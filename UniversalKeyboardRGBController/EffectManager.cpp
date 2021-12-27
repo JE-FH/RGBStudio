@@ -25,7 +25,6 @@ void EffectManager::tick()
 	for (int i = _effects.size() - 1; i >= 0; i--) {
 		if (_effects[i]->is_completed()) {
 			_effects.erase(_effects.begin() + i);
-			std::cout << "Effect was removed";
 		}
 	}
 	_device->apply_colors();

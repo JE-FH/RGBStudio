@@ -1,11 +1,11 @@
 #include "VisorEffect.h"
 #include <iostream>
 
-VisorEffect::VisorEffect(const double speed, const RGBColor& color)
+VisorEffect::VisorEffect(const double speed, RGBColor color)
 {
 	_begin_time = std::chrono::system_clock::now();
 	_speed = speed;
-	_color = color;
+	_color = std::move(color);
 }
 
 void VisorEffect::draw(IKeyboardDevice* device, double delta)
@@ -14,8 +14,8 @@ void VisorEffect::draw(IKeyboardDevice* device, double delta)
 	std::chrono::duration<float> spawn_delta = now - _begin_time;
 	double fill_length = spawn_delta.count() * _speed;
 	for (auto it = device->key_begin(); it != device->key_end(); it++) {
-		if (fill_length + 2 > (*it)->x && fill_length < (*it)->x) {
-			(*it)->set_color(_color);
+		if (fill_length + 1 > (*it)->x && fill_length - 1 < (*it)->x) {
+			(*it)->layer_color(_color, 0.5);
 		}
 	}
 	

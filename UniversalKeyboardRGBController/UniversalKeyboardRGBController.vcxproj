@@ -145,8 +145,15 @@
     <ClCompile Include="ASUSAuraKeyboardDevice.cpp" />
     <ClCompile Include="ASUSAuraKeyLight.cpp" />
     <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="EventQueue.cpp" />
+    <ClCompile Include="EventTriggerController.cpp" />
+    <ClCompile Include="KeyboardEventSource.cpp" />
+    <ClCompile Include="KeyPressEvent.cpp" />
+    <ClCompile Include="KeyReleaseEvent.cpp" />
+    <ClCompile Include="KeyTrigger.cpp" />
     <ClCompile Include="UniversalKeyboardRGBController.cpp" />
     <ClCompile Include="VisorEffect.cpp" />
+    <ClCompile Include="VisorEffectAction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ASUSAuraDeviceFactory.h" />
@@ -154,10 +161,21 @@
     <ClInclude Include="ASUSAuraKeyLight.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="EffectManager.h" />
+    <ClInclude Include="EventQueue.h" />
+    <ClInclude Include="EventTriggerController.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="IEffectAction.h" />
+    <ClInclude Include="IEventSource.h" />
     <ClInclude Include="IKeyboardDevice.h" />
     <ClInclude Include="IKeyLight.h" />
+    <ClInclude Include="KeyReleaseEvent.h" />
+    <ClInclude Include="KeyTrigger.h" />
+    <ClInclude Include="Trigger.h" />
+    <ClInclude Include="KeyboardEventSource.h" />
+    <ClInclude Include="KeyPressEvent.h" />
     <ClInclude Include="RGBColor.h" />
     <ClInclude Include="VisorEffect.h" />
+    <ClInclude Include="VisorEffectAction.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

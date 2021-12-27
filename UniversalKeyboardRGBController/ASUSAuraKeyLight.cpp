@@ -25,6 +25,14 @@ void ASUSAuraKeyLight::set_color(const RGBColor& color)
 	_native_key->Blue = color.b;
 }
 
+void ASUSAuraKeyLight::layer_color(const RGBColor& color, float opacity)
+{
+	_native_key->Red = _native_key->Red * (1 - opacity) + color.r * opacity;
+	_native_key->Green = _native_key->Green * (1 - opacity) + color.g * opacity;
+	_native_key->Blue = _native_key->Blue * (1 - opacity) + color.b * opacity;
+
+}
+
 RGBColor ASUSAuraKeyLight::get_color()
 {
 	return RGBColor{ _native_key->Red, _native_key->Green, _native_key->Blue };

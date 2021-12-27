@@ -5,7 +5,7 @@ class VisorEffect :
     public Effect
 {
 public:
-    VisorEffect(const double speed, const RGBColor& color);
+    VisorEffect(const double speed, RGBColor color);
     // Inherited via IEffect
     virtual void draw(IKeyboardDevice* device, double delta) override;
 private:
