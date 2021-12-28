@@ -24,7 +24,7 @@ void EventTriggerController::run()
 
 		std::unique_ptr<Event> queued_event;
 		while ((queued_event = _queued_events.pop()) != nullptr) {
-			printf("%s\n", queued_event->describe().c_str());
+			//printf("%s\n", queued_event->describe().c_str());
 			for (auto& trigger : _triggers) {
 				trigger->handle_event(_effect_manager, *queued_event);
 			}

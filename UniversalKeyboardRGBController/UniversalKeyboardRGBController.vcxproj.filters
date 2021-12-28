@@ -39,9 +39,6 @@
     <ClCompile Include="EventQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="KeyPressEvent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="KeyboardEventSource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -51,7 +48,7 @@
     <ClCompile Include="VisorEffectAction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="KeyReleaseEvent.cpp">
+    <ClCompile Include="KeyEvent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,9 +92,6 @@
     <ClInclude Include="EventQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="KeyPressEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="KeyboardEventSource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -113,7 +107,7 @@
     <ClInclude Include="VisorEffectAction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="KeyReleaseEvent.h">
+    <ClInclude Include="KeyEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
