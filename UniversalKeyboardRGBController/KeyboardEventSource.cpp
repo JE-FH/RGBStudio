@@ -19,11 +19,7 @@ KeyboardEventSource::KeyboardEventSource(KeyboardEventSource&& other) noexcept
 
 void KeyboardEventSource::poll_events(EventQueue& event_queue)
 {
-	MSG msg;
-	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) != 0) {    //this while loop keeps the hook
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
+	auto guard = std::lock_guard(queued_events_mutex);
 	while (queued_events.size() > 0) {
 		event_queue.push(std::move(queued_events.front()));
 		queued_events.pop();
@@ -32,27 +28,30 @@ void KeyboardEventSource::poll_events(EventQueue& event_queue)
 
 void KeyboardEventSource::on_key_down(unsigned long code, unsigned char scancode)
 {
+	auto guard = std::lock_guard(queued_events_mutex);
 	queued_events.push(std::make_unique<KeyEvent>(code, scancode, true, false));
 }
 
 void KeyboardEventSource::on_key_repeat(unsigned long code, unsigned char scancode)
 {
+	auto guard = std::lock_guard(queued_events_mutex);
 	queued_events.push(std::make_unique<KeyEvent>(code, scancode, true, true));
 }
 
 void KeyboardEventSource::on_key_up(unsigned long code, unsigned char scancode)
 {
+	auto guard = std::lock_guard(queued_events_mutex);
 	queued_events.push(std::make_unique<KeyEvent>(code, scancode, false, false));
 }
 
 void KeyboardEventSource::init()
 {
-	HHOOK hhkLowLevelKybd = SetWindowsHookEx(WH_KEYBOARD_LL, LowLevelKeyboardProc, 0, 0);
-	
+	if (inited) {
+		return;
+	}
+	event_loop_thread = std::thread(win32_event_loop);
 }
 
-std::set<KeyboardEventSource*> KeyboardEventSource::_keyboard_hooks;
-std::set<DWORD> KeyboardEventSource::pressed_keys;
 
 LRESULT KeyboardEventSource::LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
@@ -91,3 +90,24 @@ LRESULT KeyboardEventSource::LowLevelKeyboardProc(int nCode, WPARAM wParam, LPAR
 	}
 	return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
+
+void KeyboardEventSource::win32_event_loop()
+{
+	HHOOK hhkLowLevelKybd = SetWindowsHookEx(WH_KEYBOARD_LL, LowLevelKeyboardProc, 0, 0);
+
+	MSG msg;
+	while (GetMessage(&msg, NULL, 0, 0) != 0) {
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+	printf("Event loop ended?\n");
+
+	UnhookWindowsHookEx(hhkLowLevelKybd);
+}
+
+
+
+std::set<KeyboardEventSource*> KeyboardEventSource::_keyboard_hooks;
+std::set<DWORD> KeyboardEventSource::pressed_keys;
+bool KeyboardEventSource::inited;
+std::thread KeyboardEventSource::event_loop_thread;

@@ -1,7 +1,8 @@
 #include "VisorEffect.h"
 #include <iostream>
 
-VisorEffect::VisorEffect(const double speed, RGBColor color)
+VisorEffect::VisorEffect(int layer, const double speed, RGBColor color)
+	: Effect(layer)
 {
 	_begin_time = std::chrono::system_clock::now();
 	_speed = speed;

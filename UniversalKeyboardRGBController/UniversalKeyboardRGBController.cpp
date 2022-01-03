@@ -14,18 +14,17 @@ int main()
 	auto event_trigger_controller = EventTriggerController(std::move(effect_manager));
 	event_trigger_controller.add_event_source(std::make_unique<KeyboardEventSource>());
 
-	auto press_trigger = std::make_unique<KeyTrigger>(VK_SPACE, true, false, false);
-	press_trigger->add_action(std::make_shared<VisorEffectAction>(10, RGBColor {255, 0, 0}));
-	
-	auto release_trigger = std::make_unique<KeyTrigger>(VK_SPACE, false, true, false);
-	release_trigger->add_action(std::make_shared<VisorEffectAction>(10, RGBColor{ 0, 255, 0 }));
+	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("space key press", VK_SPACE, true, false, false));
+	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("space key repeat", VK_SPACE, false, true, false));
+	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("space key release", VK_SPACE, false, false, true));
 
-	auto repeat_trigger = std::make_unique<KeyTrigger>(VK_SPACE, false, false, true);
-	repeat_trigger->add_action(std::make_shared<VisorEffectAction>(10, RGBColor{ 0, 0, 255 }));
+	event_trigger_controller.add_effect_factory("red visor", std::make_unique<VisorEffectAction>(10, RGBColor{ 255, 0, 0 }));
+	event_trigger_controller.add_effect_factory("green visor", std::make_unique<VisorEffectAction>(10, RGBColor{ 0, 255, 0 }));
+	event_trigger_controller.add_effect_factory("blue visor", std::make_unique<VisorEffectAction>(10, RGBColor{ 0, 0, 255 }));
 
-	event_trigger_controller.add_trigger(std::move(press_trigger));
-	event_trigger_controller.add_trigger(std::move(release_trigger));
-	event_trigger_controller.add_trigger(std::move(repeat_trigger));
+	event_trigger_controller.add_action_trigger("space key press", "red visor");
+	event_trigger_controller.add_action_trigger("space key repeat", "green visor");
+	event_trigger_controller.add_action_trigger("space key release", "blue visor");
 
 	KeyboardEventSource::init();
 	event_trigger_controller.run();

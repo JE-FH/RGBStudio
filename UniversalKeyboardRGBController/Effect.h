@@ -5,6 +5,8 @@ class Effect {
 public:
 	virtual ~Effect() {}
 	
+	int layer;
+
 	/// <summary>
 	/// Checks if the effect has completed and will never affect the keyboard again 
 	/// </summary>
@@ -18,7 +20,8 @@ public:
 	/// <param name="delta">The amount of time since last call</param>
 	virtual void draw(IKeyboardDevice* device, double delta) = 0;
 protected:
-	Effect() {
+	Effect(int layer) {
+		this->layer = layer;
 		completed = false;
 	}
 

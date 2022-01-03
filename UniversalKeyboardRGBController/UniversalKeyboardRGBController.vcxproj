@@ -103,6 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,7 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -132,6 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,12 +143,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ActionTrigger.cpp" />
     <ClCompile Include="ASUSAuraDeviceFactory.cpp" />
     <ClCompile Include="ASUSAuraKeyboardDevice.cpp" />
     <ClCompile Include="ASUSAuraKeyLight.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="EventQueue.cpp" />
     <ClCompile Include="EventTriggerController.cpp" />
+    <ClCompile Include="FlashEffect.cpp" />
     <ClCompile Include="KeyboardEventSource.cpp" />
     <ClCompile Include="KeyEvent.cpp" />
     <ClCompile Include="KeyTrigger.cpp" />
@@ -155,6 +159,7 @@
     <ClCompile Include="VisorEffectAction.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ActionTrigger.h" />
     <ClInclude Include="ASUSAuraDeviceFactory.h" />
     <ClInclude Include="ASUSAuraKeyboardDevice.h" />
     <ClInclude Include="ASUSAuraKeyLight.h" />
@@ -163,7 +168,8 @@
     <ClInclude Include="EventQueue.h" />
     <ClInclude Include="EventTriggerController.h" />
     <ClInclude Include="Event.h" />
-    <ClInclude Include="IEffectAction.h" />
+    <ClInclude Include="FlashEffect.h" />
+    <ClInclude Include="IEffectFactory.h" />
     <ClInclude Include="IEventSource.h" />
     <ClInclude Include="IKeyboardDevice.h" />
     <ClInclude Include="IKeyLight.h" />

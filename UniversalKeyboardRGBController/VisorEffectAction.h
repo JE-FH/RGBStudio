@@ -1,12 +1,13 @@
 #pragma once
-#include "IEffectAction.h"
+#include "IEffectFactory.h"
 class VisorEffectAction :
-    public IEffectAction
+    public IEffectFactory
 {
 public:
     VisorEffectAction(double speed, RGBColor color);
-    // Inherited via IEffectAction
-    virtual void do_effect(EffectManager& effectManager) override;
+
+    // Inherited via IEffectFactory
+    virtual void add_new_instance(EffectManager& effect_manager) override;
 private:
     double _speed;
     RGBColor _color;
