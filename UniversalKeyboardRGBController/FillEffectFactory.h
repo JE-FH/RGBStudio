@@ -1,17 +1,19 @@
 #pragma once
 #include "IEffectFactory.h"
-#include "TriggerObserverDispatcher.h"
-class VisorEffectAction :
+#include "RGBColor.h"
+#include <string>
+class FillEffectFactory :
     public IEffectFactory
 {
 public:
-    VisorEffectAction(int layer, double speed, RGBColor color);
+    FillEffectFactory(int layer, std::string stop_trigger, RGBColor color);
 
     // Inherited via IEffectFactory
     virtual void add_new_instance(EffectManager& effect_manager, TriggerObserverDispatcher& trigger_observer_dispatcher) override;
+    
 private:
-    double _speed;
-    RGBColor _color;
     int _layer;
+    std::string _stop_trigger;
+    RGBColor _color;
 };
 

@@ -16,7 +16,7 @@ void VisorEffect::draw(IKeyboardDevice* device, double delta)
 	double fill_length = spawn_delta.count() * _speed;
 	for (auto it = device->key_begin(); it != device->key_end(); it++) {
 		if (fill_length + 1 > (*it)->x && fill_length - 1 < (*it)->x) {
-			(*it)->layer_color(_color, 0.5);
+			(*it)->set_color(_color, 1);
 		}
 	}
 	

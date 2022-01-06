@@ -8,7 +8,7 @@ public:
 	ASUSAuraKeyLight(ASUSAuraKeyLight&& other);
 	// Inherited via IKeyLight
 	virtual void set_color(const RGBColor& color) override;
-	virtual void layer_color(const RGBColor& color, float opacity) override;
+	virtual void set_color(const RGBColor& color, float opacity) override;
 	virtual RGBColor get_color() override;
 private:
 	AuraServiceLib::IAuraRgbKeyPtr _native_key;

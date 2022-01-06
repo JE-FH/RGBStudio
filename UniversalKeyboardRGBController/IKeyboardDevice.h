@@ -20,4 +20,5 @@ public:
 	virtual float get_height() = 0;
 
 	virtual void fill(const RGBColor& color) = 0;
+	virtual void fill(const RGBColor& color, float alpha) = 0;
 };

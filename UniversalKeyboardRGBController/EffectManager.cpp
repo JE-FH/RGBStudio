@@ -1,5 +1,7 @@
 #include "EffectManager.h"
 #include <iostream>
+#include <algorithm>
+
 EffectManager::EffectManager(std::unique_ptr<IKeyboardDevice> device)
 {
 	_device = std::move(device);
@@ -9,6 +11,9 @@ EffectManager::EffectManager(std::unique_ptr<IKeyboardDevice> device)
 void EffectManager::add_effect(std::unique_ptr<Effect> effect)
 {
 	_effects.push_back(std::move(effect));
+	std::sort(_effects.begin(), _effects.end(), [](std::unique_ptr<Effect>& a, std::unique_ptr<Effect>& b) {
+		return a->layer < b->layer;
+	});
 }
 
 void EffectManager::tick()

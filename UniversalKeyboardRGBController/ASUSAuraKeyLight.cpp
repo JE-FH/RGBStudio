@@ -1,4 +1,5 @@
 #include "ASUSAuraKeyLight.h"
+#include "ColorUtils.h"
 
 ASUSAuraKeyLight::ASUSAuraKeyLight(AuraServiceLib::IAuraRgbKeyPtr native_key)
 {
@@ -25,12 +26,11 @@ void ASUSAuraKeyLight::set_color(const RGBColor& color)
 	_native_key->Blue = color.b;
 }
 
-void ASUSAuraKeyLight::layer_color(const RGBColor& color, float opacity)
+void ASUSAuraKeyLight::set_color(const RGBColor& color, float opacity)
 {
-	_native_key->Red = _native_key->Red * (1 - opacity) + color.r * opacity;
-	_native_key->Green = _native_key->Green * (1 - opacity) + color.g * opacity;
-	_native_key->Blue = _native_key->Blue * (1 - opacity) + color.b * opacity;
-
+	_native_key->Red = LinearBlend::blend(_native_key->Red / 255.f, color.r / 255.f, opacity) * 255;
+	_native_key->Green = LinearBlend::blend(_native_key->Green / 255.f, color.g / 255.f, opacity) * 255;
+	_native_key->Blue = LinearBlend::blend(_native_key->Blue / 255.f, color.b / 255.f, opacity) * 255;
 }
 
 RGBColor ASUSAuraKeyLight::get_color()

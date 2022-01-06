@@ -4,6 +4,7 @@
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #include "ASUSAuraKeyboardDevice.h"
 #include "ASUSAuraKeyLight.h"
+#include "ColorUtils.h"
 #include <exception>
 #include <stdexcept>
 #include <locale>
@@ -79,5 +80,12 @@ void ASUSAuraKeyboardDevice::fill(const RGBColor& color)
 {
 	for (ASUSAuraKeyLight& light : _key_lights) {
 		light.set_color(color);
+	}
+}
+
+void ASUSAuraKeyboardDevice::fill(const RGBColor& color, float alpha)
+{
+	for (ASUSAuraKeyLight& light : _key_lights) {
+		light.set_color(blend_color<LinearBlend>(light.get_color(), color, alpha));
 	}
 }

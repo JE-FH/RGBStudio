@@ -23,6 +23,7 @@ public:
     virtual float get_width() override;
     virtual float get_height() override;
     virtual void fill(const RGBColor& color) override;
+    virtual void fill(const RGBColor& color, float alpha) override;
 private:
     AuraServiceLib::IAuraSyncKeyboardPtr _native_dev;
     std::vector<ASUSAuraKeyLight> _key_lights;
