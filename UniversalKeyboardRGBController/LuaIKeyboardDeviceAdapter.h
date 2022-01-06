@@ -23,5 +23,10 @@ private:
 	static IKeyboardDevice* check_device(lua_State* L);
 
 	static int lib_fill(lua_State* L);
+	static int lib_get_key_count(lua_State* L);
+	static int lib_get_key_info(lua_State* L);
+	static int lib_get_width(lua_State* L);
+	static int lib_get_height(lua_State* L);
+	static int lib_set_key_color(lua_State* L);
 };
 

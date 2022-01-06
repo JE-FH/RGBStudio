@@ -60,12 +60,6 @@
                 <mxCell id="3rFI3ZTtA5eLDSJeGrYG-21" value="*Effect*" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fontStyle=2;" parent="1" vertex="1">
                     <mxGeometry x="600" y="360" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="128" style="edgeStyle=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=block;endFill=0;endSize=16;" edge="1" parent="1" source="3rFI3ZTtA5eLDSJeGrYG-22" target="3rFI3ZTtA5eLDSJeGrYG-21">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="3rFI3ZTtA5eLDSJeGrYG-22" value="VisorEffect" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="600" y="480" width="120" height="60" as="geometry"/>
-                </mxCell>
                 <mxCell id="3rFI3ZTtA5eLDSJeGrYG-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;jumpStyle=none;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=diamondThin;startFill=0;endArrow=none;endFill=0;startSize=24;endSize=12;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="3rFI3ZTtA5eLDSJeGrYG-30" target="3rFI3ZTtA5eLDSJeGrYG-1" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
@@ -239,14 +233,8 @@
                 <mxCell id="69" value="*IEffectFactory*" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fontStyle=2" parent="1" vertex="1">
                     <mxGeometry x="790" y="240" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="91" style="edgeStyle=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=block;endFill=0;startSize=12;endSize=16;" parent="1" source="85" target="69" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
                 <mxCell id="124" style="rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=none;startFill=0;endArrow=open;endFill=0;startSize=24;endSize=12;dashed=1;" parent="1" source="69" target="122" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="85" value="VisorEffectFactory" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="790" y="360" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="88" value="KeyTrigger" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="1160" y="360" width="120" height="60" as="geometry"/>
@@ -263,10 +251,10 @@
                 <mxCell id="120" value="*ITriggerObserver*" style="whiteSpace=wrap;html=1;dashed=1;fontStyle=2" parent="1" vertex="1">
                     <mxGeometry x="975" y="360" width="120" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="130" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;endSize=16;startSize=24;startArrow=diamondThin;startFill=0;" edge="1" parent="1" source="122" target="120">
+                <mxCell id="130" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;endSize=16;startSize=24;startArrow=diamondThin;startFill=0;" parent="1" source="122" target="120" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="137" style="rounded=0;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;startArrow=none;startFill=0;endArrow=open;endFill=0;startSize=24;endSize=12;strokeColor=#000000;dashed=1;" edge="1" parent="1" source="122" target="120">
+                <mxCell id="137" style="rounded=0;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;startArrow=none;startFill=0;endArrow=open;endFill=0;startSize=24;endSize=12;strokeColor=#000000;dashed=1;" parent="1" source="122" target="120" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="122" value="TriggerObserverManager" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">

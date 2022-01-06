@@ -161,6 +161,7 @@
     <ClCompile Include="LuaEffectFactory.cpp" />
     <ClCompile Include="LuaEffectSettings.cpp" />
     <ClCompile Include="LuaIKeyboardDeviceAdapter.cpp" />
+    <ClCompile Include="LuaIKeyLightAdapter.cpp" />
     <ClCompile Include="LuaIntegerValue.cpp" />
     <ClCompile Include="LuaNumberValue.cpp" />
     <ClCompile Include="LuaStringValue.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="LuaEffectFactory.h" />
     <ClInclude Include="LuaEffectSettings.h" />
     <ClInclude Include="LuaIKeyboardDeviceAdapter.h" />
+    <ClInclude Include="LuaIKeyLightAdapter.h" />
     <ClInclude Include="LuaIntegerValue.h" />
     <ClInclude Include="LuaNumberValue.h" />
     <ClInclude Include="LuaStringValue.h" />
