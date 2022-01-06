@@ -12,8 +12,3 @@ Corsiar, ASUS, logitech, etc. each have different software for controlling RGB f
 
 ## Unplanned features
 * Effects linking across devices
-
-## TODO
-[ ] EffectFactory and Effect should have a device attached instead of the effect manager
-[ ] LuaStatePtr should track threads and somehow destroy itself when there are no threads or state references left, this would enable reloading script without having to delete all ongoing effects
-[ ] Trigger functionality from EventTriggerController should be seperated more in a new class
