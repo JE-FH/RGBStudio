@@ -39,14 +39,11 @@ void EventTriggerController::run()
 		for (const auto& triggered_action_name : triggered_action_names) {
 
 			auto action_trigger_range = _action_triggers.equal_range(triggered_action_name);
-
-			if (action_trigger_range.first != action_trigger_range.second) {
-				for (auto action_trigger = action_trigger_range.first; action_trigger != action_trigger_range.second; action_trigger++) {
-					_trigger_observer_dispatcher.dispatch(action_trigger->second);
-					auto effect_factory = _effect_factories.find(action_trigger->second);
-					if (effect_factory != _effect_factories.end()) {
-						effect_factory->second->add_new_instance(_effect_manager, _trigger_observer_dispatcher);
-					}
+			for (auto action_trigger = action_trigger_range.first; action_trigger != action_trigger_range.second; action_trigger++) {
+				_trigger_observer_dispatcher.dispatch(action_trigger->second);
+				auto effect_factory = _effect_factories.find(action_trigger->second);
+				if (effect_factory != _effect_factories.end()) {
+					effect_factory->second->add_new_instance(_effect_manager, _trigger_observer_dispatcher);
 				}
 			}
 		}
