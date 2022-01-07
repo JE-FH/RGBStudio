@@ -30,7 +30,7 @@ ASUSAuraDeviceFactory::~ASUSAuraDeviceFactory()
 {
 }
 
-std::unique_ptr<ASUSAuraKeyboardDevice> ASUSAuraDeviceFactory::create_keyboard_device()
+std::shared_ptr<ASUSAuraKeyboardDevice> ASUSAuraDeviceFactory::create_keyboard_device()
 {
 	AuraServiceLib::IAuraSyncDeviceCollectionPtr devices = _sdk->Enumerate(0x00080000);
 	for (int i = 0; i < devices->Count; i++)
@@ -43,7 +43,7 @@ std::unique_ptr<ASUSAuraKeyboardDevice> ASUSAuraDeviceFactory::create_keyboard_d
 			throw std::exception("Could not get IAuraSyncKeyboard from keyboard device");
 		}
 
-		return std::make_unique<ASUSAuraKeyboardDevice>(pKb);
+		return std::make_shared<ASUSAuraKeyboardDevice>(pKb);
 	}
-	return std::unique_ptr<ASUSAuraKeyboardDevice>(nullptr);
+	return std::shared_ptr<ASUSAuraKeyboardDevice>(nullptr);
 }

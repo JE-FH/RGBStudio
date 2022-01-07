@@ -9,7 +9,7 @@ public:
 	ASUSAuraDeviceFactory(ASUSAuraDeviceFactory&) = delete;
 	~ASUSAuraDeviceFactory();
 
-	std::unique_ptr<ASUSAuraKeyboardDevice> create_keyboard_device();
+	std::shared_ptr<ASUSAuraKeyboardDevice> create_keyboard_device();
 private:
 	AuraServiceLib::IAuraSdk2Ptr _sdk;
 };

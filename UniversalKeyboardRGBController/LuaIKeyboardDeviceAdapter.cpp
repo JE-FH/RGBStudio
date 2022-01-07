@@ -12,9 +12,9 @@ const luaL_Reg LuaIKeyboardDeviceAdapter::arraylib_m[] = {
 };
 
 
-LuaIKeyboardDeviceAdapter::LuaIKeyboardDeviceAdapter(IKeyboardDevice* keyboard_device)
+LuaIKeyboardDeviceAdapter::LuaIKeyboardDeviceAdapter(std::shared_ptr<IKeyboardDevice> keyboard_device)
 {
-	_keyboard_device = keyboard_device;
+	_keyboard_device = std::move(keyboard_device);
 }
 
 LuaIKeyboardDeviceAdapter::~LuaIKeyboardDeviceAdapter()
@@ -35,7 +35,7 @@ void LuaIKeyboardDeviceAdapter::push_device(lua_State* L)
 	lua_setmetatable(L, -2);
 
 	IKeyboardDevice** ud = (IKeyboardDevice**) luaL_checkudata(L, -1, meta_table_name);
-	*ud = _keyboard_device;
+	*ud = _keyboard_device.get();
 
 	int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 

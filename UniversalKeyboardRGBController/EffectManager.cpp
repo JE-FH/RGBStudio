@@ -2,10 +2,14 @@
 #include <iostream>
 #include <algorithm>
 
-EffectManager::EffectManager(std::unique_ptr<IKeyboardDevice> device)
+EffectManager::EffectManager()
 {
-	_device = std::move(device);
 	_last_tick = std::chrono::system_clock::now();
+}
+
+void EffectManager::add_device(std::shared_ptr<IKeyboardDevice> _device)
+{
+	_devices.push_back(std::move(_device));
 }
 
 void EffectManager::add_effect(std::unique_ptr<Effect> effect)
@@ -21,10 +25,12 @@ void EffectManager::tick()
 	auto now = std::chrono::system_clock::now();
 	float delta = ((std::chrono::duration<float>) (now - _last_tick)).count();
 	
-	_device->fill(RGBColor{0, 0, 0});
+	for (auto& device : _devices) {
+		device->fill(RGBColor{0, 0, 0});
+	}
 	
 	for (auto& effect : _effects) {
-		effect->draw(_device.get(), delta);
+		effect->draw(delta);
 	}
 	_last_tick = now;
 	for (int i = _effects.size() - 1; i >= 0; i--) {
@@ -32,5 +38,8 @@ void EffectManager::tick()
 			_effects.erase(_effects.begin() + i);
 		}
 	}
-	_device->apply_colors();
+
+	for (auto& device : _devices) {
+		device->apply_colors();
+	}
 }

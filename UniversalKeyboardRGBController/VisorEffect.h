@@ -5,9 +5,9 @@ class VisorEffect :
     public Effect
 {
 public:
-    VisorEffect(int layer, const double speed, RGBColor color);
+    VisorEffect(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device, const double speed, RGBColor color);
     // Inherited via IEffect
-    virtual void draw(IKeyboardDevice* device, double delta) override;
+    virtual void draw(double delta) override;
 private:
     std::chrono::system_clock::time_point _begin_time;
     double _speed;
