@@ -48,9 +48,6 @@
     <ClCompile Include="KeyEvent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FlashEffect.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ActionTrigger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -102,9 +99,6 @@
     <ClCompile Include="LuaIntegerValue.cpp">
       <Filter>LuaEffect</Filter>
     </ClCompile>
-    <ClCompile Include="LuaIKeyLightAdapter.cpp">
-      <Filter>LuaEffect</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RGBColor.h">
@@ -144,9 +138,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KeyEvent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FlashEffect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IEffectFactory.h">
@@ -216,9 +207,6 @@
       <Filter>LuaEffect</Filter>
     </ClInclude>
     <ClInclude Include="LuaIntegerValue.h">
-      <Filter>LuaEffect</Filter>
-    </ClInclude>
-    <ClInclude Include="LuaIKeyLightAdapter.h">
       <Filter>LuaEffect</Filter>
     </ClInclude>
   </ItemGroup>

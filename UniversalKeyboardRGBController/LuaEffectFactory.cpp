@@ -2,9 +2,10 @@
 #include "LuaEffect.h"
 #include "LuaIKeyboardDeviceAdapter.h"
 
-LuaEffectFactory::LuaEffectFactory(int layer, const std::string& file_name, LuaEffectSettings& settings)
-	: L(luaL_newstate())
+LuaEffectFactory::LuaEffectFactory(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device, const std::string& file_name, LuaEffectSettings& settings)
+	: L(luaL_newstate()), _keyboard_device_adapter(keyboard_device)
 {
+	_keyboard_device = std::move(keyboard_device);
 	_layer = layer;
 
 	luaL_openlibs(L);
@@ -19,8 +20,9 @@ LuaEffectFactory::LuaEffectFactory(int layer, const std::string& file_name, LuaE
 	}
 
 	settings.push_value(L);
+	_keyboard_device_adapter.push_device(L);
 
-	if (lua_pcall(L, 1, 0, 0) != 0) {
+	if (lua_pcall(L, 2, 0, 0) != 0) {
 		throw std::runtime_error("Lua error: " + std::string(lua_tostring(L, -1)));
 	}
 }
@@ -34,5 +36,5 @@ LuaEffectFactory::~LuaEffectFactory()
 
 void LuaEffectFactory::add_new_instance(EffectManager& effect_manager, TriggerObserverDispatcher& trigger_observer_dispatcher)
 {
-	effect_manager.add_effect(std::make_unique<LuaEffect>(_layer, trigger_observer_dispatcher, LuaStatePtr(lua_newthread(L), true)));
+	effect_manager.add_effect(std::make_unique<LuaEffect>(_layer, _keyboard_device, trigger_observer_dispatcher, LuaStatePtr(lua_newthread(L), true)));
 }

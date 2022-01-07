@@ -1,5 +1,6 @@
 #pragma once
 #include "IKeyboardDevice.h"
+#include <memory>
 
 class Effect {
 public:
@@ -18,10 +19,11 @@ public:
 	/// Call to draw the effect
 	/// </summary>
 	/// <param name="delta">The amount of time since last call</param>
-	virtual void draw(IKeyboardDevice* device, double delta) = 0;
+	virtual void draw(double delta) = 0;
 protected:
-	Effect(int layer) {
+	Effect(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device) {
 		this->layer = layer;
+		this->_keyboard_device = std::move(keyboard_device);
 		completed = false;
 	}
 
@@ -30,4 +32,6 @@ protected:
 	}
 
 	bool completed;
+
+	std::shared_ptr<IKeyboardDevice> _keyboard_device;
 };

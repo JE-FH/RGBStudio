@@ -1,8 +1,7 @@
 #include "LuaEffect.h"
-#include "LuaIKeyboardDeviceAdapter.h"
 
-LuaEffect::LuaEffect(int layer, TriggerObserverDispatcher& trigger_observer_dispatcher, LuaStatePtr thread)
-	: Effect(layer), L(std::move(thread))
+LuaEffect::LuaEffect(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device, TriggerObserverDispatcher& trigger_observer_dispatcher, LuaStatePtr thread)
+	: Effect(layer, std::move(keyboard_device)), L(std::move(thread))
 {
 	lua_createtable(L, 0, 0);
 	_state_ref = luaL_ref(L, LUA_REGISTRYINDEX);
@@ -28,7 +27,7 @@ LuaEffect::~LuaEffect()
 	}
 }
 
-void LuaEffect::draw(IKeyboardDevice* device, double delta)
+void LuaEffect::draw(double delta)
 {
 	if (lua_getglobal(L, "draw") != LUA_TFUNCTION) {
 		printf("No draw function\n");
@@ -36,13 +35,12 @@ void LuaEffect::draw(IKeyboardDevice* device, double delta)
 		return;
 	}
 
-	LuaIKeyboardDeviceAdapter device_adapter(device);
+	
 
 	lua_rawgeti(L, LUA_REGISTRYINDEX, _state_ref);
 	lua_pushnumber(L, delta);
-	device_adapter.push_device(L);
 
-	auto res = lua_pcall(L, 3, 0, 0);
+	auto res = lua_pcall(L, 2, 0, 0);
 	if (res != 0) {
 		printf("Lua error :%s\n", lua_tostring(L, -1));
 		mark_completed();

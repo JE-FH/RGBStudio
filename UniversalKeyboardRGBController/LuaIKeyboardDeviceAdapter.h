@@ -2,10 +2,11 @@
 #include "IKeyboardDevice.h"
 #include "LuaUtils.h"
 #include <vector>
+#include <memory>
 class LuaIKeyboardDeviceAdapter
 {
 public:
-	LuaIKeyboardDeviceAdapter(IKeyboardDevice* keyboard_device);
+	LuaIKeyboardDeviceAdapter(std::shared_ptr<IKeyboardDevice> keyboard_device);
 	~LuaIKeyboardDeviceAdapter();
 
 	void push_device(lua_State* L);
@@ -13,7 +14,7 @@ public:
 	static void openlib(LuaStatePtr& L);
 
 private:
-	IKeyboardDevice* _keyboard_device;
+	std::shared_ptr<IKeyboardDevice> _keyboard_device;
 
 	static const char* meta_table_name;
 	static const luaL_Reg arraylib_m[];

@@ -3,16 +3,17 @@
 #include "TriggerObserverDispatcher.h"
 #include "LuaEffectSettings.h"
 #include "LuaUtils.h"
+#include "LuaIKeyboardDeviceAdapter.h"
 #include <lua.hpp>
 class LuaEffect :
     public Effect, private TriggerObserver
 {
 public:
-    LuaEffect(int layer, TriggerObserverDispatcher& trigger_observer_dispatcher, LuaStatePtr thread);
+    LuaEffect(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device, TriggerObserverDispatcher& trigger_observer_dispatcher, LuaStatePtr thread);
     LuaEffect(const LuaEffect&) = delete;
     ~LuaEffect();
     // Inherited via Effect
-    virtual void draw(IKeyboardDevice* device, double delta) override;
+    virtual void draw(double delta) override;
 private:
     LuaStatePtr L;
     int _state_ref;
