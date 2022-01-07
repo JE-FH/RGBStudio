@@ -15,6 +15,6 @@ private:
     RGBColor _color;
 
     // Inherited via ITriggerObserver
-    virtual void Trigger(std::string trigger_name) override;
+    virtual void Trigger(const std::string& trigger_name) override;
 };
 

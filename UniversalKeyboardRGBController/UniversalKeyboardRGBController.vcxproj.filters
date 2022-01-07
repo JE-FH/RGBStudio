@@ -99,6 +99,12 @@
     <ClCompile Include="LuaIntegerValue.cpp">
       <Filter>LuaEffect</Filter>
     </ClCompile>
+    <ClCompile Include="LuaTriggerObserverDispatcherAdapter.cpp">
+      <Filter>LuaEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaUtils.cpp">
+      <Filter>LuaEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RGBColor.h">
@@ -207,6 +213,9 @@
       <Filter>LuaEffect</Filter>
     </ClInclude>
     <ClInclude Include="LuaIntegerValue.h">
+      <Filter>LuaEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="LuaTriggerObserverDispatcherAdapter.h">
       <Filter>LuaEffect</Filter>
     </ClInclude>
   </ItemGroup>

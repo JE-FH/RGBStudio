@@ -164,6 +164,8 @@
     <ClCompile Include="LuaNumberValue.cpp" />
     <ClCompile Include="LuaStringValue.cpp" />
     <ClCompile Include="LuaTableValue.cpp" />
+    <ClCompile Include="LuaTriggerObserverDispatcherAdapter.cpp" />
+    <ClCompile Include="LuaUtils.cpp" />
     <ClCompile Include="TriggerObserver.cpp" />
     <ClCompile Include="TriggerObserverDispatcher.cpp" />
     <ClCompile Include="UniversalKeyboardRGBController.cpp" />
@@ -197,6 +199,7 @@
     <ClInclude Include="LuaNumberValue.h" />
     <ClInclude Include="LuaStringValue.h" />
     <ClInclude Include="LuaTableValue.h" />
+    <ClInclude Include="LuaTriggerObserverDispatcherAdapter.h" />
     <ClInclude Include="LuaUtils.h" />
     <ClInclude Include="TriggerObserver.h" />
     <ClInclude Include="KeyEvent.h" />

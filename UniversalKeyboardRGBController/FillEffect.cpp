@@ -12,7 +12,7 @@ void FillEffect::draw(double delta)
 	_keyboard_device->fill(_color);
 }
 
-void FillEffect::Trigger(std::string trigger_name)
+void FillEffect::Trigger(const std::string& trigger_name)
 {
 	this->mark_completed();
 }
