@@ -19,6 +19,7 @@ end
 
 function init_instance(state, trigger_observer_dispatcher)
 	state.delta_counter = 0;
+	trigger_observer_dispatcher:add_trigger("green background", on_green_background)
 end
 
 function draw(state, delta)

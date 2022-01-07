@@ -10,6 +10,7 @@ LuaEffectFactory::LuaEffectFactory(int layer, std::shared_ptr<IKeyboardDevice> k
 
 	luaL_openlibs(L);
 	LuaIKeyboardDeviceAdapter::openlib(L);
+	LuaTriggerObserverDispatcherAdapter::openlib(L);
 
 	if (luaL_dofile(L, file_name.c_str()) != 0) {
 		throw std::runtime_error("Lua error " + std::string(lua_tostring(L, -1)));

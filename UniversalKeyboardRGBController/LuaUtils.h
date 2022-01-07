@@ -1,5 +1,6 @@
 #pragma once
 #include <lua.hpp>
+#include <string>
 class LuaStatePtr {
 public:
 	LuaStatePtr(lua_State* L, bool is_thread = false) {
@@ -28,3 +29,5 @@ private:
 	lua_State* L;
 	bool _is_thread;
 };
+
+std::string lua_tostdstring(lua_State* L, int idx);

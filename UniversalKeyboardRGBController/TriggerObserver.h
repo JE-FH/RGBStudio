@@ -12,7 +12,7 @@ public:
 
 	virtual ~TriggerObserver();
 
-	virtual void Trigger(std::string trigger_name) = 0;
+	virtual void Trigger(const std::string& trigger_name) = 0;
 private:
 	TriggerObserverDispatcher* _creator;
 	friend TriggerObserverDispatcher;
