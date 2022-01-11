@@ -37,5 +37,9 @@ LuaEffectFactory::~LuaEffectFactory()
 
 void LuaEffectFactory::add_new_instance(EffectManager& effect_manager, TriggerObserverDispatcher& trigger_observer_dispatcher)
 {
-	effect_manager.add_effect(std::make_unique<LuaEffect>(_layer, _keyboard_device, trigger_observer_dispatcher, LuaStatePtr(lua_newthread(L), true)));
+	auto new_thread = lua_newthread(L);
+	//We make sure that it doesnt get garbage collected
+	//TODO: This is a temporary hack and should be fixed at some point
+	luaL_ref(L, LUA_REGISTRYINDEX);
+	effect_manager.add_effect(std::make_unique<LuaEffect>(_layer, _keyboard_device, trigger_observer_dispatcher, LuaStatePtr(new_thread, true)));
 }

@@ -32,6 +32,12 @@ ASUSAuraKeyboardDevice::ASUSAuraKeyboardDevice(AuraServiceLib::IAuraSyncKeyboard
 		_key_lights.push_back(std::move(new_light));
 		_key_lights_raw_list.push_back(&_key_lights.at(_key_lights.size() - 1));
 	}
+	actual_width = 0;
+	for (const auto& light : _key_lights) {
+		if (light.x + 1 > actual_width) {
+			actual_width = light.x + 1;
+		}
+	}
 }
 
 ASUSAuraKeyboardDevice::~ASUSAuraKeyboardDevice()
@@ -68,7 +74,8 @@ IKeyLight** ASUSAuraKeyboardDevice::key_end()
 
 float ASUSAuraKeyboardDevice::get_width()
 {
-	return _native_dev->Width;
+	return actual_width;
+	//return _native_dev->Width;
 }
 
 float ASUSAuraKeyboardDevice::get_height()
