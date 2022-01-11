@@ -63,8 +63,8 @@ void LuaTriggerObserverDispatcherAdapter::Trigger(const std::string& trigger_nam
 	auto range = callback_refs.equal_range(trigger_name);
 	for (auto it = range.first; it != range.second; it++) {
 		lua_rawgeti(L, LUA_REGISTRYINDEX, it->second);
-		lua_pushlstring(L, trigger_name.data(), trigger_name.size());
 		lua_rawgeti(L, LUA_REGISTRYINDEX, _state_ref);
+		lua_pushlstring(L, trigger_name.data(), trigger_name.size());
 
 		if (lua_pcall(L, 2, 0, 0) != 0) {
 			printf("Lua error on trigger: %s\n", lua_tostring(L, -1));
