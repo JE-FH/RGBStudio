@@ -3,7 +3,6 @@
 //to be redone
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #include <asus_aura_adapter/ASUSAuraKeyboardDevice.hpp>
-#include <asus_aura_adapter/ASUSAuraKeyLight.hpp>
 #include <effect_manager/ColorUtils.hpp>
 #include <exception>
 #include <stdexcept>
@@ -18,22 +17,22 @@ ASUSAuraKeyboardDevice::ASUSAuraKeyboardDevice(AuraServiceLib::IAuraSyncKeyboard
 	_native_dev = native_dev;
 	auto lights = _native_dev->GetKeys();
 
-	/* We want to make sure that the array does not move around
-	 * This is so the pointers in _key_lights_raw_list do not
-	 * get invalidated.
-	 * This could have been avoided by having each light in a pointer.
-	 * However this would lead to alot of unnessesary pointer hunting when
-	 * clearing the lights
-	 */
-	_key_lights.reserve(lights->Count);
-
 	for (int i = 0; i < lights->Count; i++) {
-		auto new_light = ASUSAuraKeyLight(lights->Item[i]);
-		_key_lights.push_back(std::move(new_light));
-		_key_lights_raw_list.push_back(&_key_lights.at(_key_lights.size() - 1));
+		key_translation.insert(std::pair(lights->Item[i]->Code, lights->Item[i]));
+		auto new_light = KeyLight(
+			(float)lights->Item[i]->X,
+			(float)lights->Item[i]->Y,
+			lights->Item[i]->Code,
+			RGBColor{
+				lights->Item[i]->Red,
+				lights->Item[i]->Green,
+				lights->Item[i]->Blue,
+			}
+		);
+		_raster.push_back(std::move(new_light));
 	}
 	actual_width = 0;
-	for (const auto& light : _key_lights) {
+	for (const auto& light : _raster) {
 		if (light.x + 1 > actual_width) {
 			actual_width = light.x + 1;
 		}
@@ -56,43 +55,39 @@ std::string ASUSAuraKeyboardDevice::get_name()
 
 void ASUSAuraKeyboardDevice::apply_colors()
 {
+	for (const auto& key : _raster) {
+		auto translated_key = key_translation.find(key.code);
+		if (translated_key != key_translation.end()) {
+			translated_key->second->Red = key.color.r;
+			translated_key->second->Green = key.color.g;
+			translated_key->second->Blue = key.color.b;
+		} else {
+			throw std::exception("Asus Aura adapter error, unknown key in list");
+		}
+	}
+
 	HRESULT hr = _native_dev->Apply();
 	if (!SUCCEEDED(hr)) {
-		throw new std::exception("Could not apply colors to keyboard");
+		throw std::exception("Could not apply colors to keyboard");
 	}
 }
 
-IKeyLight** ASUSAuraKeyboardDevice::key_begin()
+KeyLight* ASUSAuraKeyboardDevice::key_begin()
 {
-	return _key_lights_raw_list.begin()._Ptr;
+	return _raster.begin()._Ptr;
 }
 
-IKeyLight** ASUSAuraKeyboardDevice::key_end()
+KeyLight* ASUSAuraKeyboardDevice::key_end()
 {
-	return _key_lights_raw_list.end()._Ptr;
+	return _raster.end()._Ptr;
 }
 
 float ASUSAuraKeyboardDevice::get_width()
 {
 	return actual_width;
-	//return _native_dev->Width;
 }
 
 float ASUSAuraKeyboardDevice::get_height()
 {
 	return _native_dev->Height;
-}
-
-void ASUSAuraKeyboardDevice::fill(const RGBColor& color)
-{
-	for (ASUSAuraKeyLight& light : _key_lights) {
-		light.set_color(color);
-	}
-}
-
-void ASUSAuraKeyboardDevice::fill(const RGBColor& color, float alpha)
-{
-	for (ASUSAuraKeyLight& light : _key_lights) {
-		light.set_color(blend_color<LinearBlend>(light.get_color(), color, alpha));
-	}
 }

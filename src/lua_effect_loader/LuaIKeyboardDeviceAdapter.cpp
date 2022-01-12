@@ -81,7 +81,9 @@ int LuaIKeyboardDeviceAdapter::lib_fill(lua_State* L)
 	lua_Integer b = luaL_checkinteger(L, 4);
 	luaL_argcheck(L, b >= 0 && b <= 255, 4, "color value has to be between 0 and 255 inclusively");
 
-	device->fill(RGBColor{ (unsigned char)r, (unsigned char)g, (unsigned char)b });
+	for (auto it = device->key_begin(); it != device->key_end(); it++) {
+		it->color = RGBColor{ (unsigned char)r, (unsigned char)g, (unsigned char)b };
+	}
 
 	return 0;
 }
@@ -112,15 +114,15 @@ int LuaIKeyboardDeviceAdapter::lib_get_key_info(lua_State* L)
 	lua_createtable(L, 0, 3);
 
 	lua_pushstring(L, "code");
-	lua_pushinteger(L, (*target_key)->code);
+	lua_pushinteger(L, target_key->code);
 	lua_settable(L, -3);
 
 	lua_pushstring(L, "x");
-	lua_pushnumber(L, (*target_key)->x);
+	lua_pushnumber(L, target_key->x);
 	lua_settable(L, -3);
 
 	lua_pushstring(L, "y");
-	lua_pushnumber(L, (*target_key)->y);
+	lua_pushnumber(L, target_key->y);
 	lua_settable(L, -3);
 
 	return 1;
@@ -165,7 +167,7 @@ int LuaIKeyboardDeviceAdapter::lib_set_key_color(lua_State* L)
 	lua_Integer b = luaL_checkinteger(L, 5);
 	luaL_argcheck(L, b >= 0 && b <= 255, 5, "color value has to be between 0 and 255 inclusively");
 
-	(*target_key)->set_color(RGBColor{ (unsigned char)r,(unsigned char)g, (unsigned char)b });
+	target_key->color = RGBColor{ (unsigned char)r,(unsigned char)g, (unsigned char)b };
 
 	return 0;
 }

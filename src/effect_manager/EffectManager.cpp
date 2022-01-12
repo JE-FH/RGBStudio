@@ -26,7 +26,9 @@ void EffectManager::tick()
 	float delta = ((std::chrono::duration<float>) (now - _last_tick)).count();
 	
 	for (auto& device : _devices) {
-		device->fill(RGBColor{0, 0, 0});
+		for (auto it = device->key_begin(); it != device->key_end(); it++) {
+			it->color = RGBColor {0, 0, 0};
+		}
 	}
 	
 	for (auto& effect : _effects) {

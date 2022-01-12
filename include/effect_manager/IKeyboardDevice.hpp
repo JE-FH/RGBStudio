@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "IKeyLight.hpp"
+#include "KeyLight.hpp"
 #include "RGBColor.hpp"
 class IKeyboardDevice {
 public:
@@ -12,13 +12,10 @@ public:
 	/// Applies the set key colors
 	/// </summary>
 	virtual void apply_colors() = 0;
-
-	virtual IKeyLight** key_begin() = 0;
-	virtual IKeyLight** key_end() = 0;
+	
+	virtual KeyLight* key_begin() = 0;
+	virtual KeyLight* key_end() = 0;
 
 	virtual float get_width() = 0;
 	virtual float get_height() = 0;
-
-	virtual void fill(const RGBColor& color) = 0;
-	virtual void fill(const RGBColor& color, float alpha) = 0;
 };

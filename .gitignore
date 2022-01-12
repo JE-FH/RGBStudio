@@ -1,3 +1,9 @@
 .vs/
 .vscode/
 build/
+out/
+cmake-build-debug/
+.idea
+AuraSdk_x86.tlh
+AuraSdk_x86.tli
+CMakeSettings.json
