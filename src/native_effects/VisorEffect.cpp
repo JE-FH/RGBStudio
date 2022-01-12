@@ -16,8 +16,8 @@ void VisorEffect::draw(double delta)
 	std::chrono::duration<float> spawn_delta = now - _begin_time;
 	double fill_length = spawn_delta.count() * _speed;
 	for (auto it = _keyboard_device->key_begin(); it != _keyboard_device->key_end(); it++) {
-		if (fill_length + 1 > (*it)->x && fill_length - 1 < (*it)->x) {
-			(*it)->set_color(_color, 1);
+		if (fill_length + 1 > it->x && fill_length - 1 < it->x) {
+			it->color = _color;
 		}
 	}
 	

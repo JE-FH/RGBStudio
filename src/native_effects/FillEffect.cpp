@@ -9,7 +9,9 @@ FillEffect::FillEffect(int layer, std::shared_ptr<IKeyboardDevice> keyboard_devi
 
 void FillEffect::draw(double delta)
 {
-	_keyboard_device->fill(_color);
+	for (auto it = _keyboard_device->key_begin(); it != _keyboard_device->key_end(); it++) {
+		it->color = _color;
+	}
 }
 
 void FillEffect::Trigger(const std::string& trigger_name)

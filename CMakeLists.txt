@@ -1,11 +1,9 @@
-cmake_minimum_required(VERSION 3.22.1)
+cmake_minimum_required(VERSION 3.21.1)
 project(
 	UniversalRGBDeviceController
 	VERSION 0.1.0
 	LANGUAGES CXX
 )
-
-message(WARNING "${CMAKE_TOOLCHAIN_FILE}")
 
 file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
 if(EXISTS "${LOC_PATH}")

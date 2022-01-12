@@ -36,7 +36,7 @@ target_link_libraries(lua_effect_loader PUBLIC effect_manager)
 target_link_libraries(lua_effect_loader PUBLIC event_trigger_runner)
 
 find_package(Lua REQUIRED)
-target_include_directories(lua_effect_loader PRIVATE ${LUA_INCLUDE_DIR})
+target_include_directories(lua_effect_loader PUBLIC ${LUA_INCLUDE_DIR})
 target_link_libraries(lua_effect_loader PRIVATE ${LUA_LIBRARIES})
 
 target_compile_features(asus_aura_adapter PUBLIC cxx_std_20)
