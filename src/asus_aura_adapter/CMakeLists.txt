@@ -1,5 +1,5 @@
 set(HEADER_LIST
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/asus_aura_adapter/ASUSAuraDeviceFactory.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/asus_aura_adapter/ASUSAuraDeviceFactory.hpp"
 )
 
 add_library(asus_aura_adapter SHARED 
@@ -9,7 +9,7 @@ add_library(asus_aura_adapter SHARED
 	${HEADER_LIST}
 )
 
-target_include_directories(asus_aura_adapter PUBLIC "${UniversalRGBDeviceController_SOURCE_DIR}/include")
+target_include_directories(asus_aura_adapter PUBLIC "${RGBStudio_SOURCE_DIR}/include")
 
 target_link_libraries(asus_aura_adapter PUBLIC effect_manager)
 
@@ -27,5 +27,5 @@ add_custom_command(
 	TARGET asus_aura_adapter POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy 
 		$<TARGET_FILE:asus_aura_adapter> 
-		"${UniversalRGBDeviceController_SOURCE_DIR}/bin/asus_aura_adapter.dll"
+		"${RGBStudio_SOURCE_DIR}/bin/asus_aura_adapter.dll"
 )

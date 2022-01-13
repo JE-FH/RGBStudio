@@ -1,5 +1,5 @@
-# Universal RGB Device Controller
-Corsiar, ASUS, logitech, etc. each have different software for controlling RGB for all their devices. This application will be able to control all devices through their SDK. This enables you to have one place for all functionality and gives every compatible device the same feature set.
+# RGBStudio
+Corsair, ASUS, Logitech, etc. each have different software for controlling RGB for all their devices. This application will be able to control all devices through their SDK. This enables you to have one place for all functionality and gives every compatible device the same feature set.
 ## Features
 * Layered color effects
 * Lua scripting to create custom effects
@@ -9,9 +9,6 @@ Corsiar, ASUS, logitech, etc. each have different software for controlling RGB f
 * Lua scripting
 * Supporting only keyboards
 * Supporting ASUS aura devices
-
-## Unplanned features
-* Effects linking across devices
 
 ## Building
 vcpkg makes everything easier, but the only requirement is lua 5.4

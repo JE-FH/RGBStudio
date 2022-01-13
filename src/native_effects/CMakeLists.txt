@@ -1,8 +1,8 @@
 set(HEADER_LIST
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/native_effects/FillEffect.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/native_effects/FillEffectFactory.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/native_effects/VisorEffect.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/native_effects/VisorEffectFactory.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/native_effects/FillEffect.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/native_effects/FillEffectFactory.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/native_effects/VisorEffect.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/native_effects/VisorEffectFactory.hpp"
 )
 
 add_library(native_effects STATIC 
@@ -13,7 +13,7 @@ add_library(native_effects STATIC
 	${HEADER_LIST}
 )
 
-target_include_directories(native_effects PUBLIC "${UniversalRGBDeviceController_SOURCE_DIR}/include")
+target_include_directories(native_effects PUBLIC "${RGBStudio_SOURCE_DIR}/include")
 
 target_link_libraries(native_effects PUBLIC effect_manager)
 target_link_libraries(native_effects PUBLIC event_trigger_runner)

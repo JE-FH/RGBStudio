@@ -1,5 +1,5 @@
 set(HEADER_LIST 
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/windows_event_sources/KeyboardEventSource.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/windows_event_sources/KeyboardEventSource.hpp"
 )
 
 add_library(windows_event_sources STATIC 
@@ -9,7 +9,7 @@ add_library(windows_event_sources STATIC
 
 
 
-target_include_directories(windows_event_sources PUBLIC "${UniversalRGBDeviceController_SOURCE_DIR}/include")
+target_include_directories(windows_event_sources PUBLIC "${RGBStudio_SOURCE_DIR}/include")
 
 target_link_libraries(windows_event_sources PUBLIC event_trigger_runner)
 

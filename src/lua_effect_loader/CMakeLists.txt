@@ -1,16 +1,16 @@
 set(HEADER_LIST
 	#public headers
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/lua_effect_loader/ILuaValue.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/lua_effect_loader/LuaEffect.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/lua_effect_loader/LuaEffectSettings.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/lua_effect_loader/LuaEffectFactory.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/lua_effect_loader/LuaIntegerValue.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/lua_effect_loader/LuaNumberValue.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/lua_effect_loader/LuaStringValue.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/lua_effect_loader/LuaTableValue.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/lua_effect_loader/LuaIKeyboardDeviceAdapter.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/lua_effect_loader/LuaTriggerObserverDispatcherAdapter.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/lua_effect_loader/LuaUtils.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/ILuaValue.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaEffect.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaEffectSettings.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaEffectFactory.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaIntegerValue.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaNumberValue.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaStringValue.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaTableValue.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaIKeyboardDeviceAdapter.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaTriggerObserverDispatcherAdapter.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaUtils.hpp"
 )
 
 add_library(lua_effect_loader STATIC 
@@ -27,7 +27,7 @@ add_library(lua_effect_loader STATIC
 	${HEADER_LIST}
 )
 
-target_include_directories(lua_effect_loader PUBLIC "${UniversalRGBDeviceController_SOURCE_DIR}/include")
+target_include_directories(lua_effect_loader PUBLIC "${RGBStudio_SOURCE_DIR}/include")
 
 target_link_libraries(lua_effect_loader PUBLIC device_adapter_loader)
 target_link_libraries(lua_effect_loader PUBLIC effect_manager)

@@ -1,12 +1,12 @@
 set(HEADER_LIST
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/device_adapter_loader/DeviceFactory.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/device_adapter_loader/DeviceFactoryInterface.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/device_adapter_loader/APIFunctions.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/device_adapter_loader/IKeyboardDevice.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/device_adapter_loader/KeyLight.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/device_adapter_loader/RGBColor.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/device_adapter_loader/ColorUtils.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/device_adapter_loader/DeviceAdapter.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/device_adapter_loader/DeviceFactory.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/device_adapter_loader/DeviceFactoryInterface.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/device_adapter_loader/APIFunctions.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/device_adapter_loader/IKeyboardDevice.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/device_adapter_loader/KeyLight.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/device_adapter_loader/RGBColor.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/device_adapter_loader/ColorUtils.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/device_adapter_loader/DeviceAdapter.hpp"
 )
 
 add_library(device_adapter_loader STATIC 
@@ -20,7 +20,7 @@ set(device_adapter_loader_API_VERSION 1)
 
 configure_file("constants.hpp.in" "${CMAKE_SOURCE_DIR}/include/device_adapter_loader/constants.g.hpp")
 
-target_include_directories(device_adapter_loader PUBLIC "${UniversalRGBDeviceController_SOURCE_DIR}/include")
+target_include_directories(device_adapter_loader PUBLIC "${RGBStudio_SOURCE_DIR}/include")
 
 target_compile_features(device_adapter_loader PUBLIC cxx_std_20)
 

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21.1)
 project(
-	UniversalRGBDeviceController
+	RGBStudio
 	VERSION 0.1.0
 	LANGUAGES CXX
 )
@@ -26,6 +26,6 @@ add_subdirectory("src/native_effects")
 add_subdirectory("src/event_trigger_runner")
 add_subdirectory("src/lua_effect_loader")
 add_subdirectory("src/windows_event_sources")
-add_subdirectory("src/URGBDC")
+add_subdirectory("src/effect_system_demo")
 
 add_subdirectory("src/asus_aura_adapter")
