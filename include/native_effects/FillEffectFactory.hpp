@@ -1,7 +1,7 @@
 #pragma once
 #include <event_trigger_runner/IEffectFactory.hpp>
-#include <effect_manager/RGBColor.hpp>
-#include <effect_manager/IKeyboardDevice.hpp>
+#include <device_adapter_loader/RGBColor.hpp>
+#include <device_adapter_loader/IKeyboardDevice.hpp>
 #include <string>
 class FillEffectFactory :
     public IEffectFactory

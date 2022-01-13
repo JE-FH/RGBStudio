@@ -1,5 +1,7 @@
 #include <asus_aura_adapter/ASUSAuraDeviceFactory.hpp>
+#include <device_adapter_loader/constants.g.hpp>
 
+#include <asus_aura_adapter/ASUSAuraDeviceFactory.hpp>
 #include "ASUSAuraKeyboardDevice.hpp"
 
 #import "libid:F1AA5209-5217-4B82-BA7E-A68198999AFA"
@@ -7,30 +9,30 @@
 #include <memory>
 
 
-struct ASUSAuraDeviceFactory {
+struct NativeDeviceFactory {
 	AuraServiceLib::IAuraSdk2Ptr sdk;
 };
 
-ASUSAuraDeviceFactoryInitError ASUSAuraDeviceFactory_init(ASUSAuraDeviceFactory** out) {
-	auto factory = std::make_unique<ASUSAuraDeviceFactory>();
+DeviceFactoryInitError DeviceFactory_init(NativeDeviceFactory** out) {
+	auto factory = std::make_unique<NativeDeviceFactory>();
 	factory->sdk = nullptr;
 
 	HRESULT hr = factory->sdk.CreateInstance(__uuidof(AuraServiceLib::AuraSdk), nullptr, CLSCTX_INPROC_SERVER);
 	if (!SUCCEEDED(hr))
 	{
-		return ASUSAuraDeviceFactoryInitError::A_INIT_FAILED;
+		return DeviceFactoryInitError::A_INIT_FAILED;
 	}
 
 	hr = factory->sdk->SwitchMode();
 	if (!SUCCEEDED(hr)) {
-		return ASUSAuraDeviceFactoryInitError::A_CONTROL_DENIED;
+		return DeviceFactoryInitError::A_CONTROL_DENIED;
 	}
 
 	*out = factory.release();
-	return ASUSAuraDeviceFactoryInitError::A_NO_ERROR;
+	return DeviceFactoryInitError::A_NO_ERROR;
 }
 
-IKeyboardDevice** ASUSAuraDeviceFactory_create_devices(ASUSAuraDeviceFactory* self) {
+IKeyboardDevice** DeviceFactory_create_devices(NativeDeviceFactory* self) {
 	AuraServiceLib::IAuraSyncDeviceCollectionPtr devices = self->sdk->Enumerate(0x00080000);
 	std::vector<std::unique_ptr<IKeyboardDevice>> device_list;
 
@@ -56,14 +58,24 @@ IKeyboardDevice** ASUSAuraDeviceFactory_create_devices(ASUSAuraDeviceFactory* se
 	return rv.release();
 }
 
-void ASUSAuraDeviceFactory_free_device_list(IKeyboardDevice** device_list) {
+void DeviceFactory_free(NativeDeviceFactory* self) {
+	auto _self = std::unique_ptr<NativeDeviceFactory>(self);
+}
+
+void DeviceList_free(IKeyboardDevice** device_list) {
 	auto device = std::unique_ptr<IKeyboardDevice* []>(device_list);
 }
 
-void ASUSAuraDeviceFactory_free_device(IKeyboardDevice* device) {
+void Device_free(IKeyboardDevice* device) {
 	auto a = std::unique_ptr<IKeyboardDevice>(device);
 }
 
-void ASUSAuraDeviceFactory_free(ASUSAuraDeviceFactory* self) {
-	auto _self = std::unique_ptr<ASUSAuraDeviceFactory>(self);
+const char* device_adapter_get_name()
+{
+	return "Asus aura adapter";
+}
+
+unsigned int device_adapter_get_api_version()
+{
+	return DEVICE_ADAPTER_API_VERSION;
 }

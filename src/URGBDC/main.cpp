@@ -1,5 +1,4 @@
 #include <effect_manager/EffectManager.hpp>
-#include <asus_aura_adapter/ASUSAuraDeviceFactory.hpp>
 #include <native_effects/VisorEffect.hpp>
 #include <lua_effect_loader/LuaEffect.hpp>
 #include <lua_effect_loader/LuaEffectFactory.hpp>
@@ -10,6 +9,9 @@
 #include <event_trigger_runner/EventManager.hpp>
 #include <event_trigger_runner/EventTriggerController.hpp>
 #include <windows_event_sources/KeyboardEventSource.hpp>
+#include <device_adapter_loader/DeviceAdapter.hpp>
+#include <device_adapter_loader/DeviceFactory.hpp>
+
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -25,7 +27,7 @@ std::unique_ptr<LuaEffectFactory> fraction_effect(std::shared_ptr<IKeyboardDevic
 	lua_effect_settings.set_setting("start_fraction", std::make_unique<LuaNumberValue>(start));
 	lua_effect_settings.set_setting("end_fraction", std::make_unique<LuaNumberValue>(end));
 
-	return std::make_unique<LuaEffectFactory>(0, keyboard_device, "effect.lua", lua_effect_settings);
+	return std::make_unique<LuaEffectFactory>(0, keyboard_device, "fill_fraction.lua", lua_effect_settings);
 }
 
 int catched_main()
@@ -38,31 +40,30 @@ int catched_main()
 		::CoUninitialize();
 		throw std::exception("Could not initialize COM");
 	}
+	
+	std::cout << "Enter path for device adapter (leave empty for asus_aura_adapter.dll): ";
+	std::string path;
+	std::getline(std::cin, path);
+
+	if (path.size() == 0) {
+		path = "asus_aura_adapter.dll";
+	}
+	auto device_adapter = std::make_shared<DeviceAdapter>(path.c_str());
 
 	std::cout << "Connecting to keyboard" << std::endl;
 
-	ASUSAuraDeviceFactory* device_factory;
-	auto error = ASUSAuraDeviceFactory_init(&device_factory);
-	if (error != ASUSAuraDeviceFactoryInitError::A_NO_ERROR) {
-		throw std::runtime_error("Error while initing asus aura device factory " + std::to_string((uint32_t) error));
+	std::shared_ptr<IKeyboardDevice> keyboard_device;
+
+	{
+		DeviceFactory factory(device_adapter);
+		auto devices = factory.create_devices();
+
+		if (devices.size() == 0) {
+			throw std::runtime_error("No connected devices");
+		}
+
+		keyboard_device = devices[0];
 	}
-
-	auto keyboard_devices = ASUSAuraDeviceFactory_create_devices(device_factory);
-
-	if (*keyboard_devices == nullptr) {
-		throw std::runtime_error("No connected devices");
-	}
-
-	auto keyboard_device = std::shared_ptr<IKeyboardDevice>(*keyboard_devices, [](auto p) {
-		ASUSAuraDeviceFactory_free_device(p);
-	});
-
-	//Deallocate the unused devices
-	for (auto it = keyboard_devices + 1; *it != nullptr; it++) {
-		ASUSAuraDeviceFactory_free_device(*it);
-	}
-
-	ASUSAuraDeviceFactory_free_device_list(keyboard_devices);
 
 	auto effect_manager = EffectManager();
 	effect_manager.add_device(keyboard_device);

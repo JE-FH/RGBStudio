@@ -1,9 +1,9 @@
 #pragma once
+#include <device_adapter_loader/IKeyboardDevice.hpp>
+#include <device_adapter_loader/KeyLight.hpp>
 
 #include <Windows.h>
 #import "libid:F1AA5209-5217-4B82-BA7E-A68198999AFA"
-#include <effect_manager/IKeyboardDevice.hpp>
-#include <effect_manager/KeyLight.hpp>
 #include <string>
 #include <vector>
 #include <memory>

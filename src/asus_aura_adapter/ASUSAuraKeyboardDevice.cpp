@@ -2,9 +2,9 @@
 //When they have gotten the finger out of their collective ass, and provide an alternative, this needs
 //to be redone
 #include "ASUSAuraKeyboardDevice.hpp"
+#include <device_adapter_loader/ColorUtils.hpp>
 
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
-#include <effect_manager/ColorUtils.hpp>
 #include <exception>
 #include <stdexcept>
 #include <locale>

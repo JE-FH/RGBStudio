@@ -12,3 +12,13 @@ Corsiar, ASUS, logitech, etc. each have different software for controlling RGB f
 
 ## Unplanned features
 * Effects linking across devices
+
+## Building
+vcpkg makes everything easier, but the only requirement is lua 5.4
+
+If you use MSVC to build, it currently has a bug with #import statements where it does not look for the generated tlh and tli where it has generated them,
+instead it looks in the root folder. Other than this there is another bug where it generates the correct x64 tlh and tli files but intellisense will look for the x86 versions
+for no good reason. Therefore, build the project for x86, then copy the generated AuraSDK_x86.{tlh|tli} from `build/src/asus_aura_adapter/asus_aura_adapter.dir/Debug/` to the
+root folder. This will make everything work as intended.
+
+For debugging you should use `bin/` as cwd since this is where needed dll's are copied to
