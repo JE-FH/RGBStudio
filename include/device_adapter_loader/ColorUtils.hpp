@@ -1,7 +1,6 @@
 #pragma once
 #include <cmath>
-#include <effect_manager/EffectManager.hpp>
-
+#include "RGBColor.hpp"
 template<typename T>
 concept Blender = requires(T t, float a, float b, float c)
 {

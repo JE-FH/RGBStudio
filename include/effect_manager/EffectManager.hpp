@@ -1,6 +1,6 @@
 #pragma once
 #include "Effect.hpp"
-#include "IKeyboardDevice.hpp"
+#include <device_adapter_loader/IKeyboardDevice.hpp>
 #include <vector>
 #include <memory>
 #include <chrono>

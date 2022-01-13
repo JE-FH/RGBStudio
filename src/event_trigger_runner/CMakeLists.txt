@@ -25,6 +25,7 @@ add_library(event_trigger_runner STATIC
 
 target_include_directories(event_trigger_runner PUBLIC "${UniversalRGBDeviceController_SOURCE_DIR}/include")
 
+target_link_libraries(event_trigger_runner PUBLIC device_adapter_loader)
 target_link_libraries(event_trigger_runner PUBLIC effect_manager)
 
 target_compile_features(event_trigger_runner PUBLIC cxx_std_20)

@@ -1,0 +1,1 @@
+#define DEVICE_ADAPTER_API_VERSION @device_adapter_loader_API_VERSION@

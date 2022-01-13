@@ -1,5 +1,5 @@
 #pragma once
-#include "IKeyboardDevice.hpp"
+#include <device_adapter_loader/IKeyboardDevice.hpp>
 #include <memory>
 
 class Effect {

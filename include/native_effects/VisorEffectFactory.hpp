@@ -1,7 +1,7 @@
 #pragma once
 #include <event_trigger_runner/IEffectFactory.hpp>
 #include <event_trigger_runner/TriggerObserverDispatcher.hpp>
-#include <effect_manager/IKeyboardDevice.hpp>
+#include <device_adapter_loader/IKeyboardDevice.hpp>
 
 class VisorEffectAction :
     public IEffectFactory
