@@ -1,11 +1,11 @@
 set(HEADER_LIST
 	"${UniversalRGBDeviceController_SOURCE_DIR}/include/asus_aura_adapter/ASUSAuraDeviceFactory.hpp"
-	"${UniversalRGBDeviceController_SOURCE_DIR}/include/asus_aura_adapter/ASUSAuraKeyboardDevice.hpp"
 )
 
 add_library(asus_aura_adapter STATIC 
 	"ASUSAuraDeviceFactory.cpp"
 	"ASUSAuraKeyboardDevice.cpp"
+	"ASUSAuraKeyboardDevice.hpp"
 	${HEADER_LIST}
 )
 

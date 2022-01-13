@@ -1,8 +1,9 @@
 //Since the great comitee has deprecated this without giving an alternative, we just rely on the deprecation
 //When they have gotten the finger out of their collective ass, and provide an alternative, this needs
 //to be redone
+#include "ASUSAuraKeyboardDevice.hpp"
+
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
-#include <asus_aura_adapter/ASUSAuraKeyboardDevice.hpp>
 #include <effect_manager/ColorUtils.hpp>
 #include <exception>
 #include <stdexcept>
@@ -62,13 +63,13 @@ void ASUSAuraKeyboardDevice::apply_colors()
 			translated_key->second->Green = key.color.g;
 			translated_key->second->Blue = key.color.b;
 		} else {
-			throw std::exception("Asus Aura adapter error, unknown key in list");
+			throw std::runtime_error("Asus Aura adapter error, unknown key in list");
 		}
 	}
 
 	HRESULT hr = _native_dev->Apply();
 	if (!SUCCEEDED(hr)) {
-		throw std::exception("Could not apply colors to keyboard");
+		throw std::runtime_error("Could not apply colors to keyboard");
 	}
 }
 

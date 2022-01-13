@@ -30,10 +30,39 @@ std::unique_ptr<LuaEffectFactory> fraction_effect(std::shared_ptr<IKeyboardDevic
 
 int catched_main()
 {
-	std::cout << "Connecting to keyboard" << std::endl;
-	auto device_factory = std::make_unique<ASUSAuraDeviceFactory>();
+	// Initialize COM
+	HRESULT hr = ::CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	if (!SUCCEEDED(hr))
+	{
+		// Uninitialize COM
+		::CoUninitialize();
+		throw std::exception("Could not initialize COM");
+	}
 
-	auto keyboard_device = device_factory->create_keyboard_device();
+	std::cout << "Connecting to keyboard" << std::endl;
+
+	ASUSAuraDeviceFactory* device_factory;
+	auto error = ASUSAuraDeviceFactory_init(&device_factory);
+	if (error != ASUSAuraDeviceFactoryInitError::A_NO_ERROR) {
+		throw std::runtime_error("Error while initing asus aura device factory " + std::to_string((uint32_t) error));
+	}
+
+	auto keyboard_devices = ASUSAuraDeviceFactory_create_devices(device_factory);
+
+	if (*keyboard_devices == nullptr) {
+		throw std::runtime_error("No connected devices");
+	}
+
+	auto keyboard_device = std::shared_ptr<IKeyboardDevice>(*keyboard_devices, [](auto p) {
+		ASUSAuraDeviceFactory_free_device(p);
+	});
+
+	//Deallocate the unused devices
+	for (auto it = keyboard_devices + 1; *it != nullptr; it++) {
+		ASUSAuraDeviceFactory_free_device(*it);
+	}
+
+	ASUSAuraDeviceFactory_free_device_list(keyboard_devices);
 
 	auto effect_manager = EffectManager();
 	effect_manager.add_device(keyboard_device);
@@ -84,7 +113,6 @@ int catched_main()
 
 	KeyboardEventSource::init();
 
-	
 	event_trigger_controller.run();
 	
 	return 0;
