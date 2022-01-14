@@ -28,13 +28,15 @@ export abstract class GraphNode {
 	render_connectors(render_target: SVGElement, offset_x: number, offset_y: number) {
 		let current_offset = 0;
 		for (let target of this.targets) {
-			let connector = target.render(offset_x, current_offset + offset_y);
+			target.set_relative_position(0, current_offset);
+			let connector = target.render(offset_x, offset_y);
 			current_offset += 20;
 			render_target.appendChild(connector);
 		}
 		current_offset = 0;
 		for (let source of this.sources) {
-			let connector = source.render(this.width + offset_x, current_offset + offset_y);
+			source.set_relative_position(this.width, current_offset);
+			let connector = source.render(offset_x, offset_y);
 			current_offset += 20;
 			render_target.appendChild(connector);
         }

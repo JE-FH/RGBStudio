@@ -1,13 +1,14 @@
+import ConnectorTypeRepository from "./ConnectorTypeRepository";
 import { GraphNode } from "./GraphNode";
 import { GraphSourceConnector } from "./GraphSourceConnector";
 import { NumberAttribute } from "./NumberAttribute";
-import { TriggerConnector } from "./TriggerConnector";
+import "./TriggerConnector";
 
 export class TriggerNode extends GraphNode {
 	constructor(name: string, x: number, y: number, width: number, height: number, ) {
 		super(name, x, y, width, height);
 		this.add_attribute(new NumberAttribute("key code", 12));
-		this.add_source_node(new GraphSourceConnector(this, "trigger", new TriggerConnector()));
+		this.add_source_node(new GraphSourceConnector(this, "triggerin", ConnectorTypeRepository.get_connector("TriggerConnector")));
 	}
 
 	override render(target: SVGElement) {
@@ -16,8 +17,8 @@ export class TriggerNode extends GraphNode {
 		let inner_svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 		g.appendChild(inner_svg);
 
-		inner_svg.setAttribute("x", this.x.toString());
-		inner_svg.setAttribute("y", this.y.toString());
+		inner_svg.setAttribute("x", (this.x - 10).toString());
+		inner_svg.setAttribute("y", (this.y - 10).toString());
 		inner_svg.setAttribute("width", (this.width + 20).toString());
 		inner_svg.setAttribute("width", (this.height + 20).toString());
 
@@ -30,7 +31,7 @@ export class TriggerNode extends GraphNode {
 		rect.setAttribute("width", this.width.toString());
 		rect.setAttribute("height", this.height.toString());
 
-		rect.setAttribute("fill", "#ff0000");
+		rect.setAttribute("fill", "#D9D9D9");
 
 		let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
 		inner_svg.appendChild(text);

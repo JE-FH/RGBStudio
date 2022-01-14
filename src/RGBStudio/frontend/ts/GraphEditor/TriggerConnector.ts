@@ -1,4 +1,5 @@
 import { ConnectorType } from "./ConnectorType";
+import ConnectorTypeRepository from "./ConnectorTypeRepository";
 
 export class TriggerConnector extends ConnectorType {
     constructor() {
@@ -10,7 +11,9 @@ export class TriggerConnector extends ConnectorType {
         rv.setAttribute("cx", center_x.toString());
         rv.setAttribute("cy", center_y.toString());
         rv.setAttribute("r", "5");
-        rv.setAttribute("fill", "#00FF00");
+        rv.setAttribute("fill", "#FF0000");
         return rv;
     }
 }
+
+ConnectorTypeRepository.register_connector_type("TriggerConnector", new TriggerConnector());

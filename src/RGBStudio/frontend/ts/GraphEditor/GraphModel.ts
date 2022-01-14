@@ -25,6 +25,10 @@ export class GraphModel {
 	render(target: SVGElement) {
 		for (let node of this.nodes) {
 			node.render(target);
+		}
+
+		for (let connection of this.connections) {
+			connection.render(target);
         }
     }
 }

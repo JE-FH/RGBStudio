@@ -7,11 +7,15 @@ export abstract class GraphConnector {
 	connection_type: ConnectorType;
 	connections: GraphConnection[];
 	parent: GraphNode;
+	relative_x: number;
+	relative_y: number;
 	constructor(parent: GraphNode, name: string, connection_type: ConnectorType) {
 		this.name = name;
 		this.connection_type = connection_type;
 		this.connections = [];
 		this.parent = parent;
+		this.relative_x = 0;
+		this.relative_y = 0;
 	}
 
 	//Dont call this unless you are GraphEditor
@@ -19,11 +23,19 @@ export abstract class GraphConnector {
 		this.connections.push(connection);
 	}
 
-	render(center_x: number, center_y: number): SVGElement {
-		let element = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-		element.setAttribute("cx", center_x.toString());
-		element.setAttribute("cy", center_y.toString());
-		element.setAttribute("r", "5");
-		return element;
+	set_relative_position(x: number, y: number) {
+		this.relative_x = x;
+		this.relative_y = y;
+    }
+
+	get_absolute_center_pos(): [number, number] {
+		return [
+			this.parent.x + this.relative_x,
+			this.parent.y + this.relative_y
+		];
+    }
+
+	render(offset_x: number, offset_y: number): SVGElement {
+		return this.connection_type.render_connector(offset_x + this.relative_x, offset_y + this.relative_y);
 	}
 }
