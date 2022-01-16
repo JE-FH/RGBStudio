@@ -12,5 +12,19 @@ ts/GraphEditor/GraphSourceConnector.ts \
 ts/GraphEditor/GraphTargetConnector.ts \
 ts/GraphEditor/NumberAttribute.ts \
 ts/GraphEditor/TriggerConnector.ts \
-ts/GraphEditor/TriggerNode.ts
+ts/GraphEditor/TriggerNode.ts \
+ts/GraphEditor/ActionConnector.ts \
+ts/GraphEditor/ActionNode.ts \
+ts/SVGCompositor/Dragifier.ts \
+ts/SVGCompositor/Event.ts \
+ts/SVGCompositor/Line.ts \
+ts/SVGCompositor/LineEnd.ts \
+ts/SVGCompositor/Rectangle.ts \
+ts/SVGCompositor/StyleHelper.ts \
+ts/SVGCompositor/SVGCompositor.ts \
+ts/SVGCompositor/Widget.ts \
+ts/SVGCompositor/WidgetAtom.ts \
+ts/SVGCompositor/WidgetContainer.ts \
+tsconfig.json \
+rollup.config.js
 	npx rollup -c rollup.config.js

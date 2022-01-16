@@ -29,6 +29,6 @@ export class GraphModel {
 
 		for (let connection of this.connections) {
 			connection.render(target);
-        }
-    }
+		}
+	}
 }

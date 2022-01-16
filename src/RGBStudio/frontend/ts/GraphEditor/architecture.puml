@@ -1,0 +1,36 @@
+@startuml "Visual layer"
+abstract Node
+abstract Attribute
+abstract ConnectorType
+abstract Connector
+class GraphEditor
+class Trigger
+class Action
+class Effect
+class RGBDevice
+class Connection
+class NodeSource
+class NodeTarget
+class NumberAttribute
+class TriggerConnector
+class ActionConnector
+class EffectConnector
+GraphEditor o-- Node
+GraphEditor o-- Connection
+GraphEditor o-- SVGCompositor
+Node o-- NodeSource
+Node o-- NodeTarget
+Node o-- Attribute
+Node <|-- Trigger
+Node <|-- Action
+Node <|-- Effect
+Node <|-- RGBDevice
+Connector -- Connection
+Connector o- ConnectorType
+Connector <|-- NodeTarget
+Connector <|-- NodeSource
+ConnectorType <|-- TriggerConnector
+ConnectorType <|-- ActionConnector
+ConnectorType <|-- EffectConnector
+Attribute <|-- NumberAttribute
+@enduml
