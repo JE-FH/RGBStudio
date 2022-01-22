@@ -1,16 +1,16 @@
 export type Listener<TArgs extends any[]> = (...args: TArgs) => void;
 
-export class Event<TArgs extends any[]> {
-	private listeners: Listener<TArgs>[];
+export class CSEvent<TListener extends Listener<any[]>> {
+	private listeners: TListener[];
 	constructor() {
 		this.listeners = [];
 	}
 
-	add_listener(listener: Listener<TArgs>): void {
+	add_listener(listener: TListener): void {
 		this.listeners.push(listener);
 	}
 
-	remove_listener(listener: Listener<TArgs>): void {
+	remove_listener(listener: TListener): void {
 		this.listeners = this.listeners.filter((l) => {
 			return l != listener;
 		});
@@ -20,7 +20,7 @@ export class Event<TArgs extends any[]> {
 		this.listeners = [];
 	}
 
-	call(...args: TArgs) {
+	call(...args: Parameters<TListener>) {
 		this.listeners.forEach((listener) => {
 			listener(...args);
 		});

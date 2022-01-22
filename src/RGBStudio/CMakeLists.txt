@@ -47,17 +47,7 @@ add_custom_target(
 	USES_TERMINAL
 	SOURCES
 		"${RGBStudio_FRONTEND_DIRECTORY}/ts/editor.m.ts"
-		"${RGBStudio_FRONTEND_DIRECTORY}/ts/GraphEditor/ConnectorType.ts"
-		"${RGBStudio_FRONTEND_DIRECTORY}/ts/GraphEditor/GraphConnection.ts"
-		"${RGBStudio_FRONTEND_DIRECTORY}/ts/GraphEditor/GraphConnector.ts"
-		"${RGBStudio_FRONTEND_DIRECTORY}/ts/GraphEditor/GraphModel.ts"
-		"${RGBStudio_FRONTEND_DIRECTORY}/ts/GraphEditor/GraphNode.ts"
-		"${RGBStudio_FRONTEND_DIRECTORY}/ts/GraphEditor/GraphNodeAttribute.ts"
-		"${RGBStudio_FRONTEND_DIRECTORY}/ts/GraphEditor/GraphSourceConnector.ts"
-		"${RGBStudio_FRONTEND_DIRECTORY}/ts/GraphEditor/GraphTargetConnector.ts"
-		"${RGBStudio_FRONTEND_DIRECTORY}/ts/GraphEditor/NumberAttribute.ts"
-		"${RGBStudio_FRONTEND_DIRECTORY}/ts/GraphEditor/TriggerConnector.ts"
-		"${RGBStudio_FRONTEND_DIRECTORY}/ts/GraphEditor/TriggerNode.ts"
+		"${RGBStudio_FRONTEND_DIRECTORY}/less/editor.less"
 )
 
 add_custom_command(TARGET frontend_build POST_BUILD

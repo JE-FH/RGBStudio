@@ -1,4 +1,4 @@
-import {Event} from "./Event";
+import {CSEvent} from "./CSEvent";
 import { WidgetContainer } from "./WidgetContainer";
 
 export interface Position {
@@ -6,10 +6,17 @@ export interface Position {
 	y: number;
 }
 
+export interface BoundingBox {
+	left: number;
+	top: number;
+	right: number;
+	bottom: number;
+}
+
 export type ClassConstructor<T> = (new (...args: any[]) => T);
 
 export abstract class Widget {
-	private _changed_visual_tree: Event<[]>;
+	private _changed_visual_tree: CSEvent<() => void>;
 	
 	protected relative_pos: Position;
 	
@@ -19,14 +26,14 @@ export abstract class Widget {
 		return this._parent;
 	}
 	
-	public get changed_visual_tree(): Event<[]> {
+	public get changed_visual_tree(): CSEvent<() => void> {
 		return this._changed_visual_tree;
 	}
 
 	constructor(relative_pos: Position) {
 		this._parent = null;
 
-		this._changed_visual_tree = new Event<[]>();
+		this._changed_visual_tree = new CSEvent<() => void>();
 
 		this.relative_pos = {
 			x: relative_pos.x,
@@ -34,13 +41,16 @@ export abstract class Widget {
 		};
 	}
 
-	abstract update(): void;
+	abstract position_updated(): void;
 
 	//Gets the SVGElements that constitute this Widget, it does not return the child SVGElements
 	abstract get_elements(): SVGElement[];
 	
 	//This walks the entire tree as a tree, meaning this should be overrided if a component alters the default struct like children being different
 	abstract tree_walk(operation: (widget: Widget) => void): void;
+
+	//Calculates the bounding box relative to its parent
+	abstract calculate_bounding_box(): BoundingBox;
 
 	get_absolute_position(): Position {
 		let parent_pos = this.parent?.get_absolute_position() ?? {x: 0, y: 0};
@@ -60,7 +70,7 @@ export abstract class Widget {
 	//Move this widget to a position relative to its parent
 	move_to_relative(new_relative_pos: Position): void {
 		this.relative_pos = new_relative_pos;
-		this.update();
+		this.position_updated();
 	}
 
 	//Move this widget to an absolute position (relative to the target_svg)
@@ -68,7 +78,7 @@ export abstract class Widget {
 		let parent_pos = this.parent?.get_absolute_position() ?? {x: 0, y: 0};
 		this.relative_pos.x = absolute_pos.x - parent_pos.x;
 		this.relative_pos.y = absolute_pos.y - parent_pos.y;
-		this.update();
+		this.position_updated();
 	}
 
 	//Dont know what travelling up a tree is called, so it has this name
@@ -82,5 +92,16 @@ export abstract class Widget {
 
 	protected set_parent(new_parent: WidgetContainer | null) {
 		this._parent = new_parent;
+	}
+
+	show_bounding_box(target: SVGSVGElement) {
+		let bb = this.calculate_bounding_box();
+		let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+		let abs = this.parent?.get_absolute_position?.() ?? {x: 0, y: 0};
+		rect.setAttribute("x", (bb.left + abs.x).toString());
+		rect.setAttribute("y", (bb.top + abs.y).toString());
+		rect.setAttribute("width", (bb.right - bb.left).toString());
+		rect.setAttribute("height", (bb.bottom - bb.top).toString());
+		target.appendChild(rect);
 	}
 }

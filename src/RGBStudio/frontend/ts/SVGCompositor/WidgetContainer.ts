@@ -1,5 +1,10 @@
-import { Listener } from "./Event";
+import { Listener } from "./CSEvent";
 import { Widget, Position } from "./Widget";
+
+interface DownstreamDependencyBreakageSubscriber {
+	widget: Widget;
+	callback: () => void;
+}
 
 export abstract class WidgetContainer extends Widget {
 	private children: Widget[];
@@ -11,9 +16,9 @@ export abstract class WidgetContainer extends Widget {
 		this.listeners = new Map();
 	}
 
-	update() {
+	position_updated() {
 		this.children.forEach((widget) => {
-			widget.update();
+			widget.position_updated();
 		})
 	}
 
@@ -25,7 +30,7 @@ export abstract class WidgetContainer extends Widget {
 		(widget as WidgetContainer).set_parent(this);
 		
 		this.children.push(widget);
-		widget.update();
+		widget.position_updated();
 
 		let listener = () => {
 			this.changed_visual_tree.call();
@@ -39,9 +44,10 @@ export abstract class WidgetContainer extends Widget {
 
 	remove(widget: Widget) {
 		this.children = this.children.filter((v) => {
-			(widget as WidgetContainer).set_parent(null);
-			return v == widget;
+			return v != widget;
 		});
+
+		(widget as WidgetContainer).set_parent(null);
 
 		let listener = this.listeners.get(widget);
 
@@ -63,4 +69,5 @@ export abstract class WidgetContainer extends Widget {
 			widget.tree_walk(operation);
 		});
 	}
+
 }

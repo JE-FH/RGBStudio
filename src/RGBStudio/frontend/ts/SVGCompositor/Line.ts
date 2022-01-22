@@ -1,4 +1,4 @@
-import { LineEnd } from "./LineEnd";
+import { LineEnd } from "./widgets/LineEnd";
 import { RGBColor } from "./StyleHelper";
 import { Position } from "./Widget";
 

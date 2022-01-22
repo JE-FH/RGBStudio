@@ -2,7 +2,7 @@
 abstract Node
 abstract Attribute
 abstract ConnectorType
-abstract Connector
+abstract Recepticle
 class GraphEditor
 class Trigger
 class Action
@@ -15,22 +15,23 @@ class NumberAttribute
 class TriggerConnector
 class ActionConnector
 class EffectConnector
+SVGCompositor -- Node
 GraphEditor o-- Node
 GraphEditor o-- Connection
 GraphEditor o-- SVGCompositor
-Node o-- NodeSource
-Node o-- NodeTarget
 Node o-- Attribute
 Node <|-- Trigger
 Node <|-- Action
 Node <|-- Effect
 Node <|-- RGBDevice
-Connector -- Connection
-Connector o- ConnectorType
-Connector <|-- NodeTarget
-Connector <|-- NodeSource
+Connection -- Recepticle
+Recepticle o- ConnectorType
+Recepticle <|-- NodeTarget
+Recepticle <|-- NodeSource
 ConnectorType <|-- TriggerConnector
 ConnectorType <|-- ActionConnector
 ConnectorType <|-- EffectConnector
 Attribute <|-- NumberAttribute
+Attribute <|-- NodeSource
+Attribute <|-- NodeTarget
 @enduml
