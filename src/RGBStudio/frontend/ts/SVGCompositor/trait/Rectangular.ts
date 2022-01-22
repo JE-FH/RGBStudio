@@ -1,3 +1,5 @@
+import { Resizing } from "./Resizing";
+
 interface BaseRectangular {
 	readonly __RGBSTUDIO_SVGCOMPOSITOR_RECTANGULAR_IMPLEMENTED: number;
 	readonly width: number;
@@ -5,11 +7,11 @@ interface BaseRectangular {
 }
 
 export interface Rectangular extends BaseRectangular {
-	readonly __RGBSTUDIO_SVGCOMPOSITOR_RECTANGULAR_IMPLEMENTED: 1;
+	readonly __RGBSTUDIO_SVGCOMPOSITOR_RECTANGULAR_IMPLEMENTED: 1 | 2;
 	
 }
 
-export interface ResizeableRectangular extends BaseRectangular {
+export interface ResizeableRectangular extends BaseRectangular, Resizing {
 	readonly __RGBSTUDIO_SVGCOMPOSITOR_RECTANGULAR_IMPLEMENTED: 2;
 	resize: (new_width: number, new_height: number) => void;
 	readonly minimum_width: number;

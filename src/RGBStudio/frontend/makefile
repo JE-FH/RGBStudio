@@ -27,7 +27,6 @@ ts/SVGCompositor/widgets/FitContentContainer.ts \
 ts/SVGCompositor/widgets/FlexBox.ts \
 ts/SVGCompositor/widgets/LineEnd.ts \
 ts/SVGCompositor/widgets/PaddedContainer.ts \
-ts/SVGCompositor/widgets/RectangleContainer.ts \
 ts/SVGCompositor/widgets/StackPanel.ts \
 ts/SVGCompositor/widgets/TextWidget.ts \
 ts/util.ts \

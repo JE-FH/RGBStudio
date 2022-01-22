@@ -1,4 +1,3 @@
-import { RectangleContainer } from "../widgets/RectangleContainer";
 import { Rectangular, ResizeableRectangular } from "../trait/Rectangular";
 import { Resizing } from "../trait/Resizing";
 import { Widget } from "../Widget";

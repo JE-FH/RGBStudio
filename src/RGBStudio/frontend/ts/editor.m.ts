@@ -1,5 +1,4 @@
 import { Dragifier } from "./SVGCompositor/behavior/Dragifier";
-import { RectangleContainer } from "./SVGCompositor/widgets/RectangleContainer";
 import { RGBColor } from "./SVGCompositor/StyleHelper";
 import { SVGCompositor } from "./SVGCompositor/SVGCompositor";
 import { TextWidget } from "./SVGCompositor/widgets/TextWidget";
@@ -22,9 +21,9 @@ let svg_compositor = new SVGCompositor(svg_target);
 let line = new Line({x: 5, y: 5}, {x: 5, y: 5}, {stroke: RGBColor.from_bytes(0, 0, 0)});
 
 let keypress_trigger = 
-CW(RectangleContainer, [padding(0), {fill: RGBColor.from_bytes(0xD9, 0xD9, 0xD9), classes: ["dragable"]}, {x: 100, y: 100}], [
+CW(PaddedContainer, [padding(0), {classes: ["dragable", "node"]}, {x: 100, y: 100}], [
 	CW(StackPanel, [Orientation.VERTICAL, 0], [
-		CW(RectangleContainer, [padding(5), {fill: RGBColor.from_bytes(255, 50, 50), classes: ["node-title-container"]}], [
+		CW(PaddedContainer, [padding(5), {classes: ["node-title-container", "trigger"]}], [
 			CW(TextWidget, ["Key press (trigger)", {classes: ["node-title"]}])
 		]),
 		CW(PaddedContainer, [padding(10)], [
@@ -53,9 +52,9 @@ svg_compositor.add(keypress_trigger);
 
 
 let action = 
-CW(RectangleContainer, [padding(0), {fill: RGBColor.from_bytes(0xD9, 0xD9, 0xD9), classes: ["dragable"]}, {x: 200, y: 100}], [
+CW(PaddedContainer, [padding(0), {classes: ["dragable", "node"]}, {x: 200, y: 100}], [
 	CW(StackPanel, [Orientation.VERTICAL, 0], [
-		CW(RectangleContainer, [padding(5), {fill: RGBColor.from_bytes(50, 255, 50), classes: ["node-title-container"]}], [
+		CW(PaddedContainer, [padding(5), {classes: ["node-title-container", "action"]}], [
 			CW(TextWidget, ["Left key pressed (action)", {classes: ["node-title"]}])
 		]),
 		CW(PaddedContainer, [padding(10)], [
@@ -85,15 +84,30 @@ svg_compositor.add(action);
 svg_compositor.add_line(line);
 
 
-function create_toolwindow_button(text: string, indent: number, handler: (ev: PointerEvent) => void): Widget {
-	let add_thing_button = CW(RectangleContainer, [padding(5), {fill: RGBColor.from_bytes(0, 0, 0)}], [
-		CW(TextWidget, [text, {classes: ["tool-window-text"]}])
+function create_element_button(widget: Widget, indent: number): Widget {
+	let add_thing_button = CW(PaddedContainer, [padding(5), {classes: ["debug-button"]}], [
+		CW(TextWidget, [(widget as any).constructor.name, {classes: ["tool-window-text"]}])
 	]);
 
-	add_thing_button.Clicked.add_listener(handler);
+	add_thing_button.Clicked.add_listener(() => {
+		console.log(widget);
+	});
+	let added_elements: SVGRectElement[] = [];
+	add_thing_button.Hovered.add_listener(() => {
+		let new_element = widget.create_bounding_box_rect();
+		added_elements = added_elements.concat(new_element);
+		svg_target.append(...new_element);
+	})
 
-	return CW(StackPanel, [Orientation.HORIZONTAL, 0], [
-		CW(PaddedContainer, [padding(indent, 0, 0, 0)]),
+	add_thing_button.Unhovered.add_listener(() => {
+		added_elements.forEach((element) => {
+			svg_target.removeChild(element);
+		})
+		
+		added_elements = [];
+	})
+
+	return CW(PaddedContainer, [padding(indent, 0, 0, 0)], [
 		add_thing_button
 	]);
 }
@@ -103,9 +117,7 @@ let tool_window_sp = CW(StackPanel, [Orientation.VERTICAL, 10], [
 ]);
 
 function add_tree(widget: Widget, indent_level: number) {
-	tool_window_sp.add(create_toolwindow_button((widget as any).constructor.name, indent_level * 10, () => {
-		console.log(widget);
-	}));
+	tool_window_sp.add(create_element_button(widget, indent_level * 10));
 	if (widget instanceof WidgetContainer) {
 		for (let child of widget.get_children()) {
 			add_tree(child, indent_level + 1);
@@ -117,7 +129,7 @@ add_tree(svg_compositor, 0);
 
 
 let tool_window = 
-CW(RectangleContainer, [padding(10), {fill: RGBColor.from_bytes(0xd9, 0xd9, 0xd9)}], [
+CW(PaddedContainer, [padding(10), {classes: ["debug-tool-container"]}], [
 	tool_window_sp
 ]);
 

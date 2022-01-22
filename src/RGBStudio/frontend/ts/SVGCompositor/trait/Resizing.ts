@@ -5,6 +5,7 @@ export type ResizeEvent = CSEvent<ResizeEventHandler>;
 
 export interface Resizing {
 	readonly __RGBSTUDIO_SVGCOMPOSITOR_RESIZING_IMPLEMENTED: true;
+	//Called when minimum- or current width or height changes
 	readonly Resized: ResizeEvent;
 }
 

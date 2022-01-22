@@ -94,7 +94,7 @@ export abstract class Widget {
 		this._parent = new_parent;
 	}
 
-	show_bounding_box(target: SVGSVGElement) {
+	create_bounding_box_rect(): SVGRectElement[] {
 		let bb = this.calculate_bounding_box();
 		let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 		let abs = this.parent?.get_absolute_position?.() ?? {x: 0, y: 0};
@@ -102,6 +102,7 @@ export abstract class Widget {
 		rect.setAttribute("y", (bb.top + abs.y).toString());
 		rect.setAttribute("width", (bb.right - bb.left).toString());
 		rect.setAttribute("height", (bb.bottom - bb.top).toString());
-		target.appendChild(rect);
+		rect.classList.add("debug-bb-highlight");
+		return [rect];
 	}
 }

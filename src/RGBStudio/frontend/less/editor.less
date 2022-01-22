@@ -7,6 +7,22 @@
 	touch-action: none;
 }
 
+.node {
+	fill: #d9d9d9;
+}
+
+.node-title-container {
+	&.trigger {
+		fill: rgb(255, 50, 50);
+	}
+}
+
+.node-title-container {
+	&.action {
+		fill: rgb(50, 255, 50);
+	}
+}
+
 .node-title {
 	font-family: monospace;
 	font-size: 12pt;
@@ -31,4 +47,23 @@
 
 .click-through {
 	pointer-events: none;
+}
+
+.debug-tool-container {
+	fill: #d9d9d9;
+}
+
+.debug-button {
+	fill: #222222;
+}
+
+.debug-bb-highlight {
+	stroke: rgb(255, 153, 0);
+	stroke-width: 2;
+	fill: rgba(50, 50, 255, 0.3);
+}
+
+.debug-bb-padding-highlight {
+	stroke: none;
+	fill: rgba(9, 255, 0, 0.3);
 }

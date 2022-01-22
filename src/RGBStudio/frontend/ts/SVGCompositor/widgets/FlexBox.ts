@@ -6,7 +6,7 @@ import { WidgetContainer } from "../WidgetContainer";
 
 export class FlexBox 
 	extends WidgetContainer
-	implements Resizing, ResizeableRectangular 
+	implements ResizeableRectangular 
 {
 	private _min_width: number;
 	private _min_height: number;

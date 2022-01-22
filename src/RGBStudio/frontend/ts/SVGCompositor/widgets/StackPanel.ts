@@ -1,5 +1,5 @@
 import { CSEvent } from "../CSEvent";
-import { implements_resizeable_rectangular, Rectangular } from "../trait/Rectangular";
+import { implements_resizeable_rectangular, Rectangular, ResizeableRectangular } from "../trait/Rectangular";
 import { Resizing, ResizeEvent, ResizeEventHandler, implements_resizing } from "../trait/Resizing";
 import { BoundingBox, Widget } from "../Widget";
 import { WidgetContainer } from "../WidgetContainer";
@@ -11,8 +11,10 @@ export enum Orientation {
 
 export class StackPanel 
 	extends WidgetContainer
-	implements Resizing, Rectangular
+	implements Resizing, ResizeableRectangular
 {
+	private _min_perpendicular_size: number;
+	private _perpendicular_size: number;
 	private _width: number;
 	private _height: number;
 	private _orientation: Orientation;
@@ -20,9 +22,10 @@ export class StackPanel
 
 	constructor(orientation: Orientation, item_spacing: number, relative_pos?: {x: number, y: number}) {
 		super(relative_pos ?? {x: 0, y: 0});
-		this._Resized = new CSEvent();
 		this._width = 0;
 		this._height = 0;
+		this._min_perpendicular_size = 0;
+		this._perpendicular_size = 0;
 		this._orientation = orientation;
 		this._item_spacing = item_spacing;
 		this.recalculate_layout = this.recalculate_layout.bind(this);
@@ -83,7 +86,7 @@ export class StackPanel
 				} else {
 					new_width = Math.max(new_width, bbox.right - bbox.left);
 				}
-
+				
 				child.move_to_relative({x: 0, y: new_height});
 				
 				new_height += bbox.bottom - bbox.top + this._item_spacing;
@@ -95,39 +98,82 @@ export class StackPanel
 		} else {
 			new_height -= this._item_spacing;
 		}
-		
-		console.log(new_width, new_height);
-		if (new_width != this.width || new_height != this.height) {
-			this._width = new_width;
-			this._height = new_height;
-			this.Resized.call();
 
-			this.get_children().forEach((child) => {
-				if (implements_resizeable_rectangular(child)) {
-					if (this._orientation == Orientation.HORIZONTAL) {
-						child.resize(child.width, new_height);
-					} else {
-						child.resize(new_width, child.height);
-					}
-				}
-			})
+		if (this._orientation == Orientation.HORIZONTAL) {
+			this._min_perpendicular_size = new_height;
+		} else {
+			this._min_perpendicular_size = new_width;
 		}
+
+		this._perpendicular_size = Math.max(this._perpendicular_size, this._min_perpendicular_size);
+		
+		if (this._orientation == Orientation.HORIZONTAL) {
+			new_height = this._perpendicular_size;
+		} else {
+			new_width = this._perpendicular_size;
+		}
+
+		console.log(new_width, new_height);
+		
+		this._width = new_width;
+		this._height = new_height;
+		this.Resized.call();
+		
+		this.get_children().forEach((child) => {
+			if (implements_resizeable_rectangular(child)) {
+				if (this._orientation == Orientation.HORIZONTAL) {
+					child.resize(child.width, this._perpendicular_size);
+				} else {
+					child.resize(this._perpendicular_size, child.height);
+				}
+			}
+		})
 	}
 	
 	//Implement resizing
 	__RGBSTUDIO_SVGCOMPOSITOR_RESIZING_IMPLEMENTED: true = true;
-	private _Resized: ResizeEvent
-	get Resized(): ResizeEvent {
-		return this._Resized;
-	}
+	readonly Resized: ResizeEvent = new CSEvent();
 	
-	//Implement rectangular
-	readonly __RGBSTUDIO_SVGCOMPOSITOR_RECTANGULAR_IMPLEMENTED: 1 = 1;
+	//Implement resizeable rectangular
+	readonly __RGBSTUDIO_SVGCOMPOSITOR_RECTANGULAR_IMPLEMENTED: 2 = 2;
+
 	get width(): number {
 		return this._width;
 	}
 
 	get height(): number {
 		return this._height;
+	}
+
+	resize(new_width: number, new_height: number): void {
+		if (this._orientation == Orientation.HORIZONTAL) {
+			if (this.height == new_height) {
+				return;
+			}
+			this._perpendicular_size = new_height;
+		} else {
+			if (this.width == new_width) {
+				return;
+			}
+			this._perpendicular_size= new_width;
+		}
+		
+		this.recalculate_layout();
+	}
+
+	public get minimum_width(): number {
+		if (this._orientation == Orientation.VERTICAL) {
+			return this._min_perpendicular_size;
+		}
+		
+		return this.width;
+	}
+
+	public get minimum_height(): number {
+		if (this._orientation == Orientation.HORIZONTAL) {
+			return this._min_perpendicular_size;
+		}
+		
+		return this.height;
 	}
 }
