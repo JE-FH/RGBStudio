@@ -27,6 +27,7 @@ add_subdirectory("src/native_effects")
 add_subdirectory("src/event_trigger_runner")
 add_subdirectory("src/lua_effect_loader")
 add_subdirectory("src/windows_event_sources")
+add_subdirectory("src/dynamic_config")
 
 # Dynamic libraries
 add_subdirectory("src/asus_aura_adapter")

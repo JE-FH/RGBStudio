@@ -1,13 +1,19 @@
 import { CSEvent } from "../CSEvent";
 import { implements_resizeable_rectangular, Rectangular, ResizeableRectangular } from "../trait/Rectangular";
 import { Resizing, ResizeEvent, ResizeEventHandler, implements_resizing } from "../trait/Resizing";
-import { BoundingBox, Widget } from "../Widget";
+import { BoundingBox, Position, Widget } from "../Widget";
 import { WidgetContainer } from "../WidgetContainer";
 
 export enum Orientation {
 	VERTICAL,
 	HORIZONTAL
 }
+
+export interface StackPanelProps {
+	orientation: Orientation;
+	item_spacing: number,
+	relative_pos?: Position
+};
 
 export class StackPanel 
 	extends WidgetContainer
@@ -20,14 +26,14 @@ export class StackPanel
 	private _orientation: Orientation;
 	private _item_spacing: number;
 
-	constructor(orientation: Orientation, item_spacing: number, relative_pos?: {x: number, y: number}) {
-		super(relative_pos ?? {x: 0, y: 0});
+	constructor(props: StackPanelProps) {
+		super(props.relative_pos ?? {x: 0, y: 0});
 		this._width = 0;
 		this._height = 0;
 		this._min_perpendicular_size = 0;
 		this._perpendicular_size = 0;
-		this._orientation = orientation;
-		this._item_spacing = item_spacing;
+		this._orientation = props.orientation;
+		this._item_spacing = props.item_spacing;
 		this.recalculate_layout = this.recalculate_layout.bind(this);
 	}
 	

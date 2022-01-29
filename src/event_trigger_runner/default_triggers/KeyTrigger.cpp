@@ -1,4 +1,4 @@
-#include "KeyTrigger.hpp"
+#include <event_trigger_runner/default_triggers/KeyTrigger.hpp>
 #include <event_trigger_runner/KeyEvent.hpp>
 
 KeyTrigger::KeyTrigger(std::string trigger_name, unsigned short trigger_key, bool trigger_on_press, bool trigger_on_release, bool trigger_on_repeat)

@@ -3,7 +3,10 @@ abstract Node
 abstract Attribute
 abstract ConnectorType
 abstract Recepticle
-class GraphEditor
+class GraphEditor {
+	- svg_element
+	- svg_compositor
+}
 class Trigger
 class Action
 class Effect
@@ -15,10 +18,8 @@ class NumberAttribute
 class TriggerConnector
 class ActionConnector
 class EffectConnector
-SVGCompositor -- Node
 GraphEditor o-- Node
 GraphEditor o-- Connection
-GraphEditor o-- SVGCompositor
 Node o-- Attribute
 Node <|-- Trigger
 Node <|-- Action

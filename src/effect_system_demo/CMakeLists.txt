@@ -1,4 +1,4 @@
-add_executable(effect_system_demo "main.cpp" "KeyTrigger.cpp" "KeyTrigger.hpp")
+add_executable(effect_system_demo "main.cpp" )
 
 target_link_libraries(effect_system_demo PRIVATE effect_manager)
 target_link_libraries(effect_system_demo PRIVATE native_effects)
@@ -6,6 +6,7 @@ target_link_libraries(effect_system_demo PRIVATE lua_effect_loader)
 target_link_libraries(effect_system_demo PRIVATE event_trigger_runner)
 target_link_libraries(effect_system_demo PRIVATE windows_event_sources)
 target_link_libraries(effect_system_demo PRIVATE device_adapter_loader)
+target_link_libraries(effect_system_demo PRIVATE dynamic_config)
 
 target_compile_features(effect_system_demo PUBLIC cxx_std_20)
 

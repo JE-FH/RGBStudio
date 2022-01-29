@@ -4,8 +4,10 @@ import { Resizing } from "../trait/Resizing";
 import { BoundingBox, Position } from "../Widget";
 import { WidgetAtom } from "../WidgetAtom";
 
-export interface TextStyle {
+export interface TextWidgetProps {
+	text: string;
 	classes?: string[];
+	relative_pos?: Position;
 }
 
 export class TextWidget 
@@ -40,8 +42,8 @@ export class TextWidget
 		return this.text_node.data;
 	}
 
-	constructor(text: string, style: TextStyle, relative_pos?: Position) {
-		super(relative_pos ?? {x: 0, y: 0});
+	constructor(props: TextWidgetProps) {
+		super(props.relative_pos ?? {x: 0, y: 0});
 		this._text_offset = {x: 0, y: 0};
 		this.text_node = document.createTextNode("");
 		this.text_element = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -49,16 +51,15 @@ export class TextWidget
 		this._width = 0;
 		this._height = 0;
 
-		if (style.classes) {
-			style.classes.forEach((_class) => {
+		if (props.classes) {
+			props.classes.forEach((_class) => {
 				this.text_element.classList.add(_class);
 			})
 		}
 
 		this.text_element.appendChild(this.text_node);
 
-		this.text = text;
-		this.position_updated();
+		this.text = props.text;
 	}
 
 	position_updated(): void {
@@ -82,6 +83,12 @@ export class TextWidget
 	}
 
 	private calculate_bbox(): BoundingBox {
+		let old_x = this.text_element.getAttribute("x");
+		let old_y = this.text_element.getAttribute("y");
+
+		this.text_element.removeAttribute("x");
+		this.text_element.removeAttribute("y");
+
 		let _bbox = this.text_element.getBBox({
 			fill: true,
 			stroke: true
@@ -92,15 +99,19 @@ export class TextWidget
 		if (_bbox.width + _bbox.height == 0 && this.text.length != 0) {
 			bbox = this.scratch_area_calculate_bbox();
 		} else {
-			let parent_absolute = this.parent?.get_absolute_position?.() ?? {x: 0, y: 0};
-			
 			bbox = {
-				left: _bbox.x - parent_absolute.x,
-				top: _bbox.y - parent_absolute.y,
-				right: _bbox.x + _bbox.width - parent_absolute.x,
-				bottom: _bbox.y + _bbox.height - parent_absolute.y
+				left: _bbox.x,
+				top: _bbox.y,
+				right: _bbox.x + _bbox.width,
+				bottom: _bbox.y + _bbox.height
 			};
 		}
+
+		if (old_x)
+			this.text_element.setAttribute("x", old_x);
+		if (old_y)
+			this.text_element.setAttribute("y", old_y);
+
 		return bbox;
 	}
 

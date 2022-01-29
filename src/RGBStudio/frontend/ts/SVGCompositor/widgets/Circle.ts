@@ -6,10 +6,11 @@ import { BoundingBox, Position } from "../Widget";
 import { WidgetContainer } from "../WidgetContainer";
 import { Resizing } from "../trait/Resizing";
 
-interface CircleStyle {
-	fill?: RGBColor;
+interface CircleProps {
+	radius: number;
 	classes?: string[];
-}
+	relative_pos?: Position
+};
 
 export class Circle 
 	extends WidgetContainer 
@@ -17,24 +18,20 @@ export class Circle
 {
 	private circle_element: SVGCircleElement;
 
-	constructor(radius: number, circle_style: CircleStyle, relative_pos?: Position) {
-		super(relative_pos ?? {x: 0, y: 0});
-		this._radius = radius;
+	constructor(props: CircleProps) {
+		super(props.relative_pos ?? {x: 0, y: 0});
+		this._radius = props.radius;
 		this._Clicked = new CSEvent();
 		this._Resized = new CSEvent();
 
 		this.circle_element = document.createElementNS("http://www.w3.org/2000/svg", "circle");
 		this.circle_element.setAttribute("r", this._radius.toString());
 
-		if (circle_style.classes) {
-			circle_style.classes.forEach((_class) => {
+		if (props.classes) {
+			props.classes.forEach((_class) => {
 				this.circle_element.classList.add(_class);
 			})
 		}
-
-		if (circle_style.fill)
-			this.circle_element.setAttribute("fill", circle_style.fill.svg_color());
-		
 
 		this.circle_element.addEventListener("pointerdown", (ev) => {
 			this._Clicked.call(ev);

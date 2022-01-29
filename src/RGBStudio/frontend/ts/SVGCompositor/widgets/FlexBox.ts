@@ -4,6 +4,11 @@ import { implements_resizing, ResizeEvent, Resizing } from "../trait/Resizing";
 import { BoundingBox, Position, Widget } from "../Widget";
 import { WidgetContainer } from "../WidgetContainer";
 
+export interface FlexBoxProps {
+	min_distance: number;
+	relative_pos?: Position
+}
+
 export class FlexBox 
 	extends WidgetContainer
 	implements ResizeableRectangular 
@@ -14,14 +19,14 @@ export class FlexBox
 	private _width: number;
 	private _height: number;
 	
-	constructor(min_distance: number, relative_pos?: Position) {
-		super(relative_pos ?? {x: 0, y: 0});
+	constructor(props: FlexBoxProps) {
+		super(props.relative_pos ?? {x: 0, y: 0});
 		this.Resized = new CSEvent();
 		this._width = 0;
 		this._height = 0;
 		this._min_width = 0;
 		this._min_height = 0;
-		this._min_distance = min_distance;
+		this._min_distance = props.min_distance;
 		this.recalculate_layout = this.recalculate_layout.bind(this);
 	}
 

@@ -1,4 +1,5 @@
 import { SVGCompositor } from "../SVGCompositor/SVGCompositor";
+import { GraphNode } from "./GraphNode";
 
 export class GraphEditor {
 	private compositor: SVGCompositor;

@@ -16,7 +16,9 @@
 #include <memory>
 #include <stdexcept>
 
-#include "KeyTrigger.hpp"
+#include <event_trigger_runner/default_triggers/KeyTrigger.hpp>
+#include <event_trigger_runner/default_triggers/KeyTriggerFactory.hpp>
+#include <dynamic_config/ConfigGenericValue.hpp>
 
 std::unique_ptr<LuaEffectFactory> fraction_effect(std::shared_ptr<IKeyboardDevice> keyboard_device, RGBColor color, std::string end_trigger, lua_Number start, lua_Number end) {
 	LuaEffectSettings lua_effect_settings;
@@ -75,6 +77,12 @@ int catched_main()
 
 	std::cout << "Creating effects and triggers" << std::endl;
 
+	auto trigger_factory = KeyTriggerFactory();
+
+	DynamicConfig dynamic_config;
+	dynamic_config.set_config_value("trigger_key", std::make_unique<ConfigIntegerValue>('A'));
+	dynamic_config.set_config_value("trigger_on_press", std::make_unique<ConfigBoolValue>(true));
+
 	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("escape key press", VK_ESCAPE, true, false, false));
 
 	event_trigger_controller.add_effect_factory("green highlight", fraction_effect(keyboard_device, RGBColor{ 0, 255, 0 }, "green highlight stop", 0, 0.2));
@@ -83,7 +91,7 @@ int catched_main()
 	event_trigger_controller.add_effect_factory("blue highlight", fraction_effect(keyboard_device, RGBColor{ 0, 0, 255 }, "blue highlight stop", 0.6, 0.8));
 	event_trigger_controller.add_effect_factory("orange highlight", fraction_effect(keyboard_device, RGBColor{ 255, 106, 0 }, "orange highlight stop", 0.8, 1));
 
-	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("green key press", 'A', true, false, false));
+	event_trigger_controller.add_trigger(trigger_factory.create("green key press", dynamic_config));
 	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("green key release", 'A', false, true, false));
 
 	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("red key press", 'S', true, false, false));

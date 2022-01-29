@@ -15,3 +15,17 @@ export function CreateWidget<T extends Widget, TArgs extends any[]>(ctor: new (.
 	}
 	return rv;
 }
+
+export function CreateWidget2<T extends Widget, TProps extends Record<string, any>>(
+	ctor: new (props: TProps) => T,
+	props: TProps,
+	...children: Widget[]
+): T {
+	let rv = new ctor(props);
+	if (rv instanceof WidgetContainer) {
+		for (let child of children) {
+			rv.add(child);
+		}
+	}
+	return rv;
+}

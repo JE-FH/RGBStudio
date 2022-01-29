@@ -49,6 +49,12 @@ export interface BackgroundStyle {
 	ry?: number;
 }
 
+export interface PaddedContainerProps {
+	background?: BackgroundStyle;
+	padding: Padding;
+	relative_position?: Position;
+}
+
 export class PaddedContainer
 	extends WidgetContainer
 	implements ResizeableRectangular, Clickable, Hoverable
@@ -81,9 +87,9 @@ export class PaddedContainer
 
 	private background_rect: SVGRectElement | null;
 
-	constructor(padding: Padding, rect_style?: BackgroundStyle, relative_position?: Position) {
-		super(relative_position ?? {x: 0, y: 0});
-		this._padding = padding;
+	constructor(props: PaddedContainerProps) {
+		super(props.relative_position ?? {x: 0, y: 0});
+		this._padding = props.padding;
 		this._Resized = new CSEvent();
 		
 		this._minimum_width = this.calculate_minimum_width();
@@ -97,20 +103,20 @@ export class PaddedContainer
 		this.inner_widget = null;
 		this.on_child_resize = this.on_child_resize.bind(this);
 
-		if (rect_style) {
+		if (props.background) {
 			this.background_rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-			if (rect_style.classes) {
-				for (let _class of rect_style.classes) {
+			if (props.background.classes) {
+				for (let _class of props.background.classes) {
 					this.background_rect.classList.add(_class);
 				}
 			}
 			
-			if (rect_style.rx) {
-				this.background_rect.setAttribute("rx", rect_style.rx.toString());
+			if (props.background.rx) {
+				this.background_rect.setAttribute("rx", props.background.rx.toString());
 			}
 			
-			if (rect_style.ry) {
-				this.background_rect.setAttribute("ry", rect_style.ry.toString());
+			if (props.background.ry) {
+				this.background_rect.setAttribute("ry", props.background.ry.toString());
 			}
 
 			this.background_rect.setAttribute("width", this.width.toString());

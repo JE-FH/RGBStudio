@@ -8,86 +8,31 @@ import { PaddedContainer, padding } from "./SVGCompositor/widgets/PaddedContaine
 import { Widget } from "./SVGCompositor/Widget";
 import { FlexBox } from "./SVGCompositor/widgets/FlexBox";
 import { Circle } from "./SVGCompositor/widgets/Circle";
-import { CreateWidget as CW} from "./SVGCompositor/WidgetConstructor";
+import { CreateWidget2 as CW2} from "./SVGCompositor/WidgetConstructor";
 import { Line } from "./SVGCompositor/Line";
 import { WidgetContainer } from "./SVGCompositor/WidgetContainer";
+import { GraphNode } from "./GraphEditor/GraphNode";
+import { NumberAttribute } from "./GraphEditor/NumberAttribute";
+import { ColorAttribute } from "./GraphEditor/ColorAttribute";
+import { SourceAttribute } from "./GraphEditor/SourceAttribute";
+import { TargetAttribute } from "./GraphEditor/TargetAttribute";
 
 SVGScratchArea.setup(document.getElementById("scratch-pad")! as unknown as SVGElement);
 
 let svg_target = document.getElementById("target")! as unknown as SVGSVGElement;
-
 let svg_compositor = new SVGCompositor(svg_target);
 
-let line = new Line({x: 5, y: 5}, {x: 5, y: 5}, {stroke: RGBColor.from_bytes(0, 0, 0)});
+let graph_node = new GraphNode(svg_compositor, "hello world!");
 
-let keypress_trigger = 
-CW(PaddedContainer, [padding(0), {classes: ["dragable", "node"]}, {x: 100, y: 100}], [
-	CW(StackPanel, [Orientation.VERTICAL, 0], [
-		CW(PaddedContainer, [padding(5), {classes: ["node-title-container", "trigger"]}], [
-			CW(TextWidget, ["Key press (trigger)", {classes: ["node-title"]}])
-		]),
-		CW(PaddedContainer, [padding(10)], [
-			CW(StackPanel, [Orientation.VERTICAL, 5], [
-				CW(FlexBox, [10], [
-					CW(TextWidget, ["Key code", {classes: ["attribute-text"]}]),
-					CW(TextWidget, ["64 (left arrow)", {classes: ["attribute-text"]}])
-				]),
-				CW(FlexBox, [10], [
-					CW(TextWidget, ["Source connection", {classes: ["attribute-text"]}]),
-					CW(Circle, [5, {fill: RGBColor.from_bytes(0xdd, 50, 50)}, {x: 0, y: 6}], [
-						line.start
-					])
-				])
-			])
-		])
-	]),
-]);
-
-let keypress_trigger_dragifier = new Dragifier(keypress_trigger);
-keypress_trigger.Clicked.add_listener((ev) => {
-	keypress_trigger_dragifier.drag(ev);
-});
-
-svg_compositor.add(keypress_trigger);
-
-
-let action = 
-CW(PaddedContainer, [padding(0), {classes: ["dragable", "node"]}, {x: 200, y: 100}], [
-	CW(StackPanel, [Orientation.VERTICAL, 0], [
-		CW(PaddedContainer, [padding(5), {classes: ["node-title-container", "action"]}], [
-			CW(TextWidget, ["Left key pressed (action)", {classes: ["node-title"]}])
-		]),
-		CW(PaddedContainer, [padding(10)], [
-			CW(StackPanel, [Orientation.VERTICAL, 5], [
-				CW(FlexBox, [10], [
-					CW(Circle, [5, {fill: RGBColor.from_bytes(0xdd, 50, 50)}, {x: 0, y: 6}], [
-						line.end
-					]),
-					CW(TextWidget, ["Action", {classes: ["attribute-text"]}])
-				]),
-				CW(FlexBox, [10], [
-					CW(TextWidget, ["Trigger", {classes: ["attribute-text"]}]),
-					CW(Circle, [5, {fill: RGBColor.from_bytes(50, 0xdd, 50)}, {x: 0, y: 6}])
-				])
-			])
-		])
-	])
-]);
-
-let action_dragifier = new Dragifier(action);
-action.Clicked.add_listener((ev) => {
-	action_dragifier.drag(ev);
-});
-
-svg_compositor.add(action);
-
-svg_compositor.add_line(line);
-
+graph_node.add_attribute(new NumberAttribute("number", 1));
+graph_node.add_attribute(new ColorAttribute("color", RGBColor.from_bytes(255, 0, 0)));
+graph_node.add_attribute(new SourceAttribute("source"));
+graph_node.add_attribute(new TargetAttribute("target"));
 
 function create_element_button(widget: Widget, indent: number): Widget {
-	let add_thing_button = CW(PaddedContainer, [padding(5), {classes: ["debug-button"]}], [
-		CW(TextWidget, [(widget as any).constructor.name, {classes: ["tool-window-text"]}])
-	]);
+	let add_thing_button = CW2(PaddedContainer, {padding: padding(5), background: {classes: ["debug-button"]}},
+		CW2(TextWidget, {text: (widget as any).constructor.name, classes: ["tool-window-text"]})
+	);
 
 	add_thing_button.Clicked.add_listener(() => {
 		console.log(widget);
@@ -107,14 +52,14 @@ function create_element_button(widget: Widget, indent: number): Widget {
 		added_elements = [];
 	})
 
-	return CW(PaddedContainer, [padding(indent, 0, 0, 0)], [
+	return CW2(PaddedContainer, {padding: padding(indent, 0, 0, 0)},
 		add_thing_button
-	]);
+	);
 }
 
-let tool_window_sp = CW(StackPanel, [Orientation.VERTICAL, 10], [
-	CW(TextWidget, ["Debug Window", {classes: ["click-through"]}])
-]);
+let tool_window_sp = CW2(StackPanel, {orientation: Orientation.VERTICAL, item_spacing: 10},
+	CW2(TextWidget, {text: "Debug Window", classes: ["click-through"]})
+);
 
 function add_tree(widget: Widget, indent_level: number) {
 	tool_window_sp.add(create_element_button(widget, indent_level * 10));
@@ -129,9 +74,9 @@ add_tree(svg_compositor, 0);
 
 
 let tool_window = 
-CW(PaddedContainer, [padding(10), {classes: ["debug-tool-container"]}], [
+CW2(PaddedContainer, {padding: padding(10), background: {classes: ["debug-tool-container"]}},
 	tool_window_sp
-]);
+);
 
 svg_compositor.add(tool_window);
 
