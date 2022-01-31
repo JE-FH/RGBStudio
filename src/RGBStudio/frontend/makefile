@@ -42,3 +42,6 @@ rollup.config.js
 
 ../build/css/editor.css: less/editor.less
 	npx less less/editor.less ../build/css/editor.css
+
+ ../build/editor.html: ../build/script/editor.m.js ../build/css/editor.css pages/editor.html
+	node inline-html.js "pages/editor.html" "../build/editor.html" "../build/"

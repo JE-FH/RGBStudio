@@ -19,3 +19,5 @@ for no good reason. Therefore, build the project for x86, then copy the generate
 root folder. This will make everything work as intended.
 
 For debugging you should use `bin/` as cwd since this is where needed dll's are copied to
+
+Ninja generator does not work when including .targets files, therefore set generator to "Visual Studio 17 2022". We need to support .targets files since this how we import webview2

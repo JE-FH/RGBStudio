@@ -17,95 +17,89 @@ import { ColorAttribute } from "./GraphEditor/ColorAttribute";
 import { SourceAttribute } from "./GraphEditor/SourceAttribute";
 import { TargetAttribute } from "./GraphEditor/TargetAttribute";
 
-SVGScratchArea.setup(document.getElementById("scratch-pad")! as unknown as SVGElement);
-
-let svg_target = document.getElementById("target")! as unknown as SVGSVGElement;
-let svg_compositor = new SVGCompositor(svg_target);
-
-let graph_node = new GraphNode(svg_compositor, "hello world!");
-
-graph_node.add_attribute(new NumberAttribute("number", 1));
-graph_node.add_attribute(new ColorAttribute("color", RGBColor.from_bytes(255, 0, 0)));
-graph_node.add_attribute(new SourceAttribute("source"));
-graph_node.add_attribute(new TargetAttribute("target"));
-
-function create_element_button(widget: Widget, indent: number): Widget {
-	let add_thing_button = CW2(PaddedContainer, {padding: padding(5), background: {classes: ["debug-button"]}},
-		CW2(TextWidget, {text: (widget as any).constructor.name, classes: ["tool-window-text"]})
-	);
-
-	add_thing_button.Clicked.add_listener(() => {
-		console.log(widget);
-	});
-	let added_elements: SVGRectElement[] = [];
-	add_thing_button.Hovered.add_listener(() => {
-		let new_element = widget.create_bounding_box_rect();
-		added_elements = added_elements.concat(new_element);
-		svg_target.append(...new_element);
-	})
-
-	add_thing_button.Unhovered.add_listener(() => {
-		added_elements.forEach((element) => {
-			svg_target.removeChild(element);
-		})
-		
-		added_elements = [];
-	})
-
-	return CW2(PaddedContainer, {padding: padding(indent, 0, 0, 0)},
-		add_thing_button
-	);
-}
-
-let tool_window_sp = CW2(StackPanel, {orientation: Orientation.VERTICAL, item_spacing: 10},
-	CW2(TextWidget, {text: "Debug Window", classes: ["click-through"]})
-);
-
-function add_tree(widget: Widget, indent_level: number) {
-	tool_window_sp.add(create_element_button(widget, indent_level * 10));
-	if (widget instanceof WidgetContainer) {
-		for (let child of widget.get_children()) {
-			add_tree(child, indent_level + 1);
+declare global {
+	interface Window {
+		chrome: {
+			webview: {
+				postMessage: (message: string) => void;
+			}
 		}
 	}
 }
 
-add_tree(svg_compositor, 0);
+function main() {
+	//HelloWorldBinding();
+
+	SVGScratchArea.setup(document.getElementById("scratch-pad")! as unknown as SVGElement);
+
+	let svg_target = document.getElementById("target")! as unknown as SVGSVGElement;
+	let svg_compositor = new SVGCompositor(svg_target);
+
+	let graph_node = new GraphNode(svg_compositor, "hello world!");
+
+	graph_node.add_attribute(new NumberAttribute("number", 1));
+	graph_node.add_attribute(new ColorAttribute("color", RGBColor.from_bytes(255, 0, 0)));
+	graph_node.add_attribute(new SourceAttribute("source"));
+	graph_node.add_attribute(new TargetAttribute("target"));
+
+	function create_element_button(widget: Widget, indent: number): Widget {
+		let add_thing_button = CW2(PaddedContainer, { padding: padding(5), background: { classes: ["debug-button"] } },
+			CW2(TextWidget, { text: (widget as any).constructor.name, classes: ["tool-window-text"] })
+		);
+
+		add_thing_button.Clicked.add_listener(() => {
+			console.log(widget);
+		});
+		let added_elements: SVGRectElement[] = [];
+		add_thing_button.Hovered.add_listener(() => {
+			let new_element = widget.create_bounding_box_rect();
+			added_elements = added_elements.concat(new_element);
+			svg_target.append(...new_element);
+		})
+
+		add_thing_button.Unhovered.add_listener(() => {
+			added_elements.forEach((element) => {
+				svg_target.removeChild(element);
+			})
+
+			added_elements = [];
+		})
+
+		return CW2(PaddedContainer, { padding: padding(indent, 0, 0, 0) },
+			add_thing_button
+		);
+	}
+
+	let tool_window_sp = CW2(StackPanel, { orientation: Orientation.VERTICAL, item_spacing: 10 },
+		CW2(TextWidget, { text: "Debug Window", classes: ["click-through"] })
+	);
+
+	function add_tree(widget: Widget, indent_level: number) {
+		tool_window_sp.add(create_element_button(widget, indent_level * 10));
+		if (widget instanceof WidgetContainer) {
+			for (let child of widget.get_children()) {
+				add_tree(child, indent_level + 1);
+			}
+		}
+	}
+
+	add_tree(svg_compositor, 0);
 
 
-let tool_window = 
-CW2(PaddedContainer, {padding: padding(10), background: {classes: ["debug-tool-container"]}},
-	tool_window_sp
-);
+	let tool_window =
+		CW2(PaddedContainer, { padding: padding(10), background: { classes: ["debug-tool-container"] } },
+			tool_window_sp
+		);
 
-svg_compositor.add(tool_window);
+	svg_compositor.add(tool_window);
 
-let tool_window_dragifier = new Dragifier(tool_window);
+	let tool_window_dragifier = new Dragifier(tool_window);
 
-tool_window.Clicked.add_listener((ev) => {
-	tool_window_dragifier.drag(ev);
-});
-/*
-let graph_model = new GraphModel();
+	tool_window.Clicked.add_listener((ev) => {
+		tool_window_dragifier.drag(ev);
+	});
+}
 
-let a = new TriggerNode("hello", 10, 10, 100, 100);
-
-graph_model.add_node(a);
-
-let b = new TriggerNode("hello2", 10, 150, 100, 100);
-
-graph_model.add_node(b);
-
-let c = new ActionNode("bing bong", 140, 30, 100, 100);
-
-graph_model.add_node(c);
-
-
-graph_model.create_connection(b.sources[0], c.targets[0]);
-graph_model.create_connection(a.sources[0], c.targets[0]);
-
-//We do get the SVGSVGElement even though we shouldnt but who cares
-let svg_target = document.getElementById("target")! as unknown as SVGSVGElement;
-
-graph_model.render(svg_target);
-*/
+window.addEventListener("load", () => {
+	main();
+})

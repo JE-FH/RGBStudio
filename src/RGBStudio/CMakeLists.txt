@@ -1,42 +1,39 @@
-include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
-
 set(RGBStudio_FRONTEND_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/frontend")
-set(ENABLE_INSPECTOR true)
-
-include(${CMAKE_CURRENT_SOURCE_DIR}/helper/setup_ultralight.cmake)
 
 add_executable(
 	RGBStudio
-		"main.cpp"
-		"app.cpp"
-		"app.hpp"
+	"main.cpp"
+	"editor.cpp"
+	"IAssetLoader.hpp"
+	"FSAssetLoader.cpp"
+	"FSAssetLoader.hpp"
+	"EncodingConverter.hpp"
+	"EncodingConverter.cpp"
 )
 
+find_program(NUGET_EXE NAMES nuget)
+if(NOT NUGET_EXE)
+	message(FATAL_ERROR "nuget.exe not found")
+endif()
+
+exec_program(${NUGET_EXE}
+    ARGS install "Microsoft.Web.WebView2" -Version 1.0.1072.54 -ExcludeVersion -OutputDirectory ${CMAKE_BINARY_DIR}/packages
+)
+
+exec_program(${NUGET_EXE}
+    ARGS install "Microsoft.Windows.ImplementationLibrary" -Version 1.0.211019.2 -ExcludeVersion -OutputDirectory ${CMAKE_BINARY_DIR}/packages
+)
+
+target_link_libraries(RGBStudio PRIVATE "${CMAKE_BINARY_DIR}/packages/Microsoft.Web.WebView2/build/native/Microsoft.Web.WebView2.targets")
+target_link_libraries(RGBStudio PRIVATE "${CMAKE_BINARY_DIR}/packages/Microsoft.Windows.ImplementationLibrary/build/native/Microsoft.Windows.ImplementationLibrary.targets")
+target_link_libraries(RGBStudio PUBLIC event_trigger_runner)
+
+#Visual studio and vscode does not understand the include directories from .targets so we hardcode them
+
+target_include_directories(RGBStudio PRIVATE "${CMAKE_BINARY_DIR}/packages/Microsoft.Web.WebView2/build/native/include/")
+target_include_directories(RGBStudio PRIVATE "${CMAKE_BINARY_DIR}/packages/Microsoft.Windows.ImplementationLibrary/include/")
+
 set(ASSETS_PATH "$<TARGET_FILE_DIR:RGBStudio>/assets") 
-
-# Tell MSVC to use main instead of WinMain for Windows subsystem executables
-set_target_properties(RGBStudio PROPERTIES LINK_FLAGS "/ENTRY:mainCRTStartup")
-
-# Copy all binaries to target directory
-add_custom_command(TARGET RGBStudio POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIR}" $<TARGET_FILE_DIR:RGBStudio>) 
-
-# Copy assets to assets path
-add_custom_command(TARGET RGBStudio POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/frontend/pages/" "${ASSETS_PATH}")
-
-if(${ENABLE_INSPECTOR})
-  # Copy inspector to assets directory
-  add_custom_command(TARGET RGBStudio POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_INSPECTOR_DIR}" "${ASSETS_PATH}/inspector")
-endif ()
-
-# Copy resources to assets directory
-add_custom_command(TARGET RGBStudio POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_RESOURCES_DIR}" "${ASSETS_PATH}/resources")
-  
-add_dependencies(RGBStudio UltralightSDK)
-
 
 target_compile_features(RGBStudio PUBLIC cxx_std_20)
 
@@ -51,7 +48,6 @@ add_custom_target(
 )
 
 add_custom_command(TARGET frontend_build POST_BUILD
-  DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/build/editor.m.js"
   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/build/" "${ASSETS_PATH}")
 
 add_dependencies(RGBStudio frontend_build)

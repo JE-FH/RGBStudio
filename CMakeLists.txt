@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.21.1)
+MESSAGE(STATUS "generator ${CMAKE_GENERATOR}")
+SET(CMAKE_VERBOSE_MAKEFILE ON)
+
 project(
 	RGBStudio
 	VERSION 0.1.0
