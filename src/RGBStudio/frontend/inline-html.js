@@ -38,6 +38,7 @@ async function main() {
     });
 
     await fs.writeFile(process.argv[3], root.innerHTML);
+    console.log(`Successfully inlined ${process.argv[3]}`);
 }
 
 async function html_element_walker(htmlElement, walker) {

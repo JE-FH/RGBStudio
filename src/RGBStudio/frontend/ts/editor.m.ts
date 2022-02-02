@@ -22,13 +22,18 @@ declare global {
 		chrome: {
 			webview: {
 				postMessage: (message: string) => void;
+				addEventListener: (ev: "message", listener: (data: any) => void) => void;
 			}
 		}
 	}
 }
-
+//
+window.chrome.webview.addEventListener("message", (data) => {
+	console.log(data);
+})
+window.chrome.webview.postMessage(JSON.stringify({ type: "ready", param: {}, id: 1 }));
+console.log("sent ready signal");
 function main() {
-	//HelloWorldBinding();
 
 	SVGScratchArea.setup(document.getElementById("scratch-pad")! as unknown as SVGElement);
 

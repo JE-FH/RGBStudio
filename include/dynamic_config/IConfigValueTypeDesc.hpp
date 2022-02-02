@@ -2,7 +2,10 @@
 #include <string>
 
 class IConfigValueTypeDesc {
-	virtual std::string get_friendly_name() = 0;
+public:
+	virtual ~IConfigValueTypeDesc() {}
+	virtual std::string get_friendly_name() const = 0;
+	virtual std::string get_internal_name() const = 0;
 };
 
 template<typename T>

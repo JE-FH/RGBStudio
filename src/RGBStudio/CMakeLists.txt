@@ -9,6 +9,8 @@ add_executable(
 	"FSAssetLoader.hpp"
 	"EncodingConverter.hpp"
 	"EncodingConverter.cpp"
+	"JSONRPC.hpp"
+	"JSONRPC.cpp"
 )
 
 find_program(NUGET_EXE NAMES nuget)
@@ -33,21 +35,27 @@ target_link_libraries(RGBStudio PUBLIC event_trigger_runner)
 target_include_directories(RGBStudio PRIVATE "${CMAKE_BINARY_DIR}/packages/Microsoft.Web.WebView2/build/native/include/")
 target_include_directories(RGBStudio PRIVATE "${CMAKE_BINARY_DIR}/packages/Microsoft.Windows.ImplementationLibrary/include/")
 
-set(ASSETS_PATH "$<TARGET_FILE_DIR:RGBStudio>/assets") 
-
 target_compile_features(RGBStudio PUBLIC cxx_std_20)
+
+find_package(nlohmann_json CONFIG REQUIRED)
+target_link_libraries(RGBStudio PRIVATE nlohmann_json nlohmann_json::nlohmann_json)
+
+set(ASSETS_PATH "$<TARGET_FILE_DIR:RGBStudio>/assets") 
 
 add_custom_target(
 	frontend_build
-	COMMAND nmake /NOLOGO /C
+	COMMAND nmake /NOLOGO /C "all"
 	WORKING_DIRECTORY ${RGBStudio_FRONTEND_DIRECTORY}
 	USES_TERMINAL
 	SOURCES
 		"${RGBStudio_FRONTEND_DIRECTORY}/ts/editor.m.ts"
 		"${RGBStudio_FRONTEND_DIRECTORY}/less/editor.less"
-)
+ "JSONRPC.hpp")
 
 add_custom_command(TARGET frontend_build POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E rm -r "${ASSETS_PATH}"
   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/build/" "${ASSETS_PATH}")
+
+
 
 add_dependencies(RGBStudio frontend_build)

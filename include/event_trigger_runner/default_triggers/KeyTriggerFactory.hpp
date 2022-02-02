@@ -2,11 +2,12 @@
 #include "../ITriggerFactory.hpp"
 
 
-class KeyTriggerFactory : ITriggerFactory {
+class KeyTriggerFactory : public ITriggerFactory {
 private:
 	DynamicConfigSpec spec;
 public:
 	KeyTriggerFactory();
-	std::unique_ptr<Trigger> create(std::string name, const DynamicConfig& dynamic_config);
-	const DynamicConfigSpec& get_config_spec();
+	std::unique_ptr<Trigger> create(std::string name, const DynamicConfig& dynamic_config) override;
+	const DynamicConfigSpec& get_config_spec() const override;
+	std::string get_name() const override;
 };

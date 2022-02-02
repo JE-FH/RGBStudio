@@ -1,4 +1,4 @@
-all: ../build/css/editor.css ../build/script/editor.m.js ../build/script/editor.m.js.map
+all:  ../build/editor.html ../build/css/editor.css ../build/script/editor.m.js ../build/script/editor.m.js.map
 
 #This is a last resort since node is extremely slow at starting up (3 seconds or so) delaying the entire build process every time you need to 
 #recompile RGBStudio which end up being extremly annoying to deal with, therefore we have a make file that checks if rollup should even 
@@ -43,5 +43,5 @@ rollup.config.js
 ../build/css/editor.css: less/editor.less
 	npx less less/editor.less ../build/css/editor.css
 
- ../build/editor.html: ../build/script/editor.m.js ../build/css/editor.css pages/editor.html
+../build/editor.html: inline-html.js ../build/script/editor.m.js ../build/css/editor.css pages/editor.html
 	node inline-html.js "pages/editor.html" "../build/editor.html" "../build/"

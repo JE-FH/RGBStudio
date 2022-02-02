@@ -1,7 +1,7 @@
 // compile with: /D_UNICODE /DUNICODE /DWIN32 /D_WINDOWS /c
 #include "editor.hpp"
 #include "FSAssetLoader.hpp"
-
+#include <event_trigger_runner/default_triggers/KeyTriggerFactory.hpp>
 #include <windows.h>
 #include <stdlib.h>
 #include <string>
@@ -92,6 +92,7 @@ int main() {
 	
 
 	Editor::setup(hWnd, std::make_unique<FSAssetLoader>("./"));
+	Editor::gi().add_trigger_factory(std::make_unique<KeyTriggerFactory>());
 
 	// Main message loop:
 	MSG msg;

@@ -42,7 +42,8 @@ class ConfigStringTypeDesc : public IConfigValueTypeDesc {
 public:
 	ConfigStringTypeDesc() {}
 
-	std::string get_friendly_name() override;
+	std::string get_friendly_name() const override;
+	std::string get_internal_name() const override;
 
 	static std::string friendly_name();
 };
@@ -53,7 +54,8 @@ class ConfigIntegerTypeDesc : public IConfigValueTypeDesc {
 public:
 	ConfigIntegerTypeDesc() {}
 	
-	std::string get_friendly_name() override;
+	std::string get_friendly_name() const override;
+	std::string get_internal_name() const override;
 
 	static std::string friendly_name();
 };
@@ -63,7 +65,8 @@ class ConfigNumberTypeDesc : public IConfigValueTypeDesc {
 public:
 	ConfigNumberTypeDesc() {}
 
-	std::string get_friendly_name() override;
+	std::string get_friendly_name() const override;
+	std::string get_internal_name() const override;
 
 	static std::string friendly_name();
 };
@@ -73,7 +76,8 @@ class ConfigRGBColorTypeDesc : public IConfigValueTypeDesc {
 public:
 	ConfigRGBColorTypeDesc() {}
 
-	std::string get_friendly_name() override;
+	std::string get_friendly_name() const override;
+	std::string get_internal_name() const override;
 
 	static std::string friendly_name();
 	friend std::string ConfigGenericValueConverter::to_string(const RGBColor& rgbcolor);
@@ -85,7 +89,8 @@ class ConfigBoolTypeDesc : public IConfigValueTypeDesc {
 public:
 	ConfigBoolTypeDesc() {}
 
-	std::string get_friendly_name() override;
+	std::string get_friendly_name() const override;
+	std::string get_internal_name() const override;
 
 	static std::string friendly_name();
 };
