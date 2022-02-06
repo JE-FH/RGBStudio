@@ -89,7 +89,7 @@ int main() {
 	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);
 
-	
+
 
 	Editor::setup(hWnd, std::make_unique<FSAssetLoader>("./"));
 	Editor::gi().add_trigger_factory(std::make_unique<KeyTriggerFactory>());

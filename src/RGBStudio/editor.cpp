@@ -171,7 +171,6 @@ void Editor::notify_browser_added_trigger(const ITriggerFactory& added_trigger) 
 	}
 
 	json_rpc.call("added_trigger", params);
-	
 }
 
 void Editor::ok_or_throw(HRESULT result) {

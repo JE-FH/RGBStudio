@@ -59,6 +59,12 @@ export abstract class WidgetContainer extends Widget {
 		this.changed_visual_tree.call();
 	}
 
+	remove_all() {
+		while (this.children.length > 0) {
+			this.remove(this.children[this.children.length - 1]);
+        }
+    }
+
 	get_children(): readonly Widget[] {
 		return this.children;
 	}

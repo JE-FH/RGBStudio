@@ -7,11 +7,11 @@ JSONRPC::JSONRPC(IJSONRPCConnection* conn)
 }
 
 void JSONRPC::received_message(nlohmann::json message) {
-	if (!message.is_object() || !message["type"].is_string() || !message["param"].is_object() || !message["id"].is_number_integer()) {
+	if (!message.is_object() || !message["method"].is_string() || !message["param"].is_object() || !message["id"].is_number_integer()) {
 		std::cout << "missing fields in json" << std::endl;
 		return;
 	}
-	notify_subs(message["id"], message["type"], message["param"]);
+	notify_subs(message["id"], message["method"], message["param"]);
 }
 
 int JSONRPC::call(std::string method_name, nlohmann::json param) {

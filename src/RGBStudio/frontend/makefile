@@ -11,6 +11,7 @@ ts/GraphEditor/NumberAttribute.ts \
 ts/GraphEditor/ColorAttribute.ts \
 ts/GraphEditor/SourceAttribute.ts \
 ts/GraphEditor/TargetAttribute.ts \
+ts/GraphEditor/BoolAttribute.ts \
 ts/SVGCompositor/behavior/AutoSizer.ts \
 ts/SVGCompositor/behavior/Dragifier.ts \
 ts/SVGCompositor/CSEvent.ts \
@@ -35,7 +36,10 @@ ts/SVGCompositor/widgets/PaddedContainer.ts \
 ts/SVGCompositor/widgets/StackPanel.ts \
 ts/SVGCompositor/widgets/TextInputWidget.ts \
 ts/SVGCompositor/widgets/TextWidget.ts \
+ts/SVGCompositor/widgets/CheckboxInputWidget.ts \
 ts/util.ts \
+ts/WebViewConnection.ts \
+ts/JSONRPC.ts \
 tsconfig.json \
 rollup.config.js
 	npx rollup -c rollup.config.js
