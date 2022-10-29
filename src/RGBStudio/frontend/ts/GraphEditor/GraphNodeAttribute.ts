@@ -1,3 +1,4 @@
+import { Json } from "../JSONRPC";
 import { CreateWidget2 as CW } from "../SVGCompositor/WidgetConstructor";
 import { WidgetContainer } from "../SVGCompositor/WidgetContainer";
 import { FlexBox } from "../SVGCompositor/widgets/FlexBox";
@@ -30,5 +31,7 @@ export abstract class GraphNodeAttribute {
 			this.name_text_node
 		);
 	}
+
+	public abstract get_internal_representation(): Json;
 
 }

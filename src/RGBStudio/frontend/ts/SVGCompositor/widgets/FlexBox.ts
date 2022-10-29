@@ -30,7 +30,7 @@ export class FlexBox
 		this.recalculate_layout = this.recalculate_layout.bind(this);
 	}
 
-	override add(widget: Widget) {
+	override add<T extends Widget>(widget: T): T {
 		if (implements_resizing(widget)) {
 			widget.Resized.add_listener(this.recalculate_layout);
 		}
@@ -38,6 +38,8 @@ export class FlexBox
 		super.add(widget);
 	
 		this.recalculate_layout();
+
+		return widget;
 	}
 
 	override remove(widget: Widget) {

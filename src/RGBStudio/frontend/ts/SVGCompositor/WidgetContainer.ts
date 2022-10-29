@@ -22,12 +22,12 @@ export abstract class WidgetContainer extends Widget {
 		})
 	}
 
-	add(widget: Widget) {
+	add<T extends Widget>(widget: T): T {
 		if ((widget as any).parent != null) {
 			throw new Error("Widget cannot be child of multiple parents, since its a tree structure");
 		}
 		
-		(widget as WidgetContainer).set_parent(this);
+		(widget as unknown as WidgetContainer).set_parent(this);
 		
 		this.children.push(widget);
 		widget.position_updated();
@@ -40,6 +40,7 @@ export abstract class WidgetContainer extends Widget {
 		this.listeners.set(widget, listener);
 
 		this.changed_visual_tree.call();
+		return widget;
 	}
 
 	remove(widget: Widget) {

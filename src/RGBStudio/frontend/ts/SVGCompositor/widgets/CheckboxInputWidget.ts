@@ -6,6 +6,7 @@ import { WidgetAtom } from "../WidgetAtom";
 export interface CheckboxInputWidgetProps {
 	relative_pos?: Position;
 	initial_value?: boolean;
+	readOnly?: boolean;
 }
 
 export class CheckboxInputWidget extends WidgetAtom {
@@ -32,7 +33,11 @@ export class CheckboxInputWidget extends WidgetAtom {
 		this.foreign_object.appendChild(this.text_input);
 
 		this.text_input.setAttribute("type", "checkbox");
-
+		if (props.readOnly) {
+			this.text_input.addEventListener("click", (e) => {
+				e.preventDefault();
+			})
+		}
 		SVGScratchArea.scratch_area.appendChild(this.foreign_object);
 		let rect = this.text_input.getBoundingClientRect();
 		this.real_width = rect.right - rect.left;

@@ -20,19 +20,14 @@ import { Call, JSONRPC } from "./JSONRPC";
 import { WebViewConnection } from "./WebViewConnection";
 import { BoolAttribute } from "./GraphEditor/BoolAttribute";
 import { ToolWindow } from "./SVGCompositor/ToolWindow";
+import { TriggerNode, TriggerType } from "./GraphEditor/TriggerNode";
+import { GraphEditor } from "./GraphEditor/GraphEditor";
 
-interface TriggerField {
-	name: string;
-	required: boolean;
-	type: string;
-}
+
 
 interface AddedTriggerCall extends Call<any> {
 	method: "added_trigger";
-	param: {
-		name: string;
-		fields: { [key: string]: TriggerField };
-	};
+	param: TriggerType;
 }
 
 async function main() {
@@ -40,38 +35,18 @@ async function main() {
 
 	let svg_target = document.getElementById("target")! as unknown as SVGSVGElement;
 	let svg_compositor = new SVGCompositor(svg_target);
-
-	let graph_node = new GraphNode(svg_compositor, "hello world!");
-
-	graph_node.add_attribute(new NumberAttribute("number", 1));
-	graph_node.add_attribute(new ColorAttribute("color", RGBColor.from_bytes(255, 0, 0)));
-	graph_node.add_attribute(new SourceAttribute("source"));
-	graph_node.add_attribute(new TargetAttribute("target"));
-
 	let tool_window = new ToolWindow(svg_target, svg_compositor);
 
 	tool_window.update();
+
+	let graph_editor = new GraphEditor(svg_compositor, tool_window);
+
 
 	let rpc = new JSONRPC(new WebViewConnection());
 	rpc.on_call.add_listener((call_data) => {
 		if (call_data.method == "added_trigger") {
 			let specific_data = call_data as unknown as AddedTriggerCall;
-			console.log(specific_data);
-			let new_graph_node = new GraphNode(svg_compositor, specific_data.param.name);
-			for (let [field_name, field] of Object.entries(specific_data.param.fields)) {
-				if (field.type == "Integer") {
-					new_graph_node.add_attribute(new NumberAttribute(field.name, 1));
-				} else if (field.type == "Number") {
-					new_graph_node.add_attribute(new NumberAttribute(field.name, 1));
-				} else if (field.type == "RGBColor") {
-					new_graph_node.add_attribute(new ColorAttribute(field.name, RGBColor.from_bytes(255, 255, 255)));
-				} else if (field.type == "Bool") {
-					new_graph_node.add_attribute(new BoolAttribute(field.name, false));
-				} else {
-					console.log(`Unknown attribute type for ${field_name}`, field);
-                }
-			}
-			tool_window.update();
+			graph_editor.add_trigger_type(specific_data.param);
 		}
 	});
 

@@ -7,6 +7,7 @@ export interface TextInputWidgetProps {
 	relative_pos?: Position;
 	type?: string;
 	width: number;
+	readOnly?: boolean;
 }
 
 export class TextInputWidget extends WidgetAtom {
@@ -29,6 +30,7 @@ export class TextInputWidget extends WidgetAtom {
 		this.foreign_object = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
 		this.foreign_object.style.overflow = "visible";
 		this.text_input = document.createElement("input");
+		this.text_input.readOnly = props.readOnly ?? false;
 		this.text_input.style.width = `${props.width}px`;
 		this.foreign_object.appendChild(this.text_input);
 		

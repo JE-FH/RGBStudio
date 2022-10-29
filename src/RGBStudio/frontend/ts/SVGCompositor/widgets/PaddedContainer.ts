@@ -170,7 +170,7 @@ export class PaddedContainer
 	}
 
 	//widget has to implement rectangular
-	override add(widget: Widget): void {
+	override add<T extends Widget>(widget: T): T {
 		if (this.get_children().length > 0) {
 			throw new Error("PaddedContainer can only have one child");
 		}
@@ -183,6 +183,7 @@ export class PaddedContainer
 		
 		this.inner_widget = widget;
 		this.on_child_resize();
+		return widget;
 	}
 
 	override remove(widget: Widget) {

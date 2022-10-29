@@ -50,7 +50,7 @@ export class StackPanel
 		};
 	}
 	
-	override add(widget: Widget) {
+	override add<T extends Widget>(widget: T): T {
 		if (implements_resizing(widget)) {
 			widget.Resized.add_listener(this.recalculate_layout);
 		}
@@ -58,6 +58,7 @@ export class StackPanel
 		super.add(widget);
 		
 		this.recalculate_layout();
+		return widget
 	}
 	
 	override remove(widget: Widget) {

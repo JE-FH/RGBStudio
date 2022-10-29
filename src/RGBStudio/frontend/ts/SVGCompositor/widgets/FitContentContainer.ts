@@ -28,12 +28,14 @@ export class FitContentContainer
 		}
 	}
 	
-	override add(widget: Widget): void {
+	override add<T extends Widget>(widget: T): T {
 		if (implements_resizing(widget)) {
 			widget.Resized.add_listener(this.recalculate_size);
 		}
 		super.add(widget);
 		this.recalculate_size();
+
+		return widget;
 	}
 	
 	override remove(widget: Widget): void {

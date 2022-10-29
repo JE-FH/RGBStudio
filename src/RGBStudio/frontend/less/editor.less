@@ -5,6 +5,7 @@
 
 .dragable {
 	touch-action: none;
+	user-select: none;
 }
 
 .node {
@@ -52,6 +53,7 @@
 }
 
 .click-through {
+	user-select: none;
 	pointer-events: none;
 }
 
@@ -72,4 +74,10 @@
 .debug-bb-padding-highlight {
 	stroke: none;
 	fill: rgba(9, 255, 0, 0.3);
+}
+
+.node-toolbox {
+	fill: #FFFFFF;
+	stroke: #444444;
+	stroke-width: 2px;
 }

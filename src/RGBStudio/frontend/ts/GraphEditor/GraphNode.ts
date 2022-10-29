@@ -8,7 +8,7 @@ import { Circle } from "../SVGCompositor/widgets/Circle";
 import { Dragifier } from "../SVGCompositor/behavior/Dragifier";
 import { GraphNodeAttribute } from "./GraphNodeAttribute";
 
-export class GraphNode {
+export abstract class GraphNode {
 	private container: WidgetContainer;
 	private root_widget: PaddedContainer;
 	private title_text: TextWidget;
@@ -24,7 +24,7 @@ export class GraphNode {
 		this.name_updated();
 	}
 
-	constructor(container: WidgetContainer, name: string) {
+	constructor(container: WidgetContainer, _class: string, name: string, dragable: boolean) {
 		this.attributes = [];
 		this.container = container;
 
@@ -40,7 +40,7 @@ export class GraphNode {
 			CW2(StackPanel, {orientation: Orientation.VERTICAL, item_spacing: 0},
 				CW2(PaddedContainer, {
 						padding: padding(5), 
-						background: {classes: ["node-title-container", "trigger"]}
+						background: {classes: ["node-title-container", _class]}
 					},
 					this.title_text
 				),
@@ -51,11 +51,13 @@ export class GraphNode {
 				)
 			)
 		);
-		
-		let dragifier = new Dragifier(this.root_widget);
-		this.root_widget.Clicked.add_listener((ev) => {
-			dragifier.drag(ev);
-		})
+
+		if (dragable) {
+			let dragifier = new Dragifier(this.root_widget);
+			this.root_widget.Clicked.add_listener((ev) => {
+				dragifier.drag(ev);
+			});
+		}
 
 		this.container.add(this.root_widget);
 

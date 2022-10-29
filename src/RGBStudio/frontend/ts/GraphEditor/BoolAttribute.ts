@@ -1,11 +1,16 @@
 import { GraphNodeAttribute } from "./GraphNodeAttribute";
 import { CreateWidget2 as CW } from "../SVGCompositor/WidgetConstructor";
 import { CheckboxInputWidget } from "../SVGCompositor/widgets/CheckboxInputWidget";
+import { Json } from "../JSONRPC";
 export class BoolAttribute extends GraphNodeAttribute {
-	constructor(name: string, initial_value: boolean) {
+	private input_widget: CheckboxInputWidget;
+	constructor(name: string, initial_value: boolean, readOnly: boolean) {
 		super(name);
 
-		let input_widget = CW(CheckboxInputWidget, { initial_value: initial_value});
-		this.visual_container.add(input_widget);
+		this.input_widget = CW(CheckboxInputWidget, { initial_value: initial_value, readOnly: readOnly });
+		this.visual_container.add(this.input_widget);
 	}
+    public get_internal_representation(): Json {
+		return this.input_widget.Value;
+    }
 }

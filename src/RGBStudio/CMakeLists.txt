@@ -53,7 +53,7 @@ add_custom_target(
  "JSONRPC.hpp")
 
 add_custom_command(TARGET frontend_build POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E rm -r "${ASSETS_PATH}"
+  COMMAND ${CMAKE_COMMAND} -E rm -rf "${ASSETS_PATH}"
   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/build/" "${ASSETS_PATH}")
 
 
