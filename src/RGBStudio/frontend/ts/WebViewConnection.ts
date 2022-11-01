@@ -14,6 +14,27 @@ declare global {
 	}
 }
 
+export interface LightingConfig {
+	triggerInstances: TriggerInstanceConfig;
+	actions: string[];
+	triggerActionEdges: TriggerActionEdge[];
+}
+
+export interface TriggerActionEdge {
+	triggerName: string;
+	actionName: string;
+}
+
+export interface TriggerInstanceConfig {
+	name: string;
+	attributes: DynamicConfigAttribute[];
+}
+
+export interface DynamicConfigAttribute {
+	name: string;
+	value: any;
+}
+
 export class WebViewConnection implements IJSONRPCConnection {
     private _on_message: CSEvent<(message: Json) => void>;
     public get on_message(): CSEvent<(message: Json) => void> {

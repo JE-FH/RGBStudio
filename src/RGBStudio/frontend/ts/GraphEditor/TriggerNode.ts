@@ -1,10 +1,13 @@
 import { RGBColor } from "../SVGCompositor/StyleHelper";
 import { WidgetContainer } from "../SVGCompositor/WidgetContainer";
+import { LineEnd } from "../SVGCompositor/widgets/LineEnd";
 import { BoolAttribute } from "./BoolAttribute";
 import { ColorAttribute } from "./ColorAttribute";
+import { Connector, ConnectorDirection, ConnectorType } from "./Connector";
+import { IGraphConnectorService } from "./GraphConnectorService";
+import { IGraphEditorService } from "./GraphEditor";
 import { GraphNode } from "./GraphNode";
 import { NumberAttribute } from "./NumberAttribute";
-import { SourceAttribute } from "./SourceAttribute";
 
 interface TriggerField {
 	name: string;
@@ -18,14 +21,23 @@ export interface TriggerType {
 }
 
 export class TriggerNode extends GraphNode {
-	constructor(container: WidgetContainer, name: string, dragable: boolean, readOnly: boolean) {
-        super(container, "trigger", name, dragable);
+	private sourceAttribute: Connector;
+	private _graphConnectorService: IGraphConnectorService;
 
-        this.add_attribute(new SourceAttribute("trigger"));
+	constructor(container: WidgetContainer, name: string, dragable: boolean, readOnly: boolean, graphConnectorService: IGraphConnectorService) {
+		super(container, "trigger", name, dragable);
+		this._graphConnectorService = graphConnectorService;
+		this.sourceAttribute = new Connector("trigger", this, ConnectorDirection.Source, ConnectorType.Trigger, graphConnectorService);
+		this._graphConnectorService.addConnector(this.sourceAttribute);
+		this.add_attribute(this.sourceAttribute);
 	}
 
-	static from_trigger_type(container: WidgetContainer, name: string, trigger_type: TriggerType, dragable: boolean, readOnly: boolean): TriggerNode {
-		let rv = new TriggerNode(container, name, dragable, readOnly);
+	addLineEndToSource(lineEnd: LineEnd) {
+		this.sourceAttribute.visual_container.add(lineEnd);
+    }
+
+	static from_trigger_type(container: WidgetContainer, name: string, trigger_type: TriggerType, dragable: boolean, readOnly: boolean, graphConnectorService: IGraphConnectorService): TriggerNode {
+		let rv = new TriggerNode(container, name, dragable, readOnly, graphConnectorService);
 
 		for (let [field_name, field] of Object.entries(trigger_type.fields)) {
 			if (field.type == "Integer") {

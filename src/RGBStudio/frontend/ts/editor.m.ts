@@ -14,8 +14,6 @@ import { WidgetContainer } from "./SVGCompositor/WidgetContainer";
 import { GraphNode } from "./GraphEditor/GraphNode";
 import { NumberAttribute } from "./GraphEditor/NumberAttribute";
 import { ColorAttribute } from "./GraphEditor/ColorAttribute";
-import { SourceAttribute } from "./GraphEditor/SourceAttribute";
-import { TargetAttribute } from "./GraphEditor/TargetAttribute";
 import { Call, JSONRPC } from "./JSONRPC";
 import { WebViewConnection } from "./WebViewConnection";
 import { BoolAttribute } from "./GraphEditor/BoolAttribute";
@@ -50,7 +48,6 @@ async function main() {
 		}
 	});
 
-	await rpc.dispatch_call("ready", {});
 
 	console.log("sent ready signal");
 }
