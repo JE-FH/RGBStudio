@@ -1,17 +1,24 @@
-import { RGBColor } from "../SVGCompositor/StyleHelper";
 import { WidgetContainer } from "../SVGCompositor/WidgetContainer";
-import { BoolAttribute } from "./BoolAttribute";
-import { ColorAttribute } from "./ColorAttribute";
+import { LineEnd } from "../SVGCompositor/widgets/LineEnd";
+import { Connector, ConnectorDirection, ConnectorType } from "./Connector";
+import { IGraphConnectorService } from "./GraphConnectorService";
 import { GraphNode } from "./GraphNode";
-import { NumberAttribute } from "./NumberAttribute";
-import { SourceAttribute } from "./SourceAttribute";
-import { TargetAttribute } from "./TargetAttribute";
 
 export class ActionNode extends GraphNode {
-	constructor(container: WidgetContainer, name: string, dragable: boolean) {
-		super(container, "action", name, dragable);
+	private _source: Connector;
+	private _target: Connector;
 
-		this.add_attribute(new SourceAttribute("source"));
-		this.add_attribute(new TargetAttribute("target"));
+	constructor(container: WidgetContainer, name: string, dragable: boolean, graphConnectorService: IGraphConnectorService) {
+		super(container, "action", name, dragable);
+		this._source = new Connector("source", this, ConnectorDirection.Source, ConnectorType.Action, graphConnectorService);
+		this._target = new Connector("target", this, ConnectorDirection.Target, ConnectorType.Trigger, graphConnectorService);
+		this.add_attribute(this._source);
+		this.add_attribute(this._target);
+		graphConnectorService.addConnector(this._source);
+		graphConnectorService.addConnector(this._target);
+	}
+
+	addLineEndToTarget(lineEnd: LineEnd) {
+		this._target.visual_container.add(lineEnd);
 	}
 }
