@@ -40,6 +40,7 @@ export class GraphConnectorService implements IGraphConnectorService {
 			let edge = this.getEdge(this._startConnector, connector);
 			if (edge.source.Type == ConnectorType.Trigger) {
 				this._graphEditorService.AddTriggerActionEdge(edge.source.GraphNode as TriggerNode, edge.target.GraphNode as ActionNode);
+				this._startConnector = null;
 			}
 		}
 	}

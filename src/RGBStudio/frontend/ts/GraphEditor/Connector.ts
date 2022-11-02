@@ -35,7 +35,7 @@ export class Connector extends GraphNodeAttribute {
     }
 
 	public get_internal_representation(): Json {
-		throw new Error("Method not implemented.");
+		return "";
 	}
 
 	constructor(name: string, graphNode: GraphNode, direction: ConnectorDirection, type: ConnectorType, graphConnectorService: IGraphConnectorService) {
