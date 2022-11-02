@@ -7,6 +7,8 @@ import { FlexBox } from "../SVGCompositor/widgets/FlexBox";
 import { Circle } from "../SVGCompositor/widgets/Circle";
 import { Dragifier } from "../SVGCompositor/behavior/Dragifier";
 import { GraphNodeAttribute } from "./GraphNodeAttribute";
+import { DynamicConfigAttribute } from "../RGBStudioAPI";
+import { attr } from "../../node_modules/cheerio/lib/api/attributes";
 
 export abstract class GraphNode {
 	private container: WidgetContainer;
@@ -72,4 +74,11 @@ export abstract class GraphNode {
 		this.attributes.push(attr);
 		this.attribute_container.add(attr.visual_container);
 	}
+
+	public SerializeAttributes(): DynamicConfigAttribute[] {
+		return this.attributes.map(attribute => ({
+			name: attribute.Name,
+			value: attribute.get_internal_representation()
+		}));
+    }
 }

@@ -5,7 +5,7 @@ export type Json =
     | string
     | boolean
     | {[key: string]: Json}
-    | Json[];
+    | Array<Json>;
 
 export interface IJSONRPCConnection {
     send_message(message: Json): Promise<void>;
