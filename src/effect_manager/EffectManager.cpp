@@ -12,10 +12,10 @@ void EffectManager::add_device(std::shared_ptr<IKeyboardDevice> _device)
 	_devices.push_back(std::move(_device));
 }
 
-void EffectManager::add_effect(std::unique_ptr<Effect> effect)
+void EffectManager::add_effect_instance(std::unique_ptr<EffectInstance> effect)
 {
 	_effects.push_back(std::move(effect));
-	std::sort(_effects.begin(), _effects.end(), [](std::unique_ptr<Effect>& a, std::unique_ptr<Effect>& b) {
+	std::sort(_effects.begin(), _effects.end(), [](std::unique_ptr<EffectInstance>& a, std::unique_ptr<EffectInstance>& b) {
 		return a->layer < b->layer;
 	});
 }

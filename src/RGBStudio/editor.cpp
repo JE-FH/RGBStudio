@@ -10,7 +10,7 @@
 #include <comdef.h>
 #include <nlohmann/json.hpp>
 
-Editor::Editor(HWND hwnd, std::unique_ptr<IAssetLoader> asset_loader)
+Editor::Editor(HWND hwnd, std::unique_ptr<IAssetLoader> asset_loader, std::unique_ptr<LightRunnerApi> lightRunnerApi)
 	: json_rpc(this)
 {
 	this->hwnd = hwnd;
@@ -22,6 +22,7 @@ Editor::Editor(HWND hwnd, std::unique_ptr<IAssetLoader> asset_loader)
 		})).Get()
 	));
 	json_rpc.subscribe(*this);
+	_lightRunnerApi = std::move(lightRunnerApi);
 }
 
 Editor::~Editor()
@@ -32,8 +33,8 @@ Editor::~Editor()
 	webviewWindow->remove_WebMessageReceived(web_message_received_evt);
 }
 
-void Editor::setup(HWND hwnd, std::unique_ptr<IAssetLoader> asset_loader) {
-	Editor::instance = std::unique_ptr<Editor>(new Editor(hwnd, std::move(asset_loader)));
+void Editor::setup(HWND hwnd, std::unique_ptr<IAssetLoader> asset_loader, std::unique_ptr<LightRunnerApi> lightRunnerApi) {
+	Editor::instance = std::unique_ptr<Editor>(new Editor(hwnd, std::move(asset_loader), std::move(lightRunnerApi)));
 }
 
 void Editor::send_message(nlohmann::json message) {
@@ -56,16 +57,6 @@ void Editor::set_bounds(RECT bounds) {
 	}
 	//TODO: check error here
 	webviewController->put_Bounds(bounds);
-}
-
-void Editor::add_trigger_factory(std::unique_ptr<ITriggerFactory> trigger_factory) {
-	auto ptr = trigger_factory.get();
-	trigger_factories.push_back(std::move(trigger_factory));
-	if (webviewController == nullptr || !is_browser_js_ready) {
-		unnotified_trigger_factories.push_back(ptr);
-		return;
-	}
-	notify_browser_added_trigger(*trigger_factory);
 }
 
 bool Editor::ready()
@@ -156,17 +147,14 @@ void Editor::create_controller_completed(HRESULT result, ICoreWebView2Controller
 		})).Get(), &web_message_received_evt));
 }
 
-void Editor::notify_browser_added_trigger(const ITriggerFactory& added_trigger) {
+void Editor::notify_browser_added_trigger(const RGBLightRunnerTrigger& added_trigger) {
 	nlohmann::json params;
 	params["fields"] = nlohmann::json();
-	const auto& desc = added_trigger.get_config_spec();
-	const auto& fields = desc.get_fields();
-	params["name"] = added_trigger.get_name();
-	for (const auto& field : fields) {
+	params["name"] = added_trigger.id;
+	for (const auto& field : added_trigger.attributes) {
 		nlohmann::json field_desc;
-		field_desc["required"] = field.required;
 		field_desc["name"] = field.name;
-		field_desc["type"] = field.type_desc->get_internal_name();
+		field_desc["type"] = field.type;
 		params["fields"][field.name] = field_desc;
 	}
 
@@ -191,8 +179,10 @@ void Editor::browser_callback(std::wstring message) {
 
 void Editor::command_ready() {
 	is_browser_js_ready = true;
-	for (const auto& trigger : unnotified_trigger_factories) {
-		notify_browser_added_trigger(*trigger);
+
+	auto triggers = _lightRunnerApi->ListTriggers();
+	for (auto& trigger : triggers) {
+		notify_browser_added_trigger(trigger);
 	}
 }
 

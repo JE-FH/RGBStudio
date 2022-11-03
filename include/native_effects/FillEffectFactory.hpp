@@ -1,21 +1,14 @@
-#pragma once
 #include <event_trigger_runner/IEffectFactory.hpp>
-#include <device_adapter_loader/RGBColor.hpp>
-#include <device_adapter_loader/IKeyboardDevice.hpp>
-#include <string>
-class FillEffectFactory :
-    public IEffectFactory
-{
-public:
-    FillEffectFactory(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device, std::string stop_trigger, RGBColor color);
 
-    // Inherited via IEffectFactory
-    virtual void add_new_instance(EffectManager& effect_manager, TriggerObserverDispatcher& trigger_observer_dispatcher) override;
-    
+class FillEffectFactory : public IEffectFactory {
 private:
-    int _layer;
-    std::string _stop_trigger;
-    RGBColor _color;
-    std::shared_ptr<IKeyboardDevice> _keyboard_device;
-};
+	DynamicConfigSpec spec;
+public:
+	FillEffectFactory();
 
+	std::unique_ptr<IEffect> create(const DynamicConfig& dynamic_config, std::shared_ptr<IKeyboardDevice> device) override;
+
+	const DynamicConfigSpec& get_config_spec() const override;
+
+	std::string get_name() const override;
+};

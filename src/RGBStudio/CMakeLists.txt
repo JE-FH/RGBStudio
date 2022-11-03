@@ -11,6 +11,8 @@ add_executable(
 	"EncodingConverter.cpp"
 	"JSONRPC.hpp"
 	"JSONRPC.cpp"
+	"LightRunnerApi.cpp"
+	"LightRunnerApi.hpp"
 )
 
 find_program(NUGET_EXE NAMES nuget)
@@ -40,6 +42,9 @@ target_compile_features(RGBStudio PUBLIC cxx_std_20)
 find_package(nlohmann_json CONFIG REQUIRED)
 target_link_libraries(RGBStudio PRIVATE nlohmann_json nlohmann_json::nlohmann_json)
 
+find_package(rpclib CONFIG REQUIRED)
+target_link_libraries(RGBStudio PRIVATE rpclib::rpc)
+
 set(ASSETS_PATH "$<TARGET_FILE_DIR:RGBStudio>/assets") 
 
 add_custom_target(
@@ -50,7 +55,7 @@ add_custom_target(
 	SOURCES
 		"${RGBStudio_FRONTEND_DIRECTORY}/ts/editor.m.ts"
 		"${RGBStudio_FRONTEND_DIRECTORY}/less/editor.less"
- "JSONRPC.hpp")
+ "JSONRPC.hpp" "LightRunnerApi.cpp")
 
 add_custom_command(TARGET frontend_build POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E rm -rf "${ASSETS_PATH}"

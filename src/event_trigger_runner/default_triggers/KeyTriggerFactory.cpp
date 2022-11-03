@@ -10,13 +10,13 @@ KeyTriggerFactory::KeyTriggerFactory() {
 }
 
 std::unique_ptr<Trigger> KeyTriggerFactory::create(std::string name, const DynamicConfig& dynamic_config) {
-	auto trigger_key = dynamic_config.get_config_value<ConfigIntegerValue>("trigger_key");
+	auto& trigger_key = dynamic_config.get_config_value<ConfigIntegerValue>("trigger_key");
 	auto trigger_on_press = dynamic_config.get_optional_value<ConfigBoolValue>("trigger_on_press");
 	auto trigger_on_release = dynamic_config.get_optional_value<ConfigBoolValue>("trigger_on_release");
 	auto trigger_on_repeat = dynamic_config.get_optional_value<ConfigBoolValue>("trigger_on_repeat");
 	
 	return std::make_unique<KeyTrigger>(name, 
-		trigger_key.get_value(), 
+		(unsigned short) trigger_key.get_value(), 
 		trigger_on_press != nullptr && trigger_on_press->get_value(),
 		trigger_on_release != nullptr && trigger_on_release->get_value(),
 		trigger_on_repeat != nullptr && trigger_on_repeat->get_value()

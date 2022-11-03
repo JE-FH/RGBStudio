@@ -1,5 +1,5 @@
 set(HEADER_LIST 
-	"${RGBStudio_SOURCE_DIR}/include/effect_manager/Effect.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/effect_manager/EffectInstance.hpp"
 	"${RGBStudio_SOURCE_DIR}/include/effect_manager/EffectManager.hpp"
 )
 

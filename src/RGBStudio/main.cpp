@@ -1,6 +1,7 @@
 // compile with: /D_UNICODE /DUNICODE /DWIN32 /D_WINDOWS /c
 #include "editor.hpp"
 #include "FSAssetLoader.hpp"
+#include "LightRunnerApi.hpp"
 #include <event_trigger_runner/default_triggers/KeyTriggerFactory.hpp>
 #include <windows.h>
 #include <stdlib.h>
@@ -89,11 +90,11 @@ int main() {
 	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);
 
+	std::unique_ptr<LightRunnerApi> lightRunnerApi = std::make_unique<LightRunnerApi>("127.0.0.1", 8080);
+	auto res = lightRunnerApi->Hello();
 
-
-	Editor::setup(hWnd, std::make_unique<FSAssetLoader>("./"));
-	Editor::gi().add_trigger_factory(std::make_unique<KeyTriggerFactory>());
-
+	Editor::setup(hWnd, std::make_unique<FSAssetLoader>("./"), std::move(lightRunnerApi));
+	
 	// Main message loop:
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0))

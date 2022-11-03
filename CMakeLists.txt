@@ -38,3 +38,4 @@ add_subdirectory("src/asus_aura_adapter")
 # Executables
 add_subdirectory("src/effect_system_demo")
 add_subdirectory("src/RGBStudio")
+add_subdirectory("src/RGBLightRunner")

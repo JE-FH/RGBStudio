@@ -11,7 +11,6 @@ import { NumberAttribute } from "./NumberAttribute";
 
 interface TriggerField {
 	name: string;
-	required: boolean;
 	type: string;
 }
 

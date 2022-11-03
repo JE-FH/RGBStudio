@@ -1,16 +1,20 @@
 #pragma once
-#include <effect_manager/Effect.hpp>
-#include <chrono>
+#include <event_trigger_runner/IEffect.hpp>
+#include <event_trigger_runner/TriggerObserverDispatcher.hpp>
+#include <device_adapter_loader/IKeyboardDevice.hpp>
+
 class VisorEffect :
-    public Effect
+    public IEffect
 {
 public:
-    VisorEffect(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device, const double speed, RGBColor color);
-    // Inherited via IEffect
-    virtual void draw(double delta) override;
+    VisorEffect(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device, double speed, RGBColor color);
+
+    // Inherited via IEffectFactory
+    virtual void add_new_instance(EffectManager& effect_manager, TriggerObserverDispatcher& trigger_observer_dispatcher) override;
 private:
-    std::chrono::system_clock::time_point _begin_time;
     double _speed;
     RGBColor _color;
+    int _layer;
+    std::shared_ptr<IKeyboardDevice> _keyboard_device;
 };
 
