@@ -1,61 +1,41 @@
 #include <lua_effect_loader/LuaEffect.hpp>
+#include <lua_effect_loader/LuaEffectInstance.hpp>
+#include <lua_effect_loader/LuaIKeyboardDeviceAdapter.hpp>
 
-LuaEffect::LuaEffect(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device, TriggerObserverDispatcher& trigger_observer_dispatcher, LuaStatePtr thread)
-	: Effect(layer, std::move(keyboard_device)),
-	L(std::move(thread)),
-	dispatcher(trigger_observer_dispatcher, L, 0)
+LuaEffect::LuaEffect(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device, const std::string& file_name, LuaEffectSettings& settings)
+	: L(luaL_newstate()), _keyboard_device_adapter(keyboard_device)
 {
-	lua_createtable(L, 0, 0);
-	_state_ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	dispatcher._state_ref = _state_ref;
+	_keyboard_device = std::move(keyboard_device);
+	_layer = layer;
 
-	if (lua_getglobal(L, "init_instance") != LUA_TFUNCTION) {
-		printf("No init_instance function\n");
-		return;
+	luaL_openlibs(L);
+	LuaIKeyboardDeviceAdapter::openlib(L);
+	LuaTriggerObserverDispatcherAdapter::openlib(L);
+
+	if (luaL_dofile(L, file_name.c_str()) != 0) {
+		throw std::runtime_error("Lua error " + std::string(lua_tostring(L, -1)));
 	}
 
-	lua_rawgeti(L, LUA_REGISTRYINDEX, _state_ref);
-	dispatcher.push_object();
+	if (lua_getglobal(L, "init") != LUA_TFUNCTION) {
+		throw std::runtime_error(file_name + "has no init function");
+	}
+
+	settings.push_value(L);
+	_keyboard_device_adapter.push_device(L);
 
 	if (lua_pcall(L, 2, 0, 0) != 0) {
-		printf("Lua error: %s\n", lua_tostring(L, -1));
-		mark_completed();
+		throw std::runtime_error("Lua error: " + std::string(lua_tostring(L, -1)));
 	}
 }
 
 LuaEffect::~LuaEffect()
 {
 	if (L != nullptr) {
-		luaL_unref(L, LUA_REGISTRYINDEX, _state_ref);
+		lua_close(L);
 	}
 }
 
-void LuaEffect::draw(double delta)
+void LuaEffect::add_new_instance(EffectManager& effect_manager, TriggerObserverDispatcher& trigger_observer_dispatcher)
 {
-	if (lua_getglobal(L, "draw") != LUA_TFUNCTION) {
-		printf("No draw function\n");
-		mark_completed();
-		return;
-	}
-
-	
-
-	lua_rawgeti(L, LUA_REGISTRYINDEX, _state_ref);
-	lua_pushnumber(L, delta);
-
-	auto res = lua_pcall(L, 2, 0, 0);
-	if (res != 0) {
-		printf("Lua error :%s\n", lua_tostring(L, -1));
-		mark_completed();
-		return;
-	}
-
-	lua_rawgeti(L, LUA_REGISTRYINDEX, _state_ref);
-	lua_pushstring(L, "completed");
-	if (lua_gettable(L, -2) == LUA_TBOOLEAN) {
-		if (lua_toboolean(L, -1)) {
-			mark_completed();
-		}
-	}
-	lua_pop(L, 2);
+	effect_manager.add_effect_instance(std::make_unique<LuaEffectInstance>(_layer, _keyboard_device, trigger_observer_dispatcher, L.new_thread()));
 }

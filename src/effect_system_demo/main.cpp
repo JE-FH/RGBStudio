@@ -1,7 +1,7 @@
 #include <effect_manager/EffectManager.hpp>
-#include <native_effects/VisorEffect.hpp>
+#include <native_effects/VisorEffectInstance.hpp>
+#include <lua_effect_loader/LuaEffectInstance.hpp>
 #include <lua_effect_loader/LuaEffect.hpp>
-#include <lua_effect_loader/LuaEffectFactory.hpp>
 #include <lua_effect_loader/LuaEffectSettings.hpp>
 #include <lua_effect_loader/LuaIntegerValue.hpp>
 #include <lua_effect_loader/LuaStringValue.hpp>
@@ -20,7 +20,7 @@
 #include <event_trigger_runner/default_triggers/KeyTriggerFactory.hpp>
 #include <dynamic_config/ConfigGenericValue.hpp>
 
-std::unique_ptr<LuaEffectFactory> fraction_effect(std::shared_ptr<IKeyboardDevice> keyboard_device, RGBColor color, std::string end_trigger, lua_Number start, lua_Number end) {
+std::unique_ptr<LuaEffect> fraction_effect(std::shared_ptr<IKeyboardDevice> keyboard_device, RGBColor color, std::string end_trigger, lua_Number start, lua_Number end) {
 	LuaEffectSettings lua_effect_settings;
 	lua_effect_settings.set_setting("red", std::make_unique<LuaIntegerValue>(color.r));
 	lua_effect_settings.set_setting("green", std::make_unique<LuaIntegerValue>(color.g));
@@ -29,7 +29,7 @@ std::unique_ptr<LuaEffectFactory> fraction_effect(std::shared_ptr<IKeyboardDevic
 	lua_effect_settings.set_setting("start_fraction", std::make_unique<LuaNumberValue>(start));
 	lua_effect_settings.set_setting("end_fraction", std::make_unique<LuaNumberValue>(end));
 
-	return std::make_unique<LuaEffectFactory>(0, keyboard_device, "fill_fraction.lua", lua_effect_settings);
+	return std::make_unique<LuaEffect>(0, keyboard_device, "fill_fraction.lua", lua_effect_settings);
 }
 
 int catched_main()

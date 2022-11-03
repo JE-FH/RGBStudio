@@ -4,7 +4,6 @@ import { WebViewConnection } from "./WebViewConnection";
 
 export interface AddedTriggerEvent {
     fields: Record<string, {
-        required: boolean;
         name: string;
         type: string;
     }>;

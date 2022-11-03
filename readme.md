@@ -11,7 +11,7 @@ Corsair, ASUS, Logitech, etc. each have different software for controlling RGB f
 * Supporting ASUS aura devices
 
 ## Building
-vcpkg makes everything easier, but the only requirement is lua 5.4 and nlohmann-json
+vcpkg makes everything easier, but the only requirement is lua 5.4, [rpclib](https://github.com/rpclib/rpclib.git) and nlohmann-json
 
 If you use MSVC to build, it currently has a bug with #import statements where it does not look for the generated tlh and tli where it has generated them,
 instead it looks in the root folder. Other than this there is another bug where it generates the correct x64 tlh and tli files but intellisense will look for the x86 versions

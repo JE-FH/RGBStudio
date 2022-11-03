@@ -3,7 +3,7 @@ set(HEADER_LIST
 	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/ILuaValue.hpp"
 	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaEffect.hpp"
 	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaEffectSettings.hpp"
-	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaEffectFactory.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaEffect.hpp"
 	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaIntegerValue.hpp"
 	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaNumberValue.hpp"
 	"${RGBStudio_SOURCE_DIR}/include/lua_effect_loader/LuaStringValue.hpp"
@@ -14,8 +14,8 @@ set(HEADER_LIST
 )
 
 add_library(lua_effect_loader STATIC 
+	"LuaEffectInstance.cpp"
 	"LuaEffect.cpp"
-	"LuaEffectFactory.cpp"
 	"LuaEffectSettings.cpp"
 	"LuaIKeyboardDeviceAdapter.cpp"
 	"LuaIntegerValue.cpp"
