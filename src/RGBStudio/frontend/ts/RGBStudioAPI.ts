@@ -10,14 +10,25 @@ export interface AddedTriggerEvent {
     name: string;
 }
 
+export interface AddedEffectEvent {
+    fields: Record<string, {
+        name: string;
+        type: string;
+    }>;
+    name: string;
+}
+
 export interface LightingConfig {
     triggerInstances: TriggerInstanceConfig[];
-    actions: string[];
     triggerActionEdges: TriggerActionEdge[];
+    actions: string[];
+    actionEffectEdges: ActionEffectEdge[];
+    actionAttributeEdges: EffectAttributeEdge[];
+    effectInstances: EffectInstanceConfig[];
 }
 
 export interface TriggerActionEdge {
-    triggerId: string;
+    triggerInstanceId: string;
     actionName: string;
 }
 
@@ -27,10 +38,28 @@ export interface TriggerInstanceConfig {
     attributes: DynamicConfigAttribute[];
 }
 
+export interface ActionEffectEdge {
+    actionName: string;
+    effectInstanceId: string;
+}
+
+export interface EffectAttributeEdge {
+    actionName: string;
+    effectInstanceId: string;
+    attributeName: string;
+}
+
+export interface EffectInstanceConfig {
+    instanceId: string;
+    effectId: string;
+    attributes: DynamicConfigAttribute[];
+}
+
 export interface DynamicConfigAttribute {
     name: string;
     value: Json;
 }
+
 
 export interface IRGBStudioAPI {
     readonly OnAddedTrigger: CSEvent<(addedTrigger: AddedTriggerEvent) => void>;
@@ -46,15 +75,23 @@ export class RGBStudioAPI {
         return this._onAddedTrigger;
     }
 
+    private _onAddedEffect: CSEvent<(addedEffect: AddedEffectEvent) => void>;
+    public get OnAddedEffect(): CSEvent<(addedEffect: AddedEffectEvent) => void> {
+        return this._onAddedEffect;
+    }
+
     constructor() {
         this._rpc = new JSONRPC(new WebViewConnection());
         this._onAddedTrigger = new CSEvent();
+        this._onAddedEffect = new CSEvent();
         this._rpc.on_call.add_listener(this.CallHandler.bind(this));
     }
 
     private CallHandler(call: Call<Json>) {
-        if (call.method == "added_trigger") {
+        if (call.method == "AddedTrigger") {
             this.OnAddedTrigger.call(call.param as unknown as AddedTriggerEvent);
+        } else if (call.method = "AddedEffect") {
+            this.OnAddedEffect.call(call.param as unknown as AddedEffectEvent);
         } else {
             console.warn(`Received unknown call \"${call.method}\"`);
         }

@@ -111,8 +111,6 @@ export class FlexBox
 			distance = (this.width - elements_length) / (this.get_children().length - 1);
 		}
 
-		console.log(`${distance} = (${this.width} - ${elements_length}) / ${this.get_children().length - 1}`);
-
 		let current_left = 0;
 		for (let child of this.get_children()) {
 			child.move_to_relative({x: current_left, y: child.get_relative_position().y});

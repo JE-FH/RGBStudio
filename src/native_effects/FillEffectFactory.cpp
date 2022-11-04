@@ -5,7 +5,7 @@
 
 FillEffectFactory::FillEffectFactory() {
 	spec.add_field("layer", std::make_unique<ConfigIntegerTypeDesc>(), true);
-	spec.add_field("stop trigger", std::make_unique<ConfigTriggerNameTypeDesc>(), true);
+	spec.add_field("stop trigger", std::make_unique<ConfigActionNameTypeDesc>(), true);
 	spec.add_field("color", std::make_unique<ConfigRGBColorTypeDesc>(), true);
 }
 

@@ -10,7 +10,11 @@ export type ColorInputWidgetProps = Omit<FullColorInputWidgetProps, "type">;
 
 export class ColorInputWidget extends TextInputWidget {
 	public get ColorValue(): RGBColor {
-		return RGBColor.from_bytes(255,255,255);
+		let matched = this.TextValue.match(/#([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})/);
+		if (!matched) {
+			throw new Error("Invalid color format");
+		}
+		return RGBColor.from_bytes(Number.parseInt(matched[1], 16), Number.parseInt(matched[2], 16), Number.parseInt(matched[3], 16));
 	}
 
 	public set ColorValue(value: RGBColor) {
@@ -18,7 +22,7 @@ export class ColorInputWidget extends TextInputWidget {
 	}
 
 	constructor(props: ColorInputWidgetProps) {
-		super({...props, type: "color"});
+		super({ ...props, type: "color" });
 		this.ColorValue = props.initial_color;
 	}
 }

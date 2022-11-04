@@ -1,4 +1,5 @@
 import { SVGCompositor } from "../SVGCompositor";
+import { Clickable } from "../trait/Clickable";
 import { Position, Widget } from "../Widget";
 
 
@@ -102,4 +103,12 @@ export class Dragifier {
 			y: this.widget_start_pos.y + offset_y
 		});
 	}
+}
+
+export function dragable<T extends Clickable & Widget>(widget: T): T {
+	let dragifier = new Dragifier(widget);
+	widget.Clicked.add_listener((ev) => {
+		dragifier.drag(ev);
+	});
+	return widget;
 }

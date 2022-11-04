@@ -158,7 +158,22 @@ void Editor::notify_browser_added_trigger(const RGBLightRunnerTrigger& added_tri
 		params["fields"][field.name] = field_desc;
 	}
 
-	json_rpc.call("added_trigger", params);
+	json_rpc.call("AddedTrigger", params);
+}
+
+void Editor::notify_browser_added_effect(const RGBLightRunnerEffect& added_effect)
+{
+	nlohmann::json params;
+	params["fields"] = nlohmann::json();
+	params["name"] = added_effect.id;
+	for (const auto& field : added_effect.attributes) {
+		nlohmann::json field_desc;
+		field_desc["name"] = field.name;
+		field_desc["type"] = field.type;
+		params["fields"][field.name] = field_desc;
+	}
+
+	json_rpc.call("AddedEffect", params);
 }
 
 void Editor::ok_or_throw(HRESULT result) {
@@ -183,6 +198,11 @@ void Editor::command_ready() {
 	auto triggers = _lightRunnerApi->ListTriggers();
 	for (auto& trigger : triggers) {
 		notify_browser_added_trigger(trigger);
+	}
+
+	auto effects = _lightRunnerApi->ListEffects();
+	for (auto& effect : effects) {
+		notify_browser_added_effect(effect);
 	}
 }
 

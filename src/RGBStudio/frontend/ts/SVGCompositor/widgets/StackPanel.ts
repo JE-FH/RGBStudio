@@ -119,8 +119,6 @@ export class StackPanel
 		} else {
 			new_width = this._perpendicular_size;
 		}
-
-		console.log(new_width, new_height);
 		
 		this._width = new_width;
 		this._height = new_height;

@@ -2,6 +2,7 @@ import { ActionNode } from "./ActionNode";
 import { Connector, ConnectorDirection, ConnectorType } from "./Connector";
 import { IGraphEditorService } from "./GraphEditor";
 import { TriggerNode } from "./TriggerNode";
+import { EffectNode } from "./EffectNode";
 
 export interface IGraphConnectorService {
     addConnector(source: Connector): void;
@@ -39,9 +40,20 @@ export class GraphConnectorService implements IGraphConnectorService {
 
 			let edge = this.getEdge(this._startConnector, connector);
 			if (edge.source.Type == ConnectorType.Trigger) {
-				this._graphEditorService.AddTriggerActionEdge(edge.source.GraphNode as TriggerNode, edge.target.GraphNode as ActionNode);
-				this._startConnector = null;
-			}
+				if (edge.source.GraphNode instanceof TriggerNode && edge.target.GraphNode instanceof ActionNode) {
+					this._graphEditorService.AddTriggerActionEdge(edge.source.GraphNode, edge.target.GraphNode);
+					this._startConnector = null;
+				}
+			} else if (edge.source.Type == ConnectorType.Action) {
+				if (edge.source.GraphNode instanceof ActionNode && edge.target.GraphNode instanceof EffectNode) {
+					if (edge.target.IsCustom) {
+						this._graphEditorService.AddActionAttributeEdge(edge.source.GraphNode, edge.target.GraphNode, edge.target);
+					} else {
+						this._graphEditorService.AddActionEffectEdge(edge.source.GraphNode as ActionNode, edge.target.GraphNode as EffectNode);
+						this._startConnector = null;
+					}
+				}
+            }
 		}
 	}
 
