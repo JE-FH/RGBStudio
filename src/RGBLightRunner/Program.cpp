@@ -57,7 +57,7 @@ public:
 
 		rpcServer.bind("Hello", [&]() { return HelloCommand(); });
 		rpcServer.bind("ListTriggers", [&]() { return ListTriggersCommand(); });
-		rpcServer.bind("ListEffectsCommand", [&]() { return ListEffectsCommand(); });
+		rpcServer.bind("ListEffects", [&]() { return ListEffectsCommand(); });
 
 		rpcServer.async_run();
 	

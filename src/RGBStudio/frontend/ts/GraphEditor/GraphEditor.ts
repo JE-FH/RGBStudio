@@ -1,4 +1,4 @@
-import { Dragifier } from "../SVGCompositor/behavior/Dragifier";
+import { dragable, Dragifier } from "../SVGCompositor/behavior/Dragifier";
 import { SVGCompositor } from "../SVGCompositor/SVGCompositor";
 import { ToolWindow } from "../SVGCompositor/ToolWindow";
 import { CreateWidget2 as CW } from "../SVGCompositor/WidgetConstructor";
@@ -17,6 +17,8 @@ import { GraphConnectorService, IGraphConnectorService } from "./GraphConnectorS
 import { Connector, ConnectorDirection, ConnectorType } from "./Connector";
 import { IRGBStudioAPI, LightingConfig } from "../RGBStudioAPI";
 import { Widget } from "../SVGCompositor/Widget";
+import { EffectNode, EffectType } from "./EffectNode";
+
 
 export interface IGraphEditorService {
 	createTriggerNode(triggerType: TriggerType): void;
@@ -30,12 +32,25 @@ interface TriggerActionEdge {
 	action: ActionNode;
 }
 
+interface ActionEffectEdge {
+	action: ActionNode;
+	effect: EffectNode;
+}
+
+interface ActionEffectAttributeEdge {
+	action: ActionNode;
+	effect: EffectNode;
+	attribute: string;
+}
+
 export class GraphEditor implements IGraphEditorService {
 	private compositor: SVGCompositor;
 	private graph_nodes: GraphNode[];
 	private tool_window: ToolWindow;
 	private trigger_type: TriggerType[];
 	private trigger_display_sp!: StackPanel;
+	private effect_types: EffectType[];
+	private effect_display_sp!: StackPanel;
 	private trigger_action_edges: TriggerActionEdge[];
 	private _graphConnectorService: IGraphConnectorService;
 	private _nextId: number;
@@ -47,6 +62,7 @@ export class GraphEditor implements IGraphEditorService {
 		this.compositor = compositor;
 		this.graph_nodes = [];
 		this.trigger_type = [];
+		this.effect_types = [];
 		this.trigger_action_edges = [];
 		this._graphConnectorService = new GraphConnectorService(this);
 		this._nextId = 0;
@@ -54,52 +70,45 @@ export class GraphEditor implements IGraphEditorService {
 		
 
 		this.compositor.add(this.CreateTriggerWindow());
+		this.compositor.add(this.CreateEffectWindow());
 		this.compositor.add(this.CreateActionCreatorWindow());
 		this.compositor.add(this.CreateAdministrationWindow());
-		
-
 	}
 
 	private CreateTriggerWindow(): Widget {
-		this.trigger_display_sp = CW(StackPanel, { orientation: Orientation.VERTICAL, item_spacing: 10 },
-			CW(TextWidget, { text: "Available nodes", classes: ["click-through"] })
-		);
-		let padded_container = CW(PaddedContainer, { padding: padding(10), background: { classes: ["node-toolbox"] } },
-			this.trigger_display_sp
-		);
+		return dragable(CW(PaddedContainer, { padding: padding(10), background: { classes: ["node-toolbox"] } },
+			this.trigger_display_sp = CW(StackPanel, { orientation: Orientation.VERTICAL, item_spacing: 10 },
+				CW(TextWidget, { text: "Available triggers", classes: ["click-through"] })
+			)
+		));
+	}
 
-		let dragifier = new Dragifier(padded_container);
-		padded_container.Clicked.add_listener((ev) => {
-			dragifier.drag(ev);
-		})
-
-		return padded_container;
-    }
+	private CreateEffectWindow(): Widget {
+		return dragable(CW(PaddedContainer, { padding: padding(10), background: { classes: ["node-toolbox"] } },
+			this.effect_display_sp = CW(StackPanel, { orientation: Orientation.VERTICAL, item_spacing: 10 },
+				CW(TextWidget, { text: "Available effects", classes: ["click-through"] })
+			)
+		));
+	}
 
 	private CreateActionCreatorWindow(): Widget {
-		let actionCreator = CW(StackPanel, { orientation: Orientation.VERTICAL, item_spacing: 10 },
-			CW(TextWidget, { text: "Create event node", classes: ["click-through"] })
-		);
+		let inputWidget = CW(TextInputWidget, { width: 150 });
 
-		let paddedActionCreatorContainer = CW(PaddedContainer, { padding: padding(10), background: { classes: ["node-toolbox"] } },
-			actionCreator
-		);
-		let dragifier = new Dragifier(paddedActionCreatorContainer);
-		paddedActionCreatorContainer.Clicked.add_listener((ev) => {
-			dragifier.drag(ev);
-		});
-
-		let inputWidget = actionCreator.add(CW(TextInputWidget, { width: 150 }));
-
-		let button = actionCreator.add(CW(PaddedContainer, { padding: padding(5), background: { classes: ["debug-button"] } },
+		let button = CW(PaddedContainer, { padding: padding(5), background: { classes: ["debug-button"] } },
 			CW(TextWidget, { text: "Create" })
-		));
+		);
 
 		button.Clicked.add_listener((ev) => {
 			this.createActionNode(inputWidget.TextValue);
 		});
 
-		return paddedActionCreatorContainer;
+		return dragable(CW(PaddedContainer, { padding: padding(10), background: { classes: ["node-toolbox"] } },
+			CW(StackPanel, { orientation: Orientation.VERTICAL, item_spacing: 10 },
+				CW(TextWidget, { text: "Create event node", classes: ["click-through"] }),
+				inputWidget,
+				button
+			)
+		));
 	}
 
 	private CreateAdministrationWindow(): Widget {
@@ -107,23 +116,16 @@ export class GraphEditor implements IGraphEditorService {
 			CW(TextWidget, { text: "Apply changes" })
 		);
 
-		let administrationWindow = CW(PaddedContainer, { padding: padding(10), background: { classes: ["node-toolbox"] } },
-			CW(StackPanel, { orientation: Orientation.VERTICAL, item_spacing: 10 },
-				CW(TextWidget, { text: "Administration", classes: ["click-through"] }),
-				button
-			)
-		);
-
-		let dragifier = new Dragifier(administrationWindow);
-		administrationWindow.Clicked.add_listener((ev) => {
-			dragifier.drag(ev);
-		});
-
 		button.Clicked.add_listener((ev) => {
 			this.ApplyConfig();
 		});
 
-		return administrationWindow;
+		return dragable(CW(PaddedContainer, { padding: padding(10), background: { classes: ["node-toolbox"] } },
+			CW(StackPanel, { orientation: Orientation.VERTICAL, item_spacing: 10 },
+				CW(TextWidget, { text: "Administration", classes: ["click-through"] }),
+				button
+			)
+		));
     }
 
     AddTriggerActionEdge(trigger: TriggerNode, action: ActionNode): void {
@@ -166,6 +168,12 @@ export class GraphEditor implements IGraphEditorService {
 		this.tool_window.update();
 	}
 
+	public add_effect_type(effect_type: EffectType) {
+		this.effect_types.push(effect_type)
+		EffectNode.from_effect_type(this.effect_display_sp, "-1", effect_type, false, true, this._graphConnectorService);
+		this.tool_window.update();
+    }
+
 	public ApplyConfig() {
 		let config: LightingConfig = {
 			triggerInstances: [],
@@ -190,6 +198,7 @@ export class GraphEditor implements IGraphEditorService {
 				actionName: trigger_action_edge.action.name
 			});
 		})
+			
 		this._rgbStudioApi.ApplyConfig(config);
     }
 }

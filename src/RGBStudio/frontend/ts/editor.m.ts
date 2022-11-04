@@ -23,6 +23,10 @@ async function main() {
 
 	api.OnAddedTrigger.add_listener((addedTrigger) => {
 		graph_editor.add_trigger_type(addedTrigger);
+	})
+
+	api.OnAddedEffect.add_listener((addedEffect) => {
+		graph_editor.add_effect_type(addedEffect);
     })
 
 	await api.Ready();

@@ -10,6 +10,14 @@ export interface AddedTriggerEvent {
     name: string;
 }
 
+export interface AddedEffectEvent {
+    fields: Record<string, {
+        name: string;
+        type: string;
+    }>;
+    name: string;
+}
+
 export interface LightingConfig {
     triggerInstances: TriggerInstanceConfig[];
     actions: string[];
@@ -32,6 +40,7 @@ export interface DynamicConfigAttribute {
     value: Json;
 }
 
+
 export interface IRGBStudioAPI {
     readonly OnAddedTrigger: CSEvent<(addedTrigger: AddedTriggerEvent) => void>;
     ApplyConfig(config: LightingConfig): Promise<void>;
@@ -46,15 +55,23 @@ export class RGBStudioAPI {
         return this._onAddedTrigger;
     }
 
+    private _onAddedEffect: CSEvent<(addedEffect: AddedEffectEvent) => void>;
+    public get OnAddedEffect(): CSEvent<(addedEffect: AddedEffectEvent) => void> {
+        return this._onAddedEffect;
+    }
+
     constructor() {
         this._rpc = new JSONRPC(new WebViewConnection());
         this._onAddedTrigger = new CSEvent();
+        this._onAddedEffect = new CSEvent();
         this._rpc.on_call.add_listener(this.CallHandler.bind(this));
     }
 
     private CallHandler(call: Call<Json>) {
-        if (call.method == "added_trigger") {
+        if (call.method == "AddedTrigger") {
             this.OnAddedTrigger.call(call.param as unknown as AddedTriggerEvent);
+        } else if (call.method = "AddedEffect") {
+            this.OnAddedEffect.call(call.param as unknown as AddedEffectEvent);
         } else {
             console.warn(`Received unknown call \"${call.method}\"`);
         }

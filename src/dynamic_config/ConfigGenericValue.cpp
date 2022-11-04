@@ -71,14 +71,14 @@ std::string ConfigBoolTypeDesc::friendly_name() {
 	return "bool";
 }
 
-std::string ConfigTriggerNameTypeDesc::get_friendly_name() const {
+std::string ConfigActionNameTypeDesc::get_friendly_name() const {
 	return friendly_name();
 }
 
-std::string ConfigTriggerNameTypeDesc::get_internal_name() const {
-	return "Trigger";
+std::string ConfigActionNameTypeDesc::get_internal_name() const {
+	return "Action";
 }
 
-std::string ConfigTriggerNameTypeDesc::friendly_name() {
-	return "trigger";
+std::string ConfigActionNameTypeDesc::friendly_name() {
+	return "action";
 }

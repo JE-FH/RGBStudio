@@ -97,13 +97,13 @@ public:
 using ConfigBoolValue = ConfigGenericValue<bool, ConfigBoolTypeDesc>;
 
 
-class ConfigTriggerNameTypeDesc : public IConfigValueTypeDesc {
+class ConfigActionNameTypeDesc : public IConfigValueTypeDesc {
 public:
-	ConfigTriggerNameTypeDesc() {}
+	ConfigActionNameTypeDesc() {}
 
 	std::string get_friendly_name() const override;
 	std::string get_internal_name() const override;
 
 	static std::string friendly_name();
 };
-using ConfigTriggerNameValue = ConfigGenericValue<std::string, ConfigTriggerNameTypeDesc>;
+using ConfigTriggerNameValue = ConfigGenericValue<std::string, ConfigActionNameTypeDesc>;

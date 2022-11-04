@@ -31,6 +31,7 @@ private:
 	void create_controller_completed(HRESULT result, ICoreWebView2Controller* controller);
 
 	void notify_browser_added_trigger(const RGBLightRunnerTrigger& added_trigger);
+	void notify_browser_added_effect(const RGBLightRunnerEffect& added_effect);
 	void ok_or_throw(HRESULT result);
 
 	void browser_callback(std::wstring message);
