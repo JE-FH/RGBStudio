@@ -19,7 +19,7 @@ export interface EffectType {
 }
 
 export class EffectNode extends GraphNode {
-	private sourceAttribute: Connector;
+	private _targetAttribute: Connector;
 	private _graphConnectorService: IGraphConnectorService;
 	private _effectType: EffectType;
 	private _id: string;
@@ -37,14 +37,14 @@ export class EffectNode extends GraphNode {
 		this._graphConnectorService = graphConnectorService;
 		this._effectType = effectType;
 		this._id = id;
-		this.sourceAttribute = new Connector("action", this, ConnectorDirection.Target, ConnectorType.Action, graphConnectorService);
-		this._graphConnectorService.addConnector(this.sourceAttribute);
-		this.add_attribute(this.sourceAttribute);
+		this._targetAttribute = new Connector("action", this, ConnectorDirection.Target, ConnectorType.Action, graphConnectorService, readOnly, false);
+		this._graphConnectorService.addConnector(this._targetAttribute);
+		this.add_attribute(this._targetAttribute);
 
 	}
 
-	addLineEndToSource(lineEnd: LineEnd) {
-		this.sourceAttribute.visual_container.add(lineEnd);
+	AddLineEndToTarget(lineEnd: LineEnd) {
+		this._targetAttribute.AddLineEnd(lineEnd);
 	}
 
 	static from_effect_type(container: WidgetContainer, id: string, effect_type: EffectType, dragable: boolean, readOnly: boolean, graphConnectorService: IGraphConnectorService): EffectNode {
@@ -60,7 +60,7 @@ export class EffectNode extends GraphNode {
 			} else if (field.type == "Bool") {
 				rv.add_attribute(new BoolAttribute(field.name, false, readOnly));
 			} else if (field.type == "Action") {
-				let connector = new Connector(field.name, rv, ConnectorDirection.Target, ConnectorType.Action, graphConnectorService);
+				let connector = new Connector(field.name, rv, ConnectorDirection.Target, ConnectorType.Action, graphConnectorService, readOnly, true);
 				graphConnectorService.addConnector(connector);
 				rv.add_attribute(connector);
             } else {

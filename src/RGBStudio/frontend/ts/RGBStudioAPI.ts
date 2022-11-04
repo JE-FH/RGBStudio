@@ -20,18 +20,38 @@ export interface AddedEffectEvent {
 
 export interface LightingConfig {
     triggerInstances: TriggerInstanceConfig[];
-    actions: string[];
     triggerActionEdges: TriggerActionEdge[];
+    actions: string[];
+    actionEffectEdges: ActionEffectEdge[];
+    actionAttributeEdges: EffectAttributeEdge[];
+    effectInstances: EffectInstanceConfig[];
 }
 
 export interface TriggerActionEdge {
-    triggerId: string;
+    triggerInstanceId: string;
     actionName: string;
 }
 
 export interface TriggerInstanceConfig {
     instanceId: string;
     triggerId: string;
+    attributes: DynamicConfigAttribute[];
+}
+
+export interface ActionEffectEdge {
+    actionName: string;
+    effectInstanceId: string;
+}
+
+export interface EffectAttributeEdge {
+    actionName: string;
+    effectInstanceId: string;
+    attributeName: string;
+}
+
+export interface EffectInstanceConfig {
+    instanceId: string;
+    effectId: string;
     attributes: DynamicConfigAttribute[];
 }
 

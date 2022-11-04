@@ -38,14 +38,14 @@ export class TriggerNode extends GraphNode {
 		this._graphConnectorService = graphConnectorService;
 		this._triggerType = triggerType;
 		this._id = id;
-		this.sourceAttribute = new Connector("trigger", this, ConnectorDirection.Source, ConnectorType.Trigger, graphConnectorService);
+		this.sourceAttribute = new Connector("trigger", this, ConnectorDirection.Source, ConnectorType.Trigger, graphConnectorService, readOnly, false);
 		this._graphConnectorService.addConnector(this.sourceAttribute);
 		this.add_attribute(this.sourceAttribute);
 
 	}
 
-	addLineEndToSource(lineEnd: LineEnd) {
-		this.sourceAttribute.visual_container.add(lineEnd);
+	AddLineEndToSource(lineEnd: LineEnd) {
+		this.sourceAttribute.AddLineEnd(lineEnd);
 	}
 
 	static from_trigger_type(container: WidgetContainer, id: string, trigger_type: TriggerType, dragable: boolean, readOnly: boolean, graphConnectorService: IGraphConnectorService): TriggerNode {
