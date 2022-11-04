@@ -27,6 +27,8 @@ struct RGBLightRunnerConfig {
 	std::set<std::pair<std::string, std::string>> triggerActionEdges;
 	std::set<std::string> actions;
 	std::set<std::pair<std::string, std::string>> actionEffectEdges;
+	//Order is action, effectInstanceid, attribute name
+	std::set<std::tuple<std::string, std::string, std::string>> actionAttributeEdges;
 	std::vector<EffectInstanceConfig> effectInstances;
-	MSGPACK_DEFINE_ARRAY(triggerInstances, triggerActionEdges, actions, actionEffectEdges, effectInstances)
+	MSGPACK_DEFINE_ARRAY(triggerInstances, triggerActionEdges, actions, actionEffectEdges, actionAttributeEdges, effectInstances)
 };
