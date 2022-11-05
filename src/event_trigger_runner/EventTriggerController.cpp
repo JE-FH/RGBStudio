@@ -1,5 +1,6 @@
 #include <event_trigger_runner/EventTriggerController.hpp>
 #include <vector>
+#include <iostream>
 
 EventTriggerController::EventTriggerController(EffectManager effect_manager, EventManager event_manager)
 	: _effect_manager(std::move(effect_manager)), _event_manager(std::move(event_manager))
@@ -46,23 +47,28 @@ void EventTriggerController::run_tick()
 	_event_manager.poll_events();
 
 	std::unique_ptr<Event> queued_event;
-	std::vector<std::string> triggered_action_names;
+	std::vector<std::string> triggered_triggers_names;
 	while ((queued_event = _event_manager.pop_event()) != nullptr) {
 		for (auto& trigger : _triggers) {
 			if (trigger->should_trigger(*queued_event)) {
-				triggered_action_names.push_back(trigger->trigger_name);
+				triggered_triggers_names.push_back(trigger->trigger_name);
 			}
 		}
 	}
 
-	for (const auto& triggered_action_name : triggered_action_names) {
-		auto effect_range = _action_effect_edges.equal_range(triggered_action_name);
-		for (auto it = effect_range.first; it != effect_range.second; it++) {
-			_trigger_observer_dispatcher.dispatch(it->second);
+	for (const auto& triggered_trigger_name : triggered_triggers_names) {
+		auto action_range = _trigger_action_edges.equal_range(triggered_trigger_name);
 
-			auto effect_factory = _effects.find(it->second);
-			if (effect_factory != _effects.end()) {
-				effect_factory->second->add_new_instance(_effect_manager, _trigger_observer_dispatcher);
+		for (auto action_it = action_range.first; action_it != action_range.second; action_it++) {
+			auto effect_range = _action_effect_edges.equal_range(action_it->second);
+
+			for (auto effect_it = effect_range.first; effect_it != effect_range.second; effect_it++) {
+				_trigger_observer_dispatcher.dispatch(effect_it->second);
+
+				auto effect_factory = _effects.find(effect_it->second);
+				if (effect_factory != _effects.end()) {
+					effect_factory->second->add_new_instance(_effect_manager, _trigger_observer_dispatcher);
+				}
 			}
 		}
 	}

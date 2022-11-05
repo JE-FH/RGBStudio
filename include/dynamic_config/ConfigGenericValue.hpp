@@ -2,6 +2,7 @@
 #include "IConfigValue.hpp"
 #include "IConfigValueTypeDesc.hpp"
 #include <device_adapter_loader/RGBColor.hpp>
+#include <typeinfo>
 
 namespace ConfigGenericValueConverter {
 	namespace adl_helper {
@@ -45,6 +46,8 @@ public:
 	std::string get_friendly_name() const override;
 	std::string get_internal_name() const override;
 
+	std::unique_ptr<IConfigValue> decode(const std::string& value) const;
+
 	static std::string friendly_name();
 };
 using ConfigStringValue = ConfigGenericValue<std::string, ConfigStringTypeDesc>;
@@ -57,6 +60,8 @@ public:
 	std::string get_friendly_name() const override;
 	std::string get_internal_name() const override;
 
+	std::unique_ptr<IConfigValue> decode(const std::string& value) const;
+
 	static std::string friendly_name();
 };
 using ConfigIntegerValue = ConfigGenericValue<long long, ConfigIntegerTypeDesc>;
@@ -68,6 +73,8 @@ public:
 	std::string get_friendly_name() const override;
 	std::string get_internal_name() const override;
 
+	std::unique_ptr<IConfigValue> decode(const std::string& value) const;
+
 	static std::string friendly_name();
 };
 using ConfigNumberValue = ConfigGenericValue<double, ConfigNumberTypeDesc>;
@@ -78,6 +85,8 @@ public:
 
 	std::string get_friendly_name() const override;
 	std::string get_internal_name() const override;
+
+	std::unique_ptr<IConfigValue> decode(const std::string& value) const;
 
 	static std::string friendly_name();
 	friend std::string ConfigGenericValueConverter::to_string(const RGBColor& rgbcolor);
@@ -92,6 +101,8 @@ public:
 	std::string get_friendly_name() const override;
 	std::string get_internal_name() const override;
 
+	std::unique_ptr<IConfigValue> decode(const std::string& value) const;
+
 	static std::string friendly_name();
 };
 using ConfigBoolValue = ConfigGenericValue<bool, ConfigBoolTypeDesc>;
@@ -104,6 +115,8 @@ public:
 	std::string get_friendly_name() const override;
 	std::string get_internal_name() const override;
 
+	std::unique_ptr<IConfigValue> decode(const std::string& value) const;
+
 	static std::string friendly_name();
 };
-using ConfigTriggerNameValue = ConfigGenericValue<std::string, ConfigActionNameTypeDesc>;
+using ConfigActionNameValue = ConfigGenericValue<std::string, ConfigActionNameTypeDesc>;

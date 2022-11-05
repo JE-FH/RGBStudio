@@ -160,16 +160,13 @@ export class GraphEditor implements IGraphEditorService {
 	}
 
 	AddActionAttributeEdge(action: ActionNode, effect: EffectNode, attribute: Connector): void {
-		this.action_attribute_edges.push({
-			action: action,
-			effect: effect,
-			attribute: attribute
-		});
-
 		let line = new Line({ x: 0, y: 0 }, { x: 0, y: 0 }, { stroke: RGBColor.from_bytes(0, 0, 0) });
 
 		action.AddLineEndToSource(line.start);
 		attribute.AddLineEnd(line.end);
+
+		attribute.SetConnectedAction(action);
+
 		this.compositor.add_line(line);
 	}
 
@@ -226,9 +223,7 @@ export class GraphEditor implements IGraphEditorService {
 		let config: LightingConfig = {
 			triggerInstances: [],
 			triggerActionEdges: [],
-			actions: [],
 			actionEffectEdges: [],
-			actionAttributeEdges: [],
 			effectInstances: []
 		};
 		this.graph_nodes.forEach(graphNode => {
@@ -238,8 +233,6 @@ export class GraphEditor implements IGraphEditorService {
 					triggerId: graphNode.TriggerType.name,
 					attributes: graphNode.SerializeAttributes()
 				});
-			} else if (graphNode instanceof ActionNode) {
-				config.actions.push(graphNode.name)
 			} else if (graphNode instanceof EffectNode) {
 				config.effectInstances.push({
 					instanceId: graphNode.UID,
@@ -260,14 +253,6 @@ export class GraphEditor implements IGraphEditorService {
 			config.actionEffectEdges.push({
 				actionName: edge.action.name,
 				effectInstanceId: edge.effect.UID,
-			});
-		});
-
-		this.action_attribute_edges.forEach(edge => {
-			config.actionAttributeEdges.push({
-				actionName: edge.action.name,
-				effectInstanceId: edge.effect.UID,
-				attributeName: edge.attribute.Name
 			});
 		});
 

@@ -11,7 +11,7 @@ FillEffectFactory::FillEffectFactory() {
 
 std::unique_ptr<IEffect> FillEffectFactory::create(const DynamicConfig& dynamic_config, std::shared_ptr<IKeyboardDevice> device) {
 	auto& layer = dynamic_config.get_config_value<ConfigIntegerValue>("layer");
-	auto& stop_trigger = dynamic_config.get_config_value<ConfigTriggerNameValue>("stop trigger");
+	auto& stop_trigger = dynamic_config.get_config_value<ConfigActionNameValue>("stop trigger");
 	auto& color = dynamic_config.get_config_value<ConfigRGBColorValue>("color");
 
 	return std::make_unique<FillEffect>(layer.get_value(), device, stop_trigger.get_value(), color.get_value());

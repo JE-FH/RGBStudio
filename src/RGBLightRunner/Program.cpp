@@ -42,6 +42,7 @@ class RGBLightRunner {
 	std::unique_ptr<EventTriggerController> _eventTriggerController;
 	std::map<std::string, std::unique_ptr<ITriggerFactory>> _triggerFactories;
 	std::map<std::string, std::unique_ptr<IEffectFactory>> _effectFactories;
+	std::shared_ptr<IKeyboardDevice> _keyboardDevice;
 	std::mutex _commandQueueLock;
 	std::queue<std::variant<ApplyConfigCommandData>> _commandQueue;
 public:
@@ -58,6 +59,8 @@ public:
 		eventManager.add_event_source(std::make_unique<KeyboardEventSource>());
 
 		_eventTriggerController = std::make_unique<EventTriggerController>(std::move(effectManager), std::move(eventManager));
+
+		_keyboardDevice = std::move(keyboardDevice);
 	}
 
 	void Run() {
@@ -119,7 +122,9 @@ public:
 
 	void ApplyConfigCommand(RGBLightRunnerConfig config) {
 		std::lock_guard<std::mutex> guard(_commandQueueLock);
-		_commandQueue.emplace(std::move(config));
+		_commandQueue.emplace(ApplyConfigCommandData{
+			.config = std::move(config)
+		});
 	}
 
 private:
@@ -166,17 +171,52 @@ private:
 		for (const auto& triggerInstanceConfig : config.triggerInstances) {
 			const auto& triggerFactory = _triggerFactories.find(triggerInstanceConfig.triggerId);
 			if (triggerFactory == _triggerFactories.end()) {
-				//Todo: Report this error better
 				std::cout << "Tried to create instance of non existant trigger " << triggerInstanceConfig.triggerId << std::endl;
 				continue;
 			}
 			const auto& spec = triggerFactory->second->get_config_spec();
+
+			auto config = CreateDynamicConfigFromSpec(spec, triggerInstanceConfig.attributes);
+
+			_eventTriggerController->add_trigger(triggerFactory->second->create(triggerInstanceConfig.triggerId, config));
+		}
+
+		for (const auto& effectInstanceConfig : config.effectInstances) {
+			const auto effectFactory = _effectFactories.find(effectInstanceConfig.effectId);
+			if (effectFactory == _effectFactories.end()) {
+				std::cout << "Tried to create instance of non existant effect " << effectInstanceConfig.effectId << std::endl;
+				continue;
+			}
+
+			const auto& spec = effectFactory->second->get_config_spec();
+
+			auto config = CreateDynamicConfigFromSpec(spec, effectInstanceConfig.attributes);
+
+			_eventTriggerController->add_effect(effectInstanceConfig.effectId, effectFactory->second->create(config, _keyboardDevice));
 		}
 	}
 
 	DynamicConfig CreateDynamicConfigFromSpec(const DynamicConfigSpec& spec, const std::vector<InstanceDynamicAttribute>& attributes) {
-		auto fields = spec.get_fields();
-		
+		auto& fields = spec.get_fields();
+		std::map<std::string, std::string> attributeMap;
+		for (const auto& attribute : attributes) {
+			attributeMap.insert(std::pair(attribute.name, attribute.value));
+		}
+
+		DynamicConfig config;
+
+		for (const auto& field : fields) {
+			auto assignedAttribute = attributeMap.find(field.name);
+			if (assignedAttribute == attributeMap.end()) {
+				if (field.required) {
+					throw std::exception("Missing required attribute value");
+				}
+			} else {
+				config.set_config_value(field.name, field.type_desc->decode(assignedAttribute->second));
+			}
+		}
+
+		return config;
 	}
 };
 
