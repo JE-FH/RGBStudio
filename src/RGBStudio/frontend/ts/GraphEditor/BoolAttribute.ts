@@ -10,7 +10,7 @@ export class BoolAttribute extends GraphNodeAttribute {
 		this.input_widget = CW(CheckboxInputWidget, { initial_value: initial_value, readOnly: readOnly });
 		this.visual_container.add(this.input_widget);
 	}
-    public get_internal_representation(): Json {
-		return this.input_widget.Value;
+    public get_internal_representation(): string {
+		return this.input_widget.Value ? "true" : "false";
     }
 }

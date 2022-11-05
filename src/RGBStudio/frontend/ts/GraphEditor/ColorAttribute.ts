@@ -15,12 +15,11 @@ export class ColorAttribute extends GraphNodeAttribute {
 		this.visual_container.add(this.input_widget);
 	}
 
-	public get_internal_representation(): Json {
+	public get_internal_representation(): string {
 		let color = this.input_widget.ColorValue;
-		return {
-			r: color.r,
-			g: color.g,
-			b: color.b
-		};
+		let r_hex = Math.round(color.r * 255).toString(16).padStart(2, "0");
+		let g_hex = Math.round(color.g * 255).toString(16).padStart(2, "0");
+		let b_hex = Math.round(color.b * 255).toString(16).padStart(2, "0");
+		return `${r_hex}${g_hex}${b_hex}`;
     }
 }

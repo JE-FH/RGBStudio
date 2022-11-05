@@ -19,3 +19,7 @@ std::vector<RGBLightRunnerTrigger> LightRunnerApi::ListTriggers() {
 std::vector<RGBLightRunnerEffect> LightRunnerApi::ListEffects() {
 	return _client.call("ListEffects").as<std::vector<RGBLightRunnerEffect>>();
 }
+
+void LightRunnerApi::ApplyConfig(RGBLightRunnerConfig config) {
+	_client.call("ApplyConfig", config);
+}

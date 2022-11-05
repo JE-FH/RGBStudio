@@ -13,8 +13,8 @@ export class NumberAttribute extends GraphNodeAttribute {
 		this.visual_container.add(this.input_widget);
 	}
 
-	public get_internal_representation(): Json {
-		return this.input_widget.NumberValue;
+	public get_internal_representation(): string {
+		return this.input_widget.NumberValue.toString();
     }
 
 }

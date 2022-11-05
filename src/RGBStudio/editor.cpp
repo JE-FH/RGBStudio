@@ -49,6 +49,58 @@ void Editor::received_call(int id, std::string method_name, nlohmann::json param
 	if (method_name == "ready") {
 		command_ready();
 	}
+	else if (method_name == "apply_config") {
+		apply_config_command(param);
+	}
+	else {
+		std::cout << "Received unknown command from browser '" << method_name << "'" << std::endl;
+	}
+}
+
+std::vector<InstanceDynamicAttribute> to_dynamic_attributes(const nlohmann::json& jsonAttributes) {
+	std::vector<InstanceDynamicAttribute> attributes;
+	for (const auto& jsonAttribute : jsonAttributes) {
+		attributes.push_back(InstanceDynamicAttribute{
+			.name = jsonAttribute["name"].get<std::string>(),
+			.value = jsonAttribute["value"].get<std::string>()
+		});
+	}
+
+	return attributes;
+}
+
+void Editor::apply_config_command(const nlohmann::json& param) {
+	RGBLightRunnerConfig config;
+	for (const auto& triggerInstanceJson : param["triggerInstances"]) {
+		config.triggerInstances.push_back(TriggerInstanceConfig {
+			.triggerId = triggerInstanceJson["triggerId"].get<std::string>(),
+			.instanceId = triggerInstanceJson["instanceId"].get<std::string>(),
+			.attributes = to_dynamic_attributes(triggerInstanceJson["attributes"])
+		});
+	}
+
+	for (const auto& triggerActionEdge : param["triggerActionEdges"]) {
+		config.triggerActionEdges.insert(std::pair(
+			triggerActionEdge["triggerInstanceId"].get<std::string>(),
+			triggerActionEdge["actionName"].get<std::string>()
+		));
+	}
+
+	for (const auto& actionEffectEdge : param["actionEffectEdges"]) {
+		config.actionEffectEdges.insert(std::pair(
+			actionEffectEdge["actionName"].get<std::string>(),
+			actionEffectEdge["effectInstanceId"].get<std::string>()
+		));
+	}
+
+	for (const auto& effectInstanceJson : param["effectInstances"]) {
+		config.effectInstances.push_back(EffectInstanceConfig{
+			.effectId = effectInstanceJson["effectId"].get<std::string>(),
+			.instanceId = effectInstanceJson["instanceId"].get<std::string>(),
+			.attributes = to_dynamic_attributes(effectInstanceJson["attributes"])
+		});
+	}
+	_lightRunnerApi->ApplyConfig(std::move(config));
 }
 
 void Editor::set_bounds(RECT bounds) {

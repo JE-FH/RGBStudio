@@ -159,6 +159,7 @@ private:
 	}
 
 	void ApplyConfig(RGBLightRunnerConfig config) {
+		std::cout << "Applying new config" << std::endl;
 		_eventTriggerController->clear();
 		for (const auto& edge : config.triggerActionEdges) {
 			_eventTriggerController->add_trigger_action_edge(edge.first, edge.second);
@@ -178,7 +179,7 @@ private:
 
 			auto config = CreateDynamicConfigFromSpec(spec, triggerInstanceConfig.attributes);
 
-			_eventTriggerController->add_trigger(triggerFactory->second->create(triggerInstanceConfig.triggerId, config));
+			_eventTriggerController->add_trigger(triggerFactory->second->create(triggerInstanceConfig.instanceId, config));
 		}
 
 		for (const auto& effectInstanceConfig : config.effectInstances) {
@@ -192,7 +193,7 @@ private:
 
 			auto config = CreateDynamicConfigFromSpec(spec, effectInstanceConfig.attributes);
 
-			_eventTriggerController->add_effect(effectInstanceConfig.effectId, effectFactory->second->create(config, _keyboardDevice));
+			_eventTriggerController->add_effect(effectInstanceConfig.instanceId, effectFactory->second->create(config, _keyboardDevice));
 		}
 	}
 

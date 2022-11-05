@@ -41,12 +41,6 @@ export interface ActionEffectEdge {
     effectInstanceId: string;
 }
 
-export interface EffectAttributeEdge {
-    actionName: string;
-    effectInstanceId: string;
-    attributeName: string;
-}
-
 export interface EffectInstanceConfig {
     instanceId: string;
     effectId: string;
@@ -55,7 +49,7 @@ export interface EffectInstanceConfig {
 
 export interface DynamicConfigAttribute {
     name: string;
-    value: Json;
+    value: string;
 }
 
 
@@ -98,7 +92,7 @@ export class RGBStudioAPI {
     public async ApplyConfig(config: LightingConfig) {
         console.log("applying new config");
         console.log(config);
-        await this._rpc.dispatch_call("applyConfig", config as unknown as Json);
+        await this._rpc.dispatch_call("apply_config", config as unknown as Json);
     }
 
     public async Ready() {
