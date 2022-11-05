@@ -5,6 +5,7 @@ import { Json } from "../JSONRPC";
 import { GraphNode } from "./GraphNode";
 import { IGraphConnectorService } from "./GraphConnectorService";
 import { LineEnd } from "../SVGCompositor/widgets/LineEnd";
+import { ActionNode } from "./ActionNode";
 
 export enum ConnectorDirection {
 	Source,
@@ -23,6 +24,7 @@ export class Connector extends GraphNodeAttribute {
 	private _graphConnectorService: IGraphConnectorService;
 	private _circleWidget: Circle;
 	private _isCustom: boolean;
+	private _connectedActionNode: ActionNode | null;
 
 	get Type(): ConnectorType {
 		return this._type;
@@ -40,8 +42,15 @@ export class Connector extends GraphNodeAttribute {
 		return this._isCustom;
     }
 
+	public SetConnectedAction(node: ActionNode) {
+		this._connectedActionNode = node;
+    }
+
 	public get_internal_representation(): Json {
-		return "";
+		if (this._connectedActionNode == null)
+			return "";
+		else
+			return this._connectedActionNode.name;
 	}
 
 	public AddLineEnd(lineEnd: LineEnd) {
@@ -55,6 +64,7 @@ export class Connector extends GraphNodeAttribute {
 		this._type = type;
 		this._graphConnectorService = graphConnectorService;
 		this._isCustom = isCustom;
+		this._connectedActionNode = null;
 
 		this._circleWidget = CW(Circle, { radius: 5, relative_pos: { x: 0, y: 5 }, classes: ["trigger-connector"] });
 

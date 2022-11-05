@@ -21,9 +21,7 @@ export interface AddedEffectEvent {
 export interface LightingConfig {
     triggerInstances: TriggerInstanceConfig[];
     triggerActionEdges: TriggerActionEdge[];
-    actions: string[];
     actionEffectEdges: ActionEffectEdge[];
-    actionAttributeEdges: EffectAttributeEdge[];
     effectInstances: EffectInstanceConfig[];
 }
 
