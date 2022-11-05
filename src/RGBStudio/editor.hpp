@@ -45,6 +45,8 @@ public:
 	static Editor* ogi();
 	static void setup(HWND hwnd, std::unique_ptr<IAssetLoader> asset_loader, std::unique_ptr<LightRunnerApi> lightRunnerApi);
 
+	void apply_config_command(const nlohmann::json& param);
+
 	// Inherited via IJSONRPCConnection
 	virtual void send_message(nlohmann::json message) override;
 

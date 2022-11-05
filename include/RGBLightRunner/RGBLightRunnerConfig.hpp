@@ -11,22 +11,23 @@ struct InstanceDynamicAttribute {
 
 struct TriggerInstanceConfig {
 	std::string triggerId;
+	std::string instanceId;
 	std::vector<InstanceDynamicAttribute> attributes;
-	MSGPACK_DEFINE_ARRAY(triggerId, attributes)
+	MSGPACK_DEFINE_ARRAY(triggerId, instanceId, attributes)
 
 };
 
 struct EffectInstanceConfig {
 	std::string effectId;
+	std::string instanceId;
 	std::vector<InstanceDynamicAttribute> attributes;
-	MSGPACK_DEFINE_ARRAY(effectId, attributes)
+	MSGPACK_DEFINE_ARRAY(effectId, instanceId, attributes)
 };
 
 struct RGBLightRunnerConfig {
 	std::vector<TriggerInstanceConfig> triggerInstances;
 	std::set<std::pair<std::string, std::string>> triggerActionEdges;
-	std::set<std::string> actions;
 	std::set<std::pair<std::string, std::string>> actionEffectEdges;
 	std::vector<EffectInstanceConfig> effectInstances;
-	MSGPACK_DEFINE_ARRAY(triggerInstances, triggerActionEdges, actions, actionEffectEdges, effectInstances)
+	MSGPACK_DEFINE_ARRAY(triggerInstances, triggerActionEdges, actionEffectEdges, effectInstances)
 };

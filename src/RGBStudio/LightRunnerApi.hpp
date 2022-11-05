@@ -19,4 +19,6 @@ public:
 	std::vector<RGBLightRunnerTrigger> ListTriggers();
 	
 	std::vector<RGBLightRunnerEffect> ListEffects();
+
+	void ApplyConfig(RGBLightRunnerConfig config);
 };

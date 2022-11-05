@@ -46,7 +46,7 @@ export class Connector extends GraphNodeAttribute {
 		this._connectedActionNode = node;
     }
 
-	public get_internal_representation(): Json {
+	public get_internal_representation(): string {
 		if (this._connectedActionNode == null)
 			return "";
 		else

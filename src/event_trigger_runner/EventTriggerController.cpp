@@ -49,6 +49,7 @@ void EventTriggerController::run_tick()
 	std::unique_ptr<Event> queued_event;
 	std::vector<std::string> triggered_triggers_names;
 	while ((queued_event = _event_manager.pop_event()) != nullptr) {
+		std::cout << "event: " << queued_event->describe() << std::endl;
 		for (auto& trigger : _triggers) {
 			if (trigger->should_trigger(*queued_event)) {
 				triggered_triggers_names.push_back(trigger->trigger_name);
@@ -61,11 +62,11 @@ void EventTriggerController::run_tick()
 
 		for (auto action_it = action_range.first; action_it != action_range.second; action_it++) {
 			auto effect_range = _action_effect_edges.equal_range(action_it->second);
+			_trigger_observer_dispatcher.dispatch(action_it->second);
 
 			for (auto effect_it = effect_range.first; effect_it != effect_range.second; effect_it++) {
-				_trigger_observer_dispatcher.dispatch(effect_it->second);
-
 				auto effect_factory = _effects.find(effect_it->second);
+				
 				if (effect_factory != _effects.end()) {
 					effect_factory->second->add_new_instance(_effect_manager, _trigger_observer_dispatcher);
 				}

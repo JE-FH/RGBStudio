@@ -32,6 +32,6 @@ export abstract class GraphNodeAttribute {
 		);
 	}
 
-	public abstract get_internal_representation(): Json;
+	public abstract get_internal_representation(): string;
 
 }
