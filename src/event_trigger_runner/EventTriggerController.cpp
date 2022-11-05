@@ -66,7 +66,7 @@ void EventTriggerController::run_tick()
 
 			for (auto effect_it = effect_range.first; effect_it != effect_range.second; effect_it++) {
 				auto effect_factory = _effects.find(effect_it->second);
-				
+
 				if (effect_factory != _effects.end()) {
 					effect_factory->second->add_new_instance(_effect_manager, _trigger_observer_dispatcher);
 				}
