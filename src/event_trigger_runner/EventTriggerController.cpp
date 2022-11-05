@@ -6,9 +6,13 @@ EventTriggerController::EventTriggerController(EffectManager effect_manager, Eve
 {
 }
 
-void EventTriggerController::add_action_trigger(std::string trigger_name, std::string factory_name)
+void EventTriggerController::add_trigger_action_edge(std::string trigger_name, std::string action_name)
 {
-	_action_triggers.insert(std::pair(std::move(trigger_name), std::move(factory_name)));
+	_trigger_action_edges.insert(std::pair(std::move(trigger_name), std::move(action_name)));
+}
+
+void EventTriggerController::add_action_effect_edge(std::string action_name, std::string effect_name) {
+	_action_effect_edges.insert(std::pair(std::move(action_name), std::move(effect_name)));
 }
 
 void EventTriggerController::add_trigger(std::unique_ptr<Trigger> trigger)
@@ -16,9 +20,17 @@ void EventTriggerController::add_trigger(std::unique_ptr<Trigger> trigger)
 	_triggers.push_back(std::move(trigger));
 }
 
-void EventTriggerController::add_effect_factory(std::string factory_name, std::unique_ptr<IEffect> effect_factory)
+void EventTriggerController::add_effect(std::string effect_name, std::unique_ptr<IEffect> effect_factory)
 {
-	_effect_factories.insert(std::pair(std::move(factory_name), std::move(effect_factory)));
+	_effects.insert(std::pair(std::move(effect_name), std::move(effect_factory)));
+}
+
+void EventTriggerController::clear() {
+	_triggers.clear();
+	_trigger_action_edges.clear();
+	_action_effect_edges.clear();
+	_effects.clear();
+	//TODO: Clear effectmanager
 }
 
 void EventTriggerController::run()
@@ -44,12 +56,12 @@ void EventTriggerController::run_tick()
 	}
 
 	for (const auto& triggered_action_name : triggered_action_names) {
+		auto effect_range = _action_effect_edges.equal_range(triggered_action_name);
+		for (auto it = effect_range.first; it != effect_range.second; it++) {
+			_trigger_observer_dispatcher.dispatch(it->second);
 
-		auto action_trigger_range = _action_triggers.equal_range(triggered_action_name);
-		for (auto action_trigger = action_trigger_range.first; action_trigger != action_trigger_range.second; action_trigger++) {
-			_trigger_observer_dispatcher.dispatch(action_trigger->second);
-			auto effect_factory = _effect_factories.find(action_trigger->second);
-			if (effect_factory != _effect_factories.end()) {
+			auto effect_factory = _effects.find(it->second);
+			if (effect_factory != _effects.end()) {
 				effect_factory->second->add_new_instance(_effect_manager, _trigger_observer_dispatcher);
 			}
 		}

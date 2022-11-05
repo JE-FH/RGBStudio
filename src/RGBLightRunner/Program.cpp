@@ -12,6 +12,7 @@
 #include <lua_effect_loader/LuaNumberValue.hpp>
 #include <event_trigger_runner/EventManager.hpp>
 #include <event_trigger_runner/EventTriggerController.hpp>
+#include <event_trigger_runner/IEffect.hpp>
 #include <windows_event_sources/KeyboardEventSource.hpp>
 #include <device_adapter_loader/DeviceAdapter.hpp>
 #include <device_adapter_loader/DeviceFactory.hpp>
@@ -21,20 +22,28 @@
 #include <iostream>
 #include <memory>
 #include <stdexcept>
-
+#include <queue>
 #include <event_trigger_runner/default_triggers/KeyTrigger.hpp>
 #include <event_trigger_runner/default_triggers/KeyTriggerFactory.hpp>
 #include <dynamic_config/ConfigGenericValue.hpp>
 #include <Objbase.h>
-
+#include <variant>
+#include <mutex>
 #include "RGBLightRunner/RGBLightRunnerConfig.hpp"
 #include "RGBLightRunner/RGBLightRunnerTrigger.hpp"
 #include "RGBLightRunner/RGBLightRunnerEffect.hpp"
 
+struct ApplyConfigCommandData {
+	RGBLightRunnerConfig config;
+};
+
+
 class RGBLightRunner {
 	std::unique_ptr<EventTriggerController> _eventTriggerController;
-	std::vector<std::unique_ptr<ITriggerFactory>> _triggerFactories;
-	std::vector<std::unique_ptr<IEffectFactory>> _effectFactories;
+	std::map<std::string, std::unique_ptr<ITriggerFactory>> _triggerFactories;
+	std::map<std::string, std::unique_ptr<IEffectFactory>> _effectFactories;
+	std::mutex _commandQueueLock;
+	std::queue<std::variant<ApplyConfigCommandData>> _commandQueue;
 public:
 	RGBLightRunner(const RGBLightRunner&) = delete;
 	RGBLightRunner(RGBLightRunner&&) = delete;
@@ -58,14 +67,12 @@ public:
 		rpcServer.bind("Hello", [&]() { return HelloCommand(); });
 		rpcServer.bind("ListTriggers", [&]() { return ListTriggersCommand(); });
 		rpcServer.bind("ListEffects", [&]() { return ListEffectsCommand(); });
-
+		rpcServer.bind("ApplyConfig", [&](RGBLightRunnerConfig config) { ApplyConfigCommand(config); });
 		rpcServer.async_run();
 	
 		InitEventSources();
 
-		while (true) {
-			_eventTriggerController->run_tick();
-		}
+		Loop();
 	}
 
 	HelloResponse HelloCommand() {
@@ -80,8 +87,8 @@ public:
 		for (const auto& trigger : _triggerFactories)
 		{
 			RGBLightRunnerTrigger triggerDesc;
-			triggerDesc.id = trigger->get_name();
-			auto& spec = trigger->get_config_spec();
+			triggerDesc.id = trigger.second->get_name();
+			auto& spec = trigger.second->get_config_spec();
 			for (const auto& field : spec.get_fields()) {
 				triggerDesc.attributes.push_back(RGBLightRunnerAttributeDescription{
 					.name = field.name,
@@ -97,8 +104,8 @@ public:
 		std::vector<RGBLightRunnerEffect> rv;
 		for (const auto& effect : _effectFactories) {
 			RGBLightRunnerEffect effectDesc;
-			effectDesc.id = effect->get_name();
-			auto& spec = effect->get_config_spec();
+			effectDesc.id = effect.second->get_name();
+			auto& spec = effect.second->get_config_spec();
 			for (const auto& field : spec.get_fields()) {
 				effectDesc.attributes.push_back(RGBLightRunnerAttributeDescription{
 					.name = field.name,
@@ -110,14 +117,66 @@ public:
 		return rv;
 	}
 
+	void ApplyConfigCommand(RGBLightRunnerConfig config) {
+		std::lock_guard<std::mutex> guard(_commandQueueLock);
+		_commandQueue.emplace(std::move(config));
+	}
+
 private:
 	void AddFactories() {
-		_triggerFactories.push_back(std::make_unique<KeyTriggerFactory>());
-		_effectFactories.push_back(std::make_unique<FillEffectFactory>());
+		auto triggerFactory = std::make_unique<KeyTriggerFactory>();
+		_triggerFactories.insert(std::pair(triggerFactory->get_name(), std::move(triggerFactory)));
+		auto fillEffectFactory = std::make_unique<FillEffectFactory>();
+		_effectFactories.insert(std::pair(fillEffectFactory->get_name(), std::move(fillEffectFactory)));
 	}
 
 	void InitEventSources() {
 		KeyboardEventSource::init();
+	}
+
+	void Loop() {
+		while (true) {
+			EmptyCommandQueue();
+
+			_eventTriggerController->run_tick();
+		}
+	}
+
+	void EmptyCommandQueue() {
+		std::lock_guard<std::mutex> guard(_commandQueueLock);
+		while (_commandQueue.size() > 0) {
+			auto& command = _commandQueue.front();
+			if (std::holds_alternative<ApplyConfigCommandData>(command)) {
+				ApplyConfig(std::get<ApplyConfigCommandData>(command).config);
+			}
+			_commandQueue.pop();
+		}
+	}
+
+	void ApplyConfig(RGBLightRunnerConfig config) {
+		_eventTriggerController->clear();
+		for (const auto& edge : config.triggerActionEdges) {
+			_eventTriggerController->add_trigger_action_edge(edge.first, edge.second);
+		}
+
+		for (const auto& edge : config.actionEffectEdges) {
+			_eventTriggerController->add_action_effect_edge(edge.first, edge.second);
+		}
+
+		for (const auto& triggerInstanceConfig : config.triggerInstances) {
+			const auto& triggerFactory = _triggerFactories.find(triggerInstanceConfig.triggerId);
+			if (triggerFactory == _triggerFactories.end()) {
+				//Todo: Report this error better
+				std::cout << "Tried to create instance of non existant trigger " << triggerInstanceConfig.triggerId << std::endl;
+				continue;
+			}
+			const auto& spec = triggerFactory->second->get_config_spec();
+		}
+	}
+
+	DynamicConfig CreateDynamicConfigFromSpec(const DynamicConfigSpec& spec, const std::vector<InstanceDynamicAttribute>& attributes) {
+		auto fields = spec.get_fields();
+		
 	}
 };
 
