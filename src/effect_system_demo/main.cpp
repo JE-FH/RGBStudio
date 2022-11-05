@@ -1,7 +1,7 @@
 #include <effect_manager/EffectManager.hpp>
-#include <native_effects/VisorEffect.hpp>
+#include <native_effects/VisorEffectInstance.hpp>
+#include <lua_effect_loader/LuaEffectInstance.hpp>
 #include <lua_effect_loader/LuaEffect.hpp>
-#include <lua_effect_loader/LuaEffectFactory.hpp>
 #include <lua_effect_loader/LuaEffectSettings.hpp>
 #include <lua_effect_loader/LuaIntegerValue.hpp>
 #include <lua_effect_loader/LuaStringValue.hpp>
@@ -16,9 +16,11 @@
 #include <memory>
 #include <stdexcept>
 
-#include "KeyTrigger.hpp"
+#include <event_trigger_runner/default_triggers/KeyTrigger.hpp>
+#include <event_trigger_runner/default_triggers/KeyTriggerFactory.hpp>
+#include <dynamic_config/ConfigGenericValue.hpp>
 
-std::unique_ptr<LuaEffectFactory> fraction_effect(std::shared_ptr<IKeyboardDevice> keyboard_device, RGBColor color, std::string end_trigger, lua_Number start, lua_Number end) {
+std::unique_ptr<LuaEffect> fraction_effect(std::shared_ptr<IKeyboardDevice> keyboard_device, RGBColor color, std::string end_trigger, lua_Number start, lua_Number end) {
 	LuaEffectSettings lua_effect_settings;
 	lua_effect_settings.set_setting("red", std::make_unique<LuaIntegerValue>(color.r));
 	lua_effect_settings.set_setting("green", std::make_unique<LuaIntegerValue>(color.g));
@@ -27,7 +29,7 @@ std::unique_ptr<LuaEffectFactory> fraction_effect(std::shared_ptr<IKeyboardDevic
 	lua_effect_settings.set_setting("start_fraction", std::make_unique<LuaNumberValue>(start));
 	lua_effect_settings.set_setting("end_fraction", std::make_unique<LuaNumberValue>(end));
 
-	return std::make_unique<LuaEffectFactory>(0, keyboard_device, "fill_fraction.lua", lua_effect_settings);
+	return std::make_unique<LuaEffect>(0, keyboard_device, "fill_fraction.lua", lua_effect_settings);
 }
 
 int catched_main()
@@ -75,15 +77,21 @@ int catched_main()
 
 	std::cout << "Creating effects and triggers" << std::endl;
 
+	auto trigger_factory = KeyTriggerFactory();
+
+	DynamicConfig dynamic_config;
+	dynamic_config.set_config_value("trigger_key", std::make_unique<ConfigIntegerValue>('A'));
+	dynamic_config.set_config_value("trigger_on_press", std::make_unique<ConfigBoolValue>(true));
+
 	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("escape key press", VK_ESCAPE, true, false, false));
 
-	event_trigger_controller.add_effect_factory("green highlight", fraction_effect(keyboard_device, RGBColor{ 0, 255, 0 }, "green highlight stop", 0, 0.2));
-	event_trigger_controller.add_effect_factory("red highlight", fraction_effect(keyboard_device, RGBColor{ 255, 0, 0 }, "red highlight stop", 0.2, 0.4));
-	event_trigger_controller.add_effect_factory("yellow highlight", fraction_effect(keyboard_device, RGBColor{ 255, 255, 0 }, "yellow highlight stop", 0.4, 0.6));
-	event_trigger_controller.add_effect_factory("blue highlight", fraction_effect(keyboard_device, RGBColor{ 0, 0, 255 }, "blue highlight stop", 0.6, 0.8));
-	event_trigger_controller.add_effect_factory("orange highlight", fraction_effect(keyboard_device, RGBColor{ 255, 106, 0 }, "orange highlight stop", 0.8, 1));
+	event_trigger_controller.add_effect("green highlight", fraction_effect(keyboard_device, RGBColor{ 0, 255, 0 }, "green highlight stop", 0, 0.2));
+	event_trigger_controller.add_effect("red highlight", fraction_effect(keyboard_device, RGBColor{ 255, 0, 0 }, "red highlight stop", 0.2, 0.4));
+	event_trigger_controller.add_effect("yellow highlight", fraction_effect(keyboard_device, RGBColor{ 255, 255, 0 }, "yellow highlight stop", 0.4, 0.6));
+	event_trigger_controller.add_effect("blue highlight", fraction_effect(keyboard_device, RGBColor{ 0, 0, 255 }, "blue highlight stop", 0.6, 0.8));
+	event_trigger_controller.add_effect("orange highlight", fraction_effect(keyboard_device, RGBColor{ 255, 106, 0 }, "orange highlight stop", 0.8, 1));
 
-	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("green key press", 'A', true, false, false));
+	event_trigger_controller.add_trigger(trigger_factory.create("green key press", dynamic_config));
 	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("green key release", 'A', false, true, false));
 
 	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("red key press", 'S', true, false, false));
@@ -98,17 +106,30 @@ int catched_main()
 	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("orange key press", 'G', true, false, false));
 	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("orange key release", 'G', false, true, false));
 
-	event_trigger_controller.add_action_trigger("green key press", "green highlight");
-	event_trigger_controller.add_action_trigger("red key press", "red highlight");
-	event_trigger_controller.add_action_trigger("yellow key press", "yellow highlight");
-	event_trigger_controller.add_action_trigger("blue key press", "blue highlight");
-	event_trigger_controller.add_action_trigger("orange key press", "orange highlight");
+	event_trigger_controller.add_trigger_action_edge("green key press", "green highlight");
+	event_trigger_controller.add_trigger_action_edge("red key press", "red highlight");
+	event_trigger_controller.add_trigger_action_edge("yellow key press", "yellow highlight");
+	event_trigger_controller.add_trigger_action_edge("blue key press", "blue highlight");
+	event_trigger_controller.add_trigger_action_edge("orange key press", "orange highlight");
 
-	event_trigger_controller.add_action_trigger("green key release", "green highlight stop");
-	event_trigger_controller.add_action_trigger("red key release", "red highlight stop");
-	event_trigger_controller.add_action_trigger("yellow key release", "yellow highlight stop");
-	event_trigger_controller.add_action_trigger("blue key release", "blue highlight stop");
-	event_trigger_controller.add_action_trigger("orange key release", "orange highlight stop");
+	event_trigger_controller.add_trigger_action_edge("green key release", "green highlight stop");
+	event_trigger_controller.add_trigger_action_edge("red key release", "red highlight stop");
+	event_trigger_controller.add_trigger_action_edge("yellow key release", "yellow highlight stop");
+	event_trigger_controller.add_trigger_action_edge("blue key release", "blue highlight stop");
+	event_trigger_controller.add_trigger_action_edge("orange key release", "orange highlight stop");
+
+	event_trigger_controller.add_action_effect_edge("green highlight", "green highlight");
+	event_trigger_controller.add_action_effect_edge("red highlight", "red highlight");
+	event_trigger_controller.add_action_effect_edge("yellow highlight", "yellow highlight");
+	event_trigger_controller.add_action_effect_edge("blue highlight", "blue highlight");
+	event_trigger_controller.add_action_effect_edge("orange highlight", "orange highlight");
+
+	event_trigger_controller.add_action_effect_edge("green highlight stop", "green highlight stop");
+	event_trigger_controller.add_action_effect_edge("red highlight stop", "red highlight stop");
+	event_trigger_controller.add_action_effect_edge("yellow highlight stop", "yellow highlight stop");
+	event_trigger_controller.add_action_effect_edge("blue highlight stop", "blue highlight stop");
+	event_trigger_controller.add_action_effect_edge("orange highlight stop", "orange highlight stop");
+
 
 	std::cout << "Starting event loop" << std::endl;
 

@@ -9,3 +9,8 @@ AuraSdk_x86.tli
 *.g.hpp
 *.dll
 bin/
+**/node_modules/
+*/node_modules/
+# I dont care about package-lock
+**/package-lock.json
+*/package-lock.json

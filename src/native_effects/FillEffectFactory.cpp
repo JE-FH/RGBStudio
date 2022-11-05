@@ -1,15 +1,26 @@
 #include <native_effects/FillEffectFactory.hpp>
-#include <native_effects/FillEffect.hpp>
+#include <dynamic_config/ConfigGenericValue.hpp>
+#include <memory>
+#include "native_effects/FillEffect.hpp"
 
-FillEffectFactory::FillEffectFactory(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device, std::string stop_trigger, RGBColor color)
-{
-	_layer = layer;
-	_stop_trigger = stop_trigger;
-	_color = color;
-	_keyboard_device = std::move(keyboard_device);
+FillEffectFactory::FillEffectFactory() {
+	spec.add_field("layer", std::make_unique<ConfigIntegerTypeDesc>(), true);
+	spec.add_field("stop trigger", std::make_unique<ConfigActionNameTypeDesc>(), true);
+	spec.add_field("color", std::make_unique<ConfigRGBColorTypeDesc>(), true);
 }
 
-void FillEffectFactory::add_new_instance(EffectManager& effect_manager, TriggerObserverDispatcher& trigger_observer_dispatcher)
-{
-	effect_manager.add_effect(std::make_unique<FillEffect>(_layer, _keyboard_device, _stop_trigger, _color, trigger_observer_dispatcher));
+std::unique_ptr<IEffect> FillEffectFactory::create(const DynamicConfig& dynamic_config, std::shared_ptr<IKeyboardDevice> device) {
+	auto& layer = dynamic_config.get_config_value<ConfigIntegerValue>("layer");
+	auto& stop_trigger = dynamic_config.get_config_value<ConfigActionNameValue>("stop trigger");
+	auto& color = dynamic_config.get_config_value<ConfigRGBColorValue>("color");
+
+	return std::make_unique<FillEffect>(layer.get_value(), device, stop_trigger.get_value(), color.get_value());
+}
+
+const DynamicConfigSpec& FillEffectFactory::get_config_spec() const {
+	return spec;
+}
+
+std::string FillEffectFactory::get_name() const {
+	return "Fill effect";
 }

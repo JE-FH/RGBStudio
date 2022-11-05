@@ -1,5 +1,5 @@
 #pragma once
-#include <event_trigger_runner/Trigger.hpp>
+#include "../Trigger.hpp"
 class KeyTrigger
 	: public Trigger
 {

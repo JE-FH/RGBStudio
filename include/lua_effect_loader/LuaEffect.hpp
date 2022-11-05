@@ -1,23 +1,24 @@
 #pragma once
-#include <effect_manager/Effect.hpp>
-#include <event_trigger_runner/TriggerObserverDispatcher.hpp>
+#include <event_trigger_runner/IEffect.hpp>
 #include "LuaEffectSettings.hpp"
 #include "LuaUtils.hpp"
 #include "LuaIKeyboardDeviceAdapter.hpp"
-#include "LuaTriggerObserverDispatcherAdapter.hpp"
 #include <lua.hpp>
 class LuaEffect :
-    public Effect
+    public IEffect
 {
 public:
-    LuaEffect(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device, TriggerObserverDispatcher& trigger_observer_dispatcher, LuaStatePtr thread);
     LuaEffect(const LuaEffect&) = delete;
+    LuaEffect(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device, const std::string& file_name, LuaEffectSettings& settings);
     ~LuaEffect();
-    // Inherited via Effect
-    virtual void draw(double delta) override;
+    
+    // Inherited via IEffect
+    virtual void add_new_instance(EffectManager& effect_manager, TriggerObserverDispatcher& trigger_observer_dispatcher) override;
 private:
     LuaStatePtr L;
-    LuaTriggerObserverDispatcherAdapter dispatcher;
-    int _state_ref;
+    std::shared_ptr<IKeyboardDevice> _keyboard_device;
+    LuaIKeyboardDeviceAdapter _keyboard_device_adapter;
+
+    int _layer;
 };
 

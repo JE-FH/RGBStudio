@@ -2,9 +2,9 @@
 #include <device_adapter_loader/IKeyboardDevice.hpp>
 #include <memory>
 
-class Effect {
+class EffectInstance {
 public:
-	virtual ~Effect() {}
+	virtual ~EffectInstance() {}
 	
 	int layer;
 
@@ -21,7 +21,7 @@ public:
 	/// <param name="delta">The amount of time since last call</param>
 	virtual void draw(double delta) = 0;
 protected:
-	Effect(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device) {
+	EffectInstance(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device) {
 		this->layer = layer;
 		this->_keyboard_device = std::move(keyboard_device);
 		completed = false;

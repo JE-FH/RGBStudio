@@ -1,8 +1,16 @@
 #pragma once
-#include <effect_manager/EffectManager.hpp>
-#include "TriggerObserverDispatcher.hpp"
+#include "IEffect.hpp"
+#include <dynamic_config/DynamicConfig.hpp>
+#include <dynamic_config/DynamicConfigSpec.hpp>
+#include <memory>
+
 class IEffectFactory {
 public:
 	virtual ~IEffectFactory() {}
-	virtual void add_new_instance(EffectManager& effect_manager, TriggerObserverDispatcher& trigger_observer_dispatcher) = 0;
+
+	virtual std::unique_ptr<IEffect> create(const DynamicConfig& dynamic_config, std::shared_ptr<IKeyboardDevice> device) = 0;
+
+	virtual const DynamicConfigSpec& get_config_spec() const = 0;
+
+	virtual std::string get_name() const = 0;
 };
