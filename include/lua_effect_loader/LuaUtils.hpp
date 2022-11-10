@@ -51,6 +51,30 @@ public:
 		int new_thread_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 		return LuaStatePtr(L, new_thread, new_thread_ref, _L_ref_count);
 	}
+
+	void StackDump() {
+		int top = lua_gettop(L);
+		for (int i = 1; i <= top; i++) {
+			printf("%d\t%s\t", i, luaL_typename(L, i));
+			switch (lua_type(L, i)) {
+			case LUA_TNUMBER:
+				printf("%g\n", lua_tonumber(L, i));
+				break;
+			case LUA_TSTRING:
+				printf("%s\n", lua_tostring(L, i));
+				break;
+			case LUA_TBOOLEAN:
+				printf("%s\n", (lua_toboolean(L, i) ? "true" : "false"));
+				break;
+			case LUA_TNIL:
+				printf("%s\n", "nil");
+				break;
+			default:
+				printf("%p\n", lua_topointer(L, i));
+				break;
+			}
+		}
+	}
 private:
 	LuaStatePtr(lua_State* L, lua_State* thread, int thread_ref, std::shared_ptr<size_t> L_ref_count) {
 		this->L = L;

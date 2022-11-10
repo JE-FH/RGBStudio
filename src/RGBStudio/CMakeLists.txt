@@ -62,5 +62,11 @@ add_custom_command(TARGET frontend_build POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/build/" "${ASSETS_PATH}")
 
 
+add_custom_command(
+	TARGET RGBStudio POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy 
+		$<TARGET_FILE:RGBStudio> 
+		"${RGBStudio_SOURCE_DIR}/bin/RGBStudio.exe"
+)
 
 add_dependencies(RGBStudio frontend_build)

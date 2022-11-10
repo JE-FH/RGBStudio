@@ -24,14 +24,16 @@ add_library(lua_effect_loader STATIC
 	"LuaTableValue.cpp"
 	"LuaTriggerObserverDispatcherAdapter.cpp"
 	"LuaUtils.cpp"
+	"LuaEffectFactory.cpp"
 	${HEADER_LIST}
-)
+ )
 
 target_include_directories(lua_effect_loader PUBLIC "${RGBStudio_SOURCE_DIR}/include")
 
 target_link_libraries(lua_effect_loader PUBLIC device_adapter_loader)
 target_link_libraries(lua_effect_loader PUBLIC effect_manager)
 target_link_libraries(lua_effect_loader PUBLIC event_trigger_runner)
+target_link_libraries(lua_effect_loader PUBLIC dynamic_config)
 
 find_package(Lua REQUIRED)
 target_include_directories(lua_effect_loader PUBLIC ${LUA_INCLUDE_DIR})

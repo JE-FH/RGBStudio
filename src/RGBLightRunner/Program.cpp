@@ -32,11 +32,25 @@
 #include "RGBLightRunner/RGBLightRunnerConfig.hpp"
 #include "RGBLightRunner/RGBLightRunnerTrigger.hpp"
 #include "RGBLightRunner/RGBLightRunnerEffect.hpp"
-
+#include <lua_effect_loader/LuaEffectFactory.hpp>
+#include <shlobj_core.h>
+#include <filesystem>
 struct ApplyConfigCommandData {
 	RGBLightRunnerConfig config;
 };
 
+
+std::filesystem::path GetConfigPath() {
+	PWSTR str;
+	auto res = SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_DEFAULT, NULL, &str);
+	if (res != S_OK) {
+		std::cout << "Could not get documents folder, error code: " << GetLastError() << std::endl;
+		exit(1);
+	}
+	std::wstring path = std::wstring(str);
+	CoTaskMemFree(str);
+	return std::filesystem::path(path) / "RGBLightRunner";
+}
 
 class RGBLightRunner {
 	std::unique_ptr<EventTriggerController> _eventTriggerController;
@@ -51,6 +65,7 @@ public:
 
 	RGBLightRunner(std::shared_ptr<IKeyboardDevice> keyboardDevice) {
 		AddFactories();
+		AddLuaFactories();
 
 		auto effectManager = EffectManager();
 		effectManager.add_device(keyboardDevice);
@@ -133,6 +148,25 @@ private:
 		_triggerFactories.insert(std::pair(triggerFactory->get_name(), std::move(triggerFactory)));
 		auto fillEffectFactory = std::make_unique<FillEffectFactory>();
 		_effectFactories.insert(std::pair(fillEffectFactory->get_name(), std::move(fillEffectFactory)));
+	}
+
+	void AddLuaFactories() {
+		auto luaEffectsPath = GetConfigPath() / "effects";
+		
+		for (const auto& entry : std::filesystem::directory_iterator(luaEffectsPath)) {
+			if (entry.is_regular_file() && entry.path().extension() == ".lua") {
+				AddLuaFactory(entry.path().string());
+			}
+		}
+
+	}
+
+	void AddLuaFactory(std::string fileName) {
+		auto factory = std::make_unique<LuaEffectFactory>(fileName);
+		std::string name = factory->get_name();
+		std::cout << "Adding effect: \"" << name << "\" from " << fileName << std::endl;
+
+		_effectFactories.insert(std::pair(std::move(name), std::move(factory)));
 	}
 
 	void InitEventSources() {
@@ -239,7 +273,8 @@ int Program::Main(std::span<char*> arguments)
 	if (path.size() == 0) {
 		path = "asus_aura_adapter.dll";
 	}
-	auto device_adapter = std::make_shared<DeviceAdapter>(path.c_str());
+	std::string device_adapter_path = (GetConfigPath() / "device adapters" / path).string();
+	auto device_adapter = std::make_shared<DeviceAdapter>(device_adapter_path.c_str());
 
 	std::cout << "Connecting to keyboard" << std::endl;
 

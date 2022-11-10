@@ -30,9 +30,6 @@ LuaEffect::LuaEffect(int layer, std::shared_ptr<IKeyboardDevice> keyboard_device
 
 LuaEffect::~LuaEffect()
 {
-	if (L != nullptr) {
-		lua_close(L);
-	}
 }
 
 void LuaEffect::add_new_instance(EffectManager& effect_manager, TriggerObserverDispatcher& trigger_observer_dispatcher)
