@@ -21,3 +21,8 @@ root folder. This will make everything work as intended.
 For debugging you should use `bin/` as cwd since this is where needed dll's are copied to
 
 Ninja generator does not work when including .targets files, therefore set generator to "Visual Studio 17 2022". We need to support .targets files since this how we import webview2
+
+## Running
+Current build requires you to create the config folder yourself. You have to create a folder called `RGBLightRunner` in documents and create two sub folders `effects` and `device adapters`. 
+Put the built device adapter you need into the `device adapters` folder, when prompted for the file name of the adapter, it will concat the path to the `device adapters` folder with the name.
+Put any lua effect you want to be loaded into the `effects` folder, RGBLightRunner will load all effects in the folder that has the `.lua` extension.

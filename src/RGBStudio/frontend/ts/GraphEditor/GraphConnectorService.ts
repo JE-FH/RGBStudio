@@ -42,7 +42,6 @@ export class GraphConnectorService implements IGraphConnectorService {
 			if (edge.source.Type == ConnectorType.Trigger) {
 				if (edge.source.GraphNode instanceof TriggerNode && edge.target.GraphNode instanceof ActionNode) {
 					this._graphEditorService.AddTriggerActionEdge(edge.source.GraphNode, edge.target.GraphNode);
-					this._startConnector = null;
 				}
 			} else if (edge.source.Type == ConnectorType.Action) {
 				if (edge.source.GraphNode instanceof ActionNode && edge.target.GraphNode instanceof EffectNode) {
@@ -50,10 +49,10 @@ export class GraphConnectorService implements IGraphConnectorService {
 						this._graphEditorService.AddActionAttributeEdge(edge.source.GraphNode, edge.target.GraphNode, edge.target);
 					} else {
 						this._graphEditorService.AddActionEffectEdge(edge.source.GraphNode as ActionNode, edge.target.GraphNode as EffectNode);
-						this._startConnector = null;
 					}
 				}
-            }
+			}
+			this._startConnector = null;
 		}
 	}
 
