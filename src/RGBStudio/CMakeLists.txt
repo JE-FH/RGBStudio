@@ -52,10 +52,7 @@ add_custom_target(
 	COMMAND nmake /NOLOGO /C "all"
 	WORKING_DIRECTORY ${RGBStudio_FRONTEND_DIRECTORY}
 	USES_TERMINAL
-	SOURCES
-		"${RGBStudio_FRONTEND_DIRECTORY}/ts/editor.m.ts"
-		"${RGBStudio_FRONTEND_DIRECTORY}/less/editor.less"
- "JSONRPC.hpp" "LightRunnerApi.cpp")
+)
 
 add_custom_command(TARGET frontend_build POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E rm -rf "${ASSETS_PATH}"
