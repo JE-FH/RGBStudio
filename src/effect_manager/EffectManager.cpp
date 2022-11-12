@@ -45,3 +45,8 @@ void EffectManager::tick()
 		device->apply_colors();
 	}
 }
+
+void EffectManager::clear() 
+{
+	_effects.clear();
+}

@@ -13,7 +13,7 @@
 class Editor : public IJSONRPCConnection, public IJSONRPCSubscriber {
 private:
 	Editor(HWND hwnd, std::unique_ptr<IAssetLoader> asset_loader, std::unique_ptr<LightRunnerApi> lightRunnerApi);
-
+	
 	HWND hwnd;
 	wil::com_ptr<ICoreWebView2Controller> webviewController;
 	wil::com_ptr<ICoreWebView2> webviewWindow;

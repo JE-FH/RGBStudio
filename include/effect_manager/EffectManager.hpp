@@ -12,6 +12,7 @@ public:
 	void add_device(std::shared_ptr<IKeyboardDevice> _device);
 	void add_effect_instance(std::unique_ptr<EffectInstance> effect);
 	void tick();
+	void clear();
 private:
 	std::vector<std::unique_ptr<EffectInstance>> _effects;
 	std::vector<std::shared_ptr<IKeyboardDevice>> _devices;

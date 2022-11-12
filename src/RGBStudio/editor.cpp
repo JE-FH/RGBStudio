@@ -162,26 +162,30 @@ void Editor::create_controller_completed(HRESULT result, ICoreWebView2Controller
 	GetClientRect(hwnd, &bounds);
 	ok_or_throw(webviewController->put_Bounds(bounds));
 
-	/*webviewWindow->SetVirtualHostNameToFolderMapping(
-		L"rgbeditor",
-		L"file:///L:/Development/cpp/RGBStudio/src/RGBStudio/build",
-		CoreWebView2HostResourceAccessKind.DenyCors
-	);*/
+	auto webView2_3 = webviewWindow.try_query<ICoreWebView2_3>();
 
-	auto html = EncodingConverter::utf8_to_utf16(
+	ok_or_throw(webView2_3->SetVirtualHostNameToFolderMapping(
+		L"appassets.example",
+		L"assets",
+		COREWEBVIEW2_HOST_RESOURCE_ACCESS_KIND_DENY_CORS
+	));
+
+	/*auto html = EncodingConverter::utf8_to_utf16(
 		asset_loader->load_asset("assets/editor.html")
-	);
-
+	);*/
+	
 	// Schedule an async task to navigate to 
-	ok_or_throw(webviewWindow->NavigateToString((LPCWSTR) html.c_str()));
-
+	ok_or_throw(webviewWindow->Navigate(L"https://appassets.example/index.html"));
+	std::wcout << L"COCK" << std::endl;
 	ok_or_throw(webviewWindow->add_NavigationStarting(Microsoft::WRL::Callback<ICoreWebView2NavigationStartingEventHandler>(
 		 COMCallbackExceptionProtection([&](ICoreWebView2* webview, ICoreWebView2NavigationStartingEventArgs* args) -> void {
 			PWSTR uri;
 			ok_or_throw(args->get_Uri(&uri));
 			std::wstring source(uri);
-			if (source.substr(0, 14) != L"data:text/html") {
+			std::wcout << "source: " << source << ", sub: \"" << source.substr(0, 26) << "\"" << std::endl;
+			if (source.substr(0, 26) != L"https://appassets.example/") {
 				ok_or_throw(args->put_Cancel(true));
+				std::cout << "Canceled navigation";
 			}
 			CoTaskMemFree(uri);
 		})).Get(), &navigation_started_evt));
