@@ -1,4 +1,5 @@
 #include <event_trigger_runner/TriggerObserverDispatcher.hpp>
+#include <iostream>
 
 TriggerObserverDispatcher::TriggerObserverDispatcher() {}
 
@@ -9,6 +10,7 @@ TriggerObserverDispatcher::~TriggerObserverDispatcher() {
 }
 
 void TriggerObserverDispatcher::add_observer(std::string trigger, TriggerObserver& observer) {
+	std::cout << "added observer for: " << trigger << std::endl;
 	observer._creator = this;
 	_observers.insert(std::pair(std::move(trigger), &observer));
 }
@@ -26,6 +28,7 @@ void TriggerObserverDispatcher::remove_observer(TriggerObserver* observer) {
 }
 
 void TriggerObserverDispatcher::dispatch(const std::string& trigger) {
+	std::cout << "dispatching to observers for: " << trigger << std::endl;
 	auto trigger_range = _observers.equal_range(trigger);
 	for (auto iter = trigger_range.first; iter != trigger_range.second; iter++) {
 		iter->second->Trigger(trigger);

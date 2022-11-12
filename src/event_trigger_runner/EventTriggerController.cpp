@@ -31,7 +31,7 @@ void EventTriggerController::clear() {
 	_trigger_action_edges.clear();
 	_action_effect_edges.clear();
 	_effects.clear();
-	//TODO: Clear effectmanager
+	_effect_manager.clear();
 }
 
 void EventTriggerController::run()
@@ -58,15 +58,20 @@ void EventTriggerController::run_tick()
 
 	for (const auto& triggered_trigger_name : triggered_triggers_names) {
 		auto action_range = _trigger_action_edges.equal_range(triggered_trigger_name);
-
+		std::cout << "trigger: " << triggered_trigger_name << std::endl;
 		for (auto action_it = action_range.first; action_it != action_range.second; action_it++) {
+			std::cout << "edge: " << action_it->first << " -> " << action_it->second << std::endl;
+
 			auto effect_range = _action_effect_edges.equal_range(action_it->second);
 			_trigger_observer_dispatcher.dispatch(action_it->second);
 
 			for (auto effect_it = effect_range.first; effect_it != effect_range.second; effect_it++) {
+				std::cout << "edge: " << effect_it->first << " -> " << effect_it->second << std::endl;
 				auto effect_factory = _effects.find(effect_it->second);
 
 				if (effect_factory != _effects.end()) {
+					std::cout << "effect: " << effect_factory->first << std::endl;
+
 					effect_factory->second->add_new_instance(_effect_manager, _trigger_observer_dispatcher);
 				}
 			}

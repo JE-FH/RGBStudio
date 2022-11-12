@@ -1,5 +1,5 @@
 import type { DynamicConfigAttribute, EffectInstanceConfig, LightingConfig, TriggerInstanceConfig } from "@/util/RGBStudioAPI";
-import { CheckboxInterface, IntegerInterface, NodeInterface, NumberInterface, TextInputInterface, type AbstractNode, type Graph } from "baklavajs";
+import { CheckboxInterface, Connection, IntegerInterface, NodeInterface, NumberInterface, TextInputInterface, type AbstractNode, type Graph } from "baklavajs";
 import { ColorPickerInterface } from "@/graph/Interfaces/ColorPickerInterface";
 
 const RGBLightRunnerCommands = {
@@ -31,7 +31,7 @@ function FormatNodeConnection(node: AbstractNode, nodeInterface: NodeInterface) 
 	return `${GetInstanceName(node)}.${nodeInterface.name}`;
 }
 
-function EncodeInterfaceValue(nodeInterface: NodeInterface<any>): string {
+function EncodeInterfaceValue(nodeInterface: NodeInterface<any>, graph: Graph): string {
 	if (nodeInterface instanceof TextInputInterface) {
 		return nodeInterface.value;
 	} else if (nodeInterface instanceof NumberInterface) {
@@ -43,18 +43,29 @@ function EncodeInterfaceValue(nodeInterface: NodeInterface<any>): string {
 	} else if (nodeInterface instanceof ColorPickerInterface) {
 		return nodeInterface.value.hex_color;
 	} else if (nodeInterface instanceof NodeInterface) {
+		if (nodeInterface.value?.isAttribute == true) {
+			let connection = graph.connections.find((connection) => connection.to.id == nodeInterface.id);
+			if (connection == null) {
+				throw new Error("Could not find connection");
+			}
+			let node = graph.findNodeById(connection.from.nodeId);
+			if (node == null) {
+				throw new Error("Could not find node by id");
+			}
+			return GetInstanceName(node);
+		}
 		return "";
 	} 
 	console.log(nodeInterface);
 	throw new Error("Unsupported interface type");
 }
 
-function CreateAttributes(inputs: Record<string, NodeInterface<any>>): DynamicConfigAttribute[] {
+function CreateAttributes(inputs: Record<string, NodeInterface<any>>, graph: Graph): DynamicConfigAttribute[] {
 	return Object.keys(inputs)
 		.map((inputKey) => inputs[inputKey])
 		.map((input) => {
 			console.log(input)
-			return {name: input.name, value: EncodeInterfaceValue(input)};
+			return {name: input.name, value: EncodeInterfaceValue(input, graph)};
 		})
 }
 
@@ -73,7 +84,7 @@ export function CreateLightningConfig(graph: Graph): LightingConfig {
 			let triggerInstance: TriggerInstanceConfig = {
 				instanceId: GetInstanceName(node),
 				triggerId: info.id,
-				attributes: CreateAttributes(node.inputs)
+				attributes: CreateAttributes(node.inputs, graph)
 			};
 
 			config.triggerInstances.push(triggerInstance);
@@ -81,7 +92,7 @@ export function CreateLightningConfig(graph: Graph): LightingConfig {
 			let effectInstance: EffectInstanceConfig = {
 				instanceId: GetInstanceName(node),
 				effectId: info.id,
-				attributes: CreateAttributes(node.inputs)
+				attributes: CreateAttributes(node.inputs, graph)
 			};
 
 			config.effectInstances.push(effectInstance);
@@ -93,10 +104,13 @@ export function CreateLightningConfig(graph: Graph): LightingConfig {
 
 		let fromNodeInfo = GetTypeAndName(fromNode);
 		if (fromNodeInfo.type == "action") {
-			config.actionEffectEdges.push({
-				actionName: GetInstanceName(fromNode),
-				effectInstanceId: GetInstanceName(toNode)
-			});
+			if (connection.to.value?.isAttribute == true) {
+			} else {
+				config.actionEffectEdges.push({
+					actionName: GetInstanceName(fromNode),
+					effectInstanceId: GetInstanceName(toNode)
+				});
+			}
 		} else {
 			config.triggerActionEdges.push({
 				triggerInstanceId: GetInstanceName(fromNode),

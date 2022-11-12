@@ -5,7 +5,7 @@ export interface TriggerEvent {
 }
 
 export interface ActionEvent {
-	
+	isAttribute: boolean;
 }
 
 function hexToRgb(hex: string) {

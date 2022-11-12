@@ -44,6 +44,10 @@ if (import.meta.env.DEV) {
 				"Color": {
 					name: "Color",
 					type: FieldType.RGBColor
+				},
+				"Stop": {
+					name: "Stop",
+					type: FieldType.Action
 				}
 
 			}

@@ -7,6 +7,6 @@ export default defineNode({
 		input: () => new NodeInterface("Trigger", {}).use(setType, triggerActionType),
 	},
 	outputs: {
-        output: () => new NodeInterface("Effect", {}).use(setType, actionEffectType),
+        output: () => new NodeInterface("Effect", {isAttribute: false}).use(setType, actionEffectType),
     },
 });

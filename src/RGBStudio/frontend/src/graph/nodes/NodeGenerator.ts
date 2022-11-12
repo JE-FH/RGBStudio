@@ -14,7 +14,7 @@ function FieldTypeToNode(name: string, fieldType: FieldType) {
 		case FieldType.Bool:
 			return () => new CheckboxInterface(name, false).setPort(false);
 		case FieldType.Action:
-			return () => new NodeInterface(name, {}).use(setType, actionEffectType);
+			return () => new NodeInterface(name, {isAttribute: true}).use(setType, actionEffectType);
 		case FieldType.RGBColor:
 			return () => new ColorPickerInterface(name).setPort(false);
 		default:
@@ -53,7 +53,7 @@ export function CreateEffectNode(effectDescription: EffectDescription) {
 		type: `effect#${effectDescription.name}`,
 		inputs: {
 			...inputs,
-			action: () => new NodeInterface("Action", {}).use(setType, actionEffectType)
+			action: () => new NodeInterface("Action", {isAttribute: false}).use(setType, actionEffectType)
 		},
 	});
 }
