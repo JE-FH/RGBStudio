@@ -64,7 +64,6 @@ function CreateAttributes(inputs: Record<string, NodeInterface<any>>, graph: Gra
 	return Object.keys(inputs)
 		.map((inputKey) => inputs[inputKey])
 		.map((input) => {
-			console.log(input)
 			return {name: input.name, value: EncodeInterfaceValue(input, graph)};
 		})
 }
@@ -117,8 +116,6 @@ export function CreateLightningConfig(graph: Graph): LightingConfig {
 				actionName: GetInstanceName(toNode)
 			});
 		}
-
-		console.log(`${FormatNodeConnection(fromNode, connection.from)} -> ${FormatNodeConnection(toNode, connection.to)}`)
 	}
 
 	return config;

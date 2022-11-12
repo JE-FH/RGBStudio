@@ -5,6 +5,6 @@
 
 <template>
   <main>
-    <p>cock</p>
+    <p></p>
   </main>
 </template>

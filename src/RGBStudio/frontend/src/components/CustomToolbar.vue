@@ -15,7 +15,6 @@ const commands = [
 const props = defineProps<{
 	commandHandler: ICommandHandler
 }>();
-console.log("cock");
 </script>
 
 <template>
