@@ -166,7 +166,7 @@ void Editor::create_controller_completed(HRESULT result, ICoreWebView2Controller
 
 	ok_or_throw(webView2_3->SetVirtualHostNameToFolderMapping(
 		L"appassets.example",
-		L"L:/Development/cpp/RGBStudio/src/RGBStudio/frontend/dist",
+		L"assets",
 		COREWEBVIEW2_HOST_RESOURCE_ACCESS_KIND_DENY_CORS
 	));
 
