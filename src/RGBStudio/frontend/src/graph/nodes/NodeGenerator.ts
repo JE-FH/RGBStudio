@@ -14,7 +14,7 @@ function FieldTypeToNode(name: string, fieldType: FieldType) {
 		case FieldType.Bool:
 			return () => new CheckboxInterface(name, false).setPort(false);
 		case FieldType.Action:
-			return () => new NodeInterface("Action", {}).use(setType, actionEffectType);
+			return () => new NodeInterface(name, {}).use(setType, actionEffectType);
 		case FieldType.RGBColor:
 			return () => new ColorPickerInterface(name).setPort(false);
 		default:

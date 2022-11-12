@@ -21,7 +21,7 @@ if(NOT NUGET_EXE)
 endif()
 
 exec_program(${NUGET_EXE}
-    ARGS install "Microsoft.Web.WebView2" -Version 1.0.1072.54 -ExcludeVersion -OutputDirectory ${CMAKE_BINARY_DIR}/packages
+    ARGS install "Microsoft.Web.WebView2" -Version 1.0.1418.22 -ExcludeVersion -OutputDirectory ${CMAKE_BINARY_DIR}/packages
 )
 
 exec_program(${NUGET_EXE}
@@ -56,7 +56,7 @@ add_custom_target(
 
 add_custom_command(TARGET frontend_build POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E rm -rf "${ASSETS_PATH}"
-  COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/build/" "${ASSETS_PATH}")
+  COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/frontend/dist/" "${ASSETS_PATH}")
 
 
 add_custom_command(

@@ -27,12 +27,10 @@ async function main() {
 			fileString += file.replaceAll("\\", "/") + " \\\n";
         }
     }
-	let makefile = `all: ../build/editor.html
-frontend/dist/index.html: ${fileString}
-	npm run build
+	let makefile = `all: dist/index.html
 
-../build/editor.html: frontend/dist/index.html
-	node inlinehtml.js "frontend/dist/index.html" "../build/editor.html" "../frontend/dist/"
+dist/index.html: ${fileString}
+	npm run build
 `;
 	fs.writeFile("makefile", makefile);
 }

@@ -1,5 +1,6 @@
-all: frontend/dist/index.html
-frontend/dist/index.html: src/App.vue \
+all: dist/index.html
+
+dist/index.html: src/App.vue \
 src/components/ColorPickerAttribute.vue \
 src/components/CustomToolbar.vue \
 src/components/CustomToolbarButton.vue \
@@ -22,6 +23,3 @@ src/util/WebViewConnection.ts \
 src/views/EditorView.vue \
 src/views/HomeView.vue
 	npm run build
-
-../build/editor.html: frontend/dist/index.html
-	node inlinehtml.js "frontend/dist/index.html" "../build/editor.html" "../frontend/dist/"

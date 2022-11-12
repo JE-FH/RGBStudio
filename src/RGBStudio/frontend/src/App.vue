@@ -6,6 +6,7 @@ import { FieldType, RGBStudioAPI } from './util/RGBStudioAPI';
 import RGBStudioMockAPI from './util/RGBStudioMockAPI';
 
 if (import.meta.env.DEV) {
+	console.log("Dev mode, using mock API");
 	provide(RGBStudioAPISymbol, new RGBStudioMockAPI([
 		{
 			name: "test trigger",
@@ -49,6 +50,7 @@ if (import.meta.env.DEV) {
 		}
 	]));
 } else {
+	console.log("Production mode, using real API");
 	provide(RGBStudioAPISymbol, new RGBStudioAPI());
 }
 </script>

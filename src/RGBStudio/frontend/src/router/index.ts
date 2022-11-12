@@ -14,6 +14,10 @@ const router = createRouter({
       path: '/',
       name: 'editor',
       component: EditorView
+    },
+    {
+      path: "/index.html",
+      redirect: { name: "editor" }
     }
   ]
 })
