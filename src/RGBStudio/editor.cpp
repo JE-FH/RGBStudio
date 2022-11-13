@@ -176,7 +176,6 @@ void Editor::create_controller_completed(HRESULT result, ICoreWebView2Controller
 	
 	// Schedule an async task to navigate to 
 	ok_or_throw(webviewWindow->Navigate(L"https://appassets.example/index.html"));
-	std::wcout << L"COCK" << std::endl;
 	ok_or_throw(webviewWindow->add_NavigationStarting(Microsoft::WRL::Callback<ICoreWebView2NavigationStartingEventHandler>(
 		 COMCallbackExceptionProtection([&](ICoreWebView2* webview, ICoreWebView2NavigationStartingEventArgs* args) -> void {
 			PWSTR uri;

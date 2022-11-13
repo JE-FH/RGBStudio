@@ -9,7 +9,8 @@ export enum FieldType {
     Number = "Number",
     RGBColor = "RGBColor",
     Bool = "Bool",
-    Action = "Action"
+    Action = "Action",
+    KeyCode = "KeyCode",
 }
 
 export interface TriggerDescription {

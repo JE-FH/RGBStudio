@@ -1,4 +1,4 @@
-Enum,Code,Description,Js name
+Enum,VKCode,Description,JsName
 VK_BACK,0x08,BACKSPACE key,Backspace
 VK_TAB,0x09,TAB key,Tab
 VK_CLEAR,0x0C,CLEAR key,
@@ -142,7 +142,7 @@ VK_LAUNCH_MEDIA_SELECT,0xB5,Select Media key,
 VK_LAUNCH_APP1,0xB6,Start Application 1 key,
 VK_LAUNCH_APP2,0xB7,Start Application 2 key,
 VK_OEM_1,0xBA,U,BracketRight
-VK_OEM_PLUS,0xBB,For any country/region,minus
+VK_OEM_PLUS,0xBB,For any country/region,Minus
 VK_OEM_COMMA,0xBC,For any country/region,Comma
 VK_OEM_MINUS,0xBD,For any country/region,Slash
 VK_OEM_PERIOD,0xBE,For any country/region,Period

@@ -23,9 +23,7 @@ baklava.commandHandler.registerCommand(RGBLightRunnerCommands.APPLY_CONFIG, {
 	execute: async () => {
 		await api.ApplyConfig(CreateLightningConfig(baklava.editor.graph));
 	}
-})
-
-
+});
 
 api.OnAddedTrigger.add_listener((addedTrigger) => {
 	baklava.editor.registerNodeType(CreateTriggerNode(addedTrigger), {category: "Trigger"});

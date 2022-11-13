@@ -145,3 +145,19 @@ std::string ConfigActionNameTypeDesc::friendly_name() {
 std::unique_ptr<IConfigValue> ConfigActionNameTypeDesc::decode(const std::string& value) const {
 	return std::make_unique<ConfigActionNameValue>(value);
 }
+
+std::string ConfigKeyCodeTypeDesc::get_friendly_name() const {
+	return friendly_name();
+}
+
+std::string ConfigKeyCodeTypeDesc::get_internal_name() const {
+	return "KeyCode";
+}
+
+std::string ConfigKeyCodeTypeDesc::friendly_name() {
+	return "key code";
+}
+
+std::unique_ptr<IConfigValue> ConfigKeyCodeTypeDesc::decode(const std::string& value) const {
+	return std::make_unique<ConfigKeyCodeValue>(std::stoll(value));
+}
