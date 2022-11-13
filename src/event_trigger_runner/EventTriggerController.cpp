@@ -50,8 +50,9 @@ void EventTriggerController::run_tick()
 	std::vector<std::string> triggered_triggers_names;
 	while ((queued_event = _event_manager.pop_event()) != nullptr) {
 		for (auto& trigger : _triggers) {
-			if (trigger->should_trigger(*queued_event)) {
-				triggered_triggers_names.push_back(trigger->trigger_name);
+			std::string sub_trigger;
+			if (trigger->should_trigger(*queued_event, sub_trigger)) {
+				triggered_triggers_names.push_back(trigger->trigger_name + "." + sub_trigger);
 			}
 		}
 	}

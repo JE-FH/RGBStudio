@@ -83,7 +83,7 @@ int catched_main()
 	dynamic_config.set_config_value("trigger_key", std::make_unique<ConfigIntegerValue>('A'));
 	dynamic_config.set_config_value("trigger_on_press", std::make_unique<ConfigBoolValue>(true));
 
-	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("escape key press", VK_ESCAPE, true, false, false));
+	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("escape key", VK_ESCAPE));
 
 	event_trigger_controller.add_effect("green highlight", fraction_effect(keyboard_device, RGBColor{ 0, 255, 0 }, "green highlight stop", 0, 0.2));
 	event_trigger_controller.add_effect("red highlight", fraction_effect(keyboard_device, RGBColor{ 255, 0, 0 }, "red highlight stop", 0.2, 0.4));
@@ -92,31 +92,27 @@ int catched_main()
 	event_trigger_controller.add_effect("orange highlight", fraction_effect(keyboard_device, RGBColor{ 255, 106, 0 }, "orange highlight stop", 0.8, 1));
 
 	event_trigger_controller.add_trigger(trigger_factory.create("green key press", dynamic_config));
-	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("green key release", 'A', false, true, false));
+	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("green key", 'A'));
 
-	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("red key press", 'S', true, false, false));
-	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("red key release", 'S', false, true, false));
+	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("red key", 'S'));
 
-	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("yellow key press", 'D', true, false, false));
-	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("yellow key release", 'D', false, true, false));
+	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("yellow key", 'D'));
 
-	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("blue key press", 'F', true, false, false));
-	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("blue key release", 'F', false, true, false));
+	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("blue key", 'F'));
 
-	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("orange key press", 'G', true, false, false));
-	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("orange key release", 'G', false, true, false));
+	event_trigger_controller.add_trigger(std::make_unique<KeyTrigger>("orange key", 'G'));
 
-	event_trigger_controller.add_trigger_action_edge("green key press", "green highlight");
-	event_trigger_controller.add_trigger_action_edge("red key press", "red highlight");
-	event_trigger_controller.add_trigger_action_edge("yellow key press", "yellow highlight");
-	event_trigger_controller.add_trigger_action_edge("blue key press", "blue highlight");
-	event_trigger_controller.add_trigger_action_edge("orange key press", "orange highlight");
+	event_trigger_controller.add_trigger_action_edge("green key.pressed", "green highlight");
+	event_trigger_controller.add_trigger_action_edge("red key.pressed", "red highlight");
+	event_trigger_controller.add_trigger_action_edge("yellow key.pressed", "yellow highlight");
+	event_trigger_controller.add_trigger_action_edge("blue key.pressed", "blue highlight");
+	event_trigger_controller.add_trigger_action_edge("orange key.pressed", "orange highlight");
 
-	event_trigger_controller.add_trigger_action_edge("green key release", "green highlight stop");
-	event_trigger_controller.add_trigger_action_edge("red key release", "red highlight stop");
-	event_trigger_controller.add_trigger_action_edge("yellow key release", "yellow highlight stop");
-	event_trigger_controller.add_trigger_action_edge("blue key release", "blue highlight stop");
-	event_trigger_controller.add_trigger_action_edge("orange key release", "orange highlight stop");
+	event_trigger_controller.add_trigger_action_edge("green key.released", "green highlight stop");
+	event_trigger_controller.add_trigger_action_edge("red key.released", "red highlight stop");
+	event_trigger_controller.add_trigger_action_edge("yellow key.released", "yellow highlight stop");
+	event_trigger_controller.add_trigger_action_edge("blue key.released", "blue highlight stop");
+	event_trigger_controller.add_trigger_action_edge("orange key.released", "orange highlight stop");
 
 	event_trigger_controller.add_action_effect_edge("green highlight", "green highlight");
 	event_trigger_controller.add_action_effect_edge("red highlight", "red highlight");
