@@ -24,21 +24,24 @@ function FieldTypeToNode(name: string, fieldType: FieldType) {
 
 export function CreateTriggerNode(triggerDescription: TriggerDescription) {
 	let inputs: InterfaceFactory<any>  = {};
-	for (let fieldKey of Object.keys(triggerDescription.fields)) {
-		let field = triggerDescription.fields[fieldKey];
+	for (let [key, field] of Object.entries(triggerDescription.fields)) {
 		if (field.type == FieldType.Action) {
 			throw new Error("Action properties are unsupported in triggers");
 		}
 		inputs[field.name] = FieldTypeToNode(field.name, field.type);
 		
 	}
+
+	let outputs: InterfaceFactory<any> = {};
+	for (let subTrigger of triggerDescription.subTriggers) {
+		outputs[subTrigger] = () => new NodeInterface(subTrigger, {}).use(setType, triggerActionType)
+	}
+
 	return defineNode({
 		title: triggerDescription.name,
 		type: `trigger#${triggerDescription.name}`,
 		inputs: inputs,
-		outputs: {
-			action: () => new NodeInterface("Action", {}).use(setType, triggerActionType),
-		},
+		outputs: outputs,
 	});
 }
 

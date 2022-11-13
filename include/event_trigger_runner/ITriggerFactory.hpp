@@ -11,6 +11,6 @@ public:
 	virtual std::unique_ptr<Trigger> create(std::string name, const DynamicConfig& dynamic_config) = 0;
 
 	virtual const DynamicConfigSpec& get_config_spec() const = 0;
-
+	virtual std::vector<std::string> get_sub_triggers() const = 0;
 	virtual std::string get_name() const = 0;
 };

@@ -22,9 +22,9 @@ function GetTypeAndName(node: AbstractNode): {type: "trigger" | "effect", id: st
 function GetInstanceName(node: AbstractNode) {
 	let info = GetTypeAndName(node);
 	if (info.type == "action") {
-		return `action##${node.id}#${node.title}`;
+		return `${node.id}#${node.title}`;
 	}
-	return `${info.type}#${info.id}#${node.id}#${node.title}`;
+	return `${node.id}#${node.title}`;
 }
 
 function FormatNodeConnection(node: AbstractNode, nodeInterface: NodeInterface) {
@@ -46,7 +46,7 @@ function EncodeInterfaceValue(nodeInterface: NodeInterface<any>, graph: Graph): 
 		if (nodeInterface.value?.isAttribute == true) {
 			let connection = graph.connections.find((connection) => connection.to.id == nodeInterface.id);
 			if (connection == null) {
-				throw new Error("Could not find connection");
+				return "";
 			}
 			let node = graph.findNodeById(connection.from.nodeId);
 			if (node == null) {
@@ -112,7 +112,7 @@ export function CreateLightningConfig(graph: Graph): LightingConfig {
 			}
 		} else {
 			config.triggerActionEdges.push({
-				triggerInstanceId: GetInstanceName(fromNode),
+				triggerInstanceId: GetInstanceName(fromNode) + "." + connection.from.name,
 				actionName: GetInstanceName(toNode)
 			});
 		}

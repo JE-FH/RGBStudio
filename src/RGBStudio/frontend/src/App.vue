@@ -14,20 +14,13 @@ if (import.meta.env.DEV) {
 				"Key code": {
 					name: "Key code",
 					type: FieldType.Integer,
-				},
-				"Trigger on release": {
-					name: "Trigger on release",
-					type: FieldType.Bool
-				},
-				"Trigger on press": {
-					name: "Trigger on press",
-					type: FieldType.Bool
-				},
-				"Trigger on repeat": {
-					name: "Trigger on repeat",
-					type: FieldType.Bool
 				}
-			}
+			},
+			subTriggers: [
+				"released",
+				"pressed",
+				"repeated"
+			]
 		}
 	], [
 		{

@@ -6,5 +6,6 @@
 struct RGBLightRunnerTrigger {
 	std::string id;
 	std::vector<RGBLightRunnerAttributeDescription> attributes;
-	MSGPACK_DEFINE_ARRAY(id, attributes)
+	std::vector<std::string> sub_triggers;
+	MSGPACK_DEFINE_ARRAY(id, attributes, sub_triggers)
 };

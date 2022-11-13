@@ -17,6 +17,7 @@ export interface TriggerDescription {
         name: string;
         type: FieldType;
     }>;
+    subTriggers: string[];
     name: string;
 }
 

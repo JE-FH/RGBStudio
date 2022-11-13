@@ -3,7 +3,7 @@ import type { EffectDescription, TriggerDescription, IRGBStudioAPI, LightingConf
 
 export default class RGBStudioMockAPI implements IRGBStudioAPI {
 	private _triggers: TriggerDescription[];
-	private _effects: TriggerDescription[];
+	private _effects: EffectDescription[];
 
 	OnAddedTrigger: CSEvent<(addedTrigger: TriggerDescription) => void>;
     OnAddedEffect: CSEvent<(addedTrigger: EffectDescription) => void>;
@@ -25,7 +25,7 @@ export default class RGBStudioMockAPI implements IRGBStudioAPI {
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 		let randomOrderEvents: (["trigger", TriggerDescription] | ["effect", EffectDescription])[] = [];
 		this._triggers.map<["trigger", TriggerDescription]>(x => ["trigger", x]).forEach(x => randomOrderEvents.push(x));
-		this._effects.map<["effect", TriggerDescription]>(x => ["effect", x]).forEach(x => randomOrderEvents.push(x));
+		this._effects.map<["effect", EffectDescription]>(x => ["effect", x]).forEach(x => randomOrderEvents.push(x));
 
 		randomOrderEvents = randomOrderEvents.map(x => ({x, randomNumber: Math.random()}))
 			.sort((a, b) => a.randomNumber - b.randomNumber)

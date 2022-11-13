@@ -207,6 +207,13 @@ void Editor::notify_browser_added_trigger(const RGBLightRunnerTrigger& added_tri
 	nlohmann::json params;
 	params["fields"] = nlohmann::json();
 	params["name"] = added_trigger.id;
+
+	auto subTriggers = nlohmann::json::array();
+	for (const auto& sub_trigger : added_trigger.sub_triggers) {
+		subTriggers.push_back(sub_trigger);
+	}
+	params["subTriggers"] = subTriggers;
+
 	for (const auto& field : added_trigger.attributes) {
 		nlohmann::json field_desc;
 		field_desc["name"] = field.name;

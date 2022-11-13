@@ -106,6 +106,7 @@ public:
 		{
 			RGBLightRunnerTrigger triggerDesc;
 			triggerDesc.id = trigger.second->get_name();
+			triggerDesc.sub_triggers = trigger.second->get_sub_triggers();
 			auto& spec = trigger.second->get_config_spec();
 			for (const auto& field : spec.get_fields()) {
 				triggerDesc.attributes.push_back(RGBLightRunnerAttributeDescription{
