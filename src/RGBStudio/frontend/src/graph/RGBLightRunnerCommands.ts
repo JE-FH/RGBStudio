@@ -1,6 +1,7 @@
 import type { DynamicConfigAttribute, EffectInstanceConfig, LightingConfig, TriggerInstanceConfig } from "@/util/RGBStudioAPI";
 import { CheckboxInterface, Connection, IntegerInterface, NodeInterface, NumberInterface, TextInputInterface, type AbstractNode, type Graph } from "baklavajs";
 import { ColorPickerInterface } from "@/graph/Interfaces/ColorPickerInterface";
+import { KeyCodePickerInterface } from "./Interfaces/KeyCodePickerInterface";
 
 const RGBLightRunnerCommands = {
 	APPLY_CONFIG: "RGBLightRunnerCommands.APPLY_CONFIG"
@@ -42,6 +43,8 @@ function EncodeInterfaceValue(nodeInterface: NodeInterface<any>, graph: Graph): 
 		return nodeInterface.value ? "true" : "false";
 	} else if (nodeInterface instanceof ColorPickerInterface) {
 		return nodeInterface.value.hex_color;
+	} else if (nodeInterface instanceof KeyCodePickerInterface) {
+		return nodeInterface.value.toString();
 	} else if (nodeInterface instanceof NodeInterface) {
 		if (nodeInterface.value?.isAttribute == true) {
 			let connection = graph.connections.find((connection) => connection.to.id == nodeInterface.id);

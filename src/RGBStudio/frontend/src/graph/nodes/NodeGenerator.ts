@@ -1,6 +1,7 @@
 import { FieldType, type EffectDescription, type TriggerDescription } from "@/util/RGBStudioAPI";
 import { CheckboxInterface, defineNode, IntegerInterface, NodeInterface, NumberInterface, setType, TextInputInterface, type InterfaceFactory } from "baklavajs";
 import { ColorPickerInterface } from "../Interfaces/ColorPickerInterface";
+import { KeyCodePickerInterface } from "../Interfaces/KeyCodePickerInterface";
 import { actionEffectType, triggerActionType } from "./CustomNodeTypes";
 
 function FieldTypeToNode(name: string, fieldType: FieldType) {
@@ -17,6 +18,8 @@ function FieldTypeToNode(name: string, fieldType: FieldType) {
 			return () => new NodeInterface(name, {isAttribute: true}).use(setType, actionEffectType);
 		case FieldType.RGBColor:
 			return () => new ColorPickerInterface(name).setPort(false);
+		case FieldType.KeyCode:
+			return () => new KeyCodePickerInterface(name).setPort(false);
 		default:
 			throw new Error("Unsupported field type: " + fieldType);
 	}

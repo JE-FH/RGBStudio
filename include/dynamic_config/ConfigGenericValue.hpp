@@ -120,3 +120,16 @@ public:
 	static std::string friendly_name();
 };
 using ConfigActionNameValue = ConfigGenericValue<std::string, ConfigActionNameTypeDesc>;
+
+class ConfigKeyCodeTypeDesc : public IConfigValueTypeDesc {
+public:
+	ConfigKeyCodeTypeDesc() {}
+
+	std::string get_friendly_name() const override;
+	std::string get_internal_name() const override;
+
+	std::unique_ptr<IConfigValue> decode(const std::string& value) const;
+
+	static std::string friendly_name();
+};
+using ConfigKeyCodeValue = ConfigGenericValue<long long, ConfigKeyCodeTypeDesc>;

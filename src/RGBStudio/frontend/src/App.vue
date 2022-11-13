@@ -13,7 +13,7 @@ if (import.meta.env.DEV) {
 			fields: {
 				"Key code": {
 					name: "Key code",
-					type: FieldType.Integer,
+					type: FieldType.KeyCode,
 				}
 			},
 			subTriggers: [

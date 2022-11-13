@@ -77,3 +77,4 @@ export class RGBColor {
 export const actionEffectType = new NodeInterfaceType<ActionEvent>("actionEffectType");
 export const triggerActionType = new NodeInterfaceType<TriggerEvent>("triggerActionType");
 export const RGBColorType = new NodeInterfaceType<RGBColor>("RGBColorType");
+export const KeyCodeType = new NodeInterfaceType<number>("KeyCodeType");

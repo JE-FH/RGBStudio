@@ -49,6 +49,7 @@ void EventTriggerController::run_tick()
 	std::unique_ptr<Event> queued_event;
 	std::vector<std::string> triggered_triggers_names;
 	while ((queued_event = _event_manager.pop_event()) != nullptr) {
+		std::cout << queued_event->describe() << std::endl;
 		for (auto& trigger : _triggers) {
 			std::string sub_trigger;
 			if (trigger->should_trigger(*queued_event, sub_trigger)) {
