@@ -4,7 +4,7 @@ EventManager::EventManager() {
 	
 }
 
-void EventManager::add_event_source(std::unique_ptr<IEventSource> event_source) {
+void EventManager::add_event_source(std::shared_ptr<IEventSource> event_source) {
 	_event_sources.push_back(std::move(event_source));
 }
 

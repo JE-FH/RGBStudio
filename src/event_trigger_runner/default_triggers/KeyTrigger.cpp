@@ -14,15 +14,17 @@ bool KeyTrigger::should_trigger(Event& ev, std::string& trigger_sub_name)
 			return false;
 		}
 
+		if (key_event->repeated && key_event->pressed) {
+			trigger_sub_name = "repeated";
+			return true;
+		}
+
 		if (key_event->pressed) {
 			trigger_sub_name = "pressed";
 			return true;
 		}
 
-		if (key_event->repeated && key_event->pressed) {
-			trigger_sub_name = "repeated";
-			return true;
-		}
+		
 
 		if (!key_event->pressed) {
 			trigger_sub_name = "released";

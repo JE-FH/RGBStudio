@@ -10,8 +10,12 @@ set(HEADER_LIST
 	"${RGBStudio_SOURCE_DIR}/include/event_trigger_runner/TriggerObserver.hpp"
 	"${RGBStudio_SOURCE_DIR}/include/event_trigger_runner/TriggerObserverDispatcher.hpp"
 	"${RGBStudio_SOURCE_DIR}/include/event_trigger_runner/IEffectFactory.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/event_trigger_runner/LifetimeEvent.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/event_trigger_runner/LifetimeEventSource.hpp"
 	"${RGBStudio_SOURCE_DIR}/include/event_trigger_runner/default_triggers/KeyTrigger.hpp"
 	"${RGBStudio_SOURCE_DIR}/include/event_trigger_runner/default_triggers/KeyTriggerFactory.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/event_trigger_runner/default_triggers/LifetimeTrigger.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/event_trigger_runner/default_triggers/LifetimeTriggerFactory.hpp"
 )
 
 add_library(event_trigger_runner STATIC 
@@ -21,8 +25,12 @@ add_library(event_trigger_runner STATIC
 	"KeyEvent.cpp"
 	"TriggerObserver.cpp"
 	"TriggerObserverDispatcher.cpp" 
+	"LifetimeEvent.cpp" 
+	"LifetimeEventSource.cpp"
 	"default_triggers/KeyTrigger.cpp" 
 	"default_triggers/KeyTriggerFactory.cpp" 
+	"default_triggers/LifetimeTrigger.cpp" 
+	"default_triggers/LifetimeTriggerFactory.cpp" 
 	${HEADER_LIST}
 )
 

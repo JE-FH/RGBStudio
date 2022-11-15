@@ -7,11 +7,11 @@
 class EventManager {
 public:
 	EventManager();
-	void add_event_source(std::unique_ptr<IEventSource> event_source);
+	void add_event_source(std::shared_ptr<IEventSource> event_source);
 	void poll_events();
 	std::unique_ptr<Event> pop_event();
 private:
 	EventQueue _queued_events;
-	std::vector<std::unique_ptr<IEventSource>> _event_sources;
+	std::vector<std::shared_ptr<IEventSource>> _event_sources;
 };
 

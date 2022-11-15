@@ -71,7 +71,7 @@ int catched_main()
 	effect_manager.add_device(keyboard_device);
 
 	auto event_manager = EventManager();
-	event_manager.add_event_source(std::make_unique<KeyboardEventSource>());
+	event_manager.add_event_source(std::make_shared<KeyboardEventSource>());
 
 	auto event_trigger_controller = EventTriggerController(std::move(effect_manager), std::move(event_manager));
 

@@ -35,6 +35,8 @@
 #include <lua_effect_loader/LuaEffectFactory.hpp>
 #include <shlobj_core.h>
 #include <filesystem>
+#include <event_trigger_runner/default_triggers/LifetimeTriggerFactory.hpp>
+#include <event_trigger_runner/LifetimeEventSource.hpp>
 struct ApplyConfigCommandData {
 	RGBLightRunnerConfig config;
 };
@@ -59,6 +61,7 @@ class RGBLightRunner {
 	std::shared_ptr<IKeyboardDevice> _keyboardDevice;
 	std::mutex _commandQueueLock;
 	std::queue<std::variant<ApplyConfigCommandData>> _commandQueue;
+	std::shared_ptr<LifetimeEventSource> _lifetimeEventSource;
 public:
 	RGBLightRunner(const RGBLightRunner&) = delete;
 	RGBLightRunner(RGBLightRunner&&) = delete;
@@ -71,8 +74,9 @@ public:
 		effectManager.add_device(keyboardDevice);
 
 		auto eventManager = EventManager();
-		eventManager.add_event_source(std::make_unique<KeyboardEventSource>());
-
+		eventManager.add_event_source(std::make_shared<KeyboardEventSource>());
+		_lifetimeEventSource = std::make_shared<LifetimeEventSource>();
+		eventManager.add_event_source(_lifetimeEventSource);
 		_eventTriggerController = std::make_unique<EventTriggerController>(std::move(effectManager), std::move(eventManager));
 
 		_keyboardDevice = std::move(keyboardDevice);
@@ -89,7 +93,7 @@ public:
 		rpcServer.async_run();
 	
 		InitEventSources();
-
+		_lifetimeEventSource->starting();
 		Loop();
 	}
 
@@ -144,11 +148,20 @@ public:
 	}
 
 private:
-	void AddFactories() {
-		auto triggerFactory = std::make_unique<KeyTriggerFactory>();
+	void AddTriggerFactory(std::unique_ptr<ITriggerFactory> triggerFactory) {
+		std::cout << "Registered trigger: " << triggerFactory->get_name() << std::endl;
 		_triggerFactories.insert(std::pair(triggerFactory->get_name(), std::move(triggerFactory)));
-		auto fillEffectFactory = std::make_unique<FillEffectFactory>();
-		_effectFactories.insert(std::pair(fillEffectFactory->get_name(), std::move(fillEffectFactory)));
+	}
+
+	void AddEffectFactory(std::unique_ptr<IEffectFactory> effectFactory) {
+		std::cout << "Registered effect: " << effectFactory->get_name() << std::endl; 
+		_effectFactories.insert(std::pair(effectFactory->get_name(), std::move(effectFactory)));
+	}
+
+	void AddFactories() {
+		AddTriggerFactory(std::make_unique<KeyTriggerFactory>());
+		AddTriggerFactory(std::make_unique<LifetimeTriggerFactory>());
+		AddEffectFactory(std::make_unique<FillEffectFactory>());
 	}
 
 	void AddLuaFactories() {
@@ -164,10 +177,8 @@ private:
 
 	void AddLuaFactory(std::string fileName) {
 		auto factory = std::make_unique<LuaEffectFactory>(fileName);
-		std::string name = factory->get_name();
-		std::cout << "Adding effect: \"" << name << "\" from " << fileName << std::endl;
-
-		_effectFactories.insert(std::pair(std::move(name), std::move(factory)));
+		std::cout << "Loading effect from " << fileName << std::endl;
+		AddEffectFactory(std::move(factory));
 	}
 
 	void InitEventSources() {
@@ -194,6 +205,9 @@ private:
 	}
 
 	void ApplyConfig(RGBLightRunnerConfig config) {
+		_lifetimeEventSource->stopping();
+		_eventTriggerController->run_tick();
+
 		std::cout << "Applying new config" << std::endl;
 		_eventTriggerController->clear();
 		for (const auto& edge : config.triggerActionEdges) {
@@ -230,6 +244,7 @@ private:
 
 			_eventTriggerController->add_effect(effectInstanceConfig.instanceId, effectFactory->second->create(config, _keyboardDevice));
 		}
+		_lifetimeEventSource->starting();
 	}
 
 	DynamicConfig CreateDynamicConfigFromSpec(const DynamicConfigSpec& spec, const std::vector<InstanceDynamicAttribute>& attributes) {
