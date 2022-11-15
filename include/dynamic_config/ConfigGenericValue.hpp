@@ -21,6 +21,7 @@ namespace ConfigGenericValueConverter {
 	std::string to_string(const RGBColor& rgbcolor);
 }
 
+
 template<typename T, ConfigValueTypeDesc _TTypeDesc>
 class ConfigGenericValue : public IConfigValue {
 private:
@@ -38,6 +39,7 @@ public:
 
 	using TTypeDesc = _TTypeDesc;
 };
+
 
 class ConfigStringTypeDesc : public IConfigValueTypeDesc {
 public:
@@ -66,6 +68,7 @@ public:
 };
 using ConfigIntegerValue = ConfigGenericValue<long long, ConfigIntegerTypeDesc>;
 
+
 class ConfigNumberTypeDesc : public IConfigValueTypeDesc {
 public:
 	ConfigNumberTypeDesc() {}
@@ -78,6 +81,7 @@ public:
 	static std::string friendly_name();
 };
 using ConfigNumberValue = ConfigGenericValue<double, ConfigNumberTypeDesc>;
+
 
 class ConfigRGBColorTypeDesc : public IConfigValueTypeDesc {
 public:
@@ -120,6 +124,7 @@ public:
 	static std::string friendly_name();
 };
 using ConfigActionNameValue = ConfigGenericValue<std::string, ConfigActionNameTypeDesc>;
+
 
 class ConfigKeyCodeTypeDesc : public IConfigValueTypeDesc {
 public:
