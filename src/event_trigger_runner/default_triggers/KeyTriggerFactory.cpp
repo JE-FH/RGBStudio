@@ -11,7 +11,7 @@ std::unique_ptr<Trigger> KeyTriggerFactory::create(std::string name, const Dynam
 	
 	return std::make_unique<KeyTrigger>(
 		name, 
-		(unsigned short) trigger_key.get_value()
+		(int) trigger_key.get_value()
 	);
 }
 
