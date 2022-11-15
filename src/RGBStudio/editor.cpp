@@ -181,12 +181,12 @@ void Editor::create_controller_completed(HRESULT result, ICoreWebView2Controller
 			PWSTR uri;
 			ok_or_throw(args->get_Uri(&uri));
 			std::wstring source(uri);
+			CoTaskMemFree(uri);
 			std::wcout << "source: " << source << ", sub: \"" << source.substr(0, 26) << "\"" << std::endl;
 			if (source.substr(0, 26) != L"https://appassets.example/") {
 				ok_or_throw(args->put_Cancel(true));
 				std::cout << "Canceled navigation";
 			}
-			CoTaskMemFree(uri);
 		})).Get(), &navigation_started_evt));
 
 	// Step 6 - Communication between host and web content
