@@ -17,7 +17,7 @@
 #include <device_adapter_loader/DeviceAdapter.hpp>
 #include <device_adapter_loader/DeviceFactory.hpp>
 #include <native_effects/FillEffectFactory.hpp>
-#include <native_effects/VisorEffect.hpp>
+#include <native_effects/VisorEffectFactory.hpp>
 #include <event_trigger_runner/IEffectFactory.hpp>
 #include <iostream>
 #include <memory>
@@ -162,6 +162,7 @@ private:
 		AddTriggerFactory(std::make_unique<KeyTriggerFactory>());
 		AddTriggerFactory(std::make_unique<LifetimeTriggerFactory>());
 		AddEffectFactory(std::make_unique<FillEffectFactory>());
+		AddEffectFactory(std::make_unique<VisorEffectFactory>());
 	}
 
 	void AddLuaFactories() {
