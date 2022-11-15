@@ -4,11 +4,13 @@ set(HEADER_LIST
 	"${RGBStudio_SOURCE_DIR}/include/native_effects/FillEffectFactory.hpp"
 	"${RGBStudio_SOURCE_DIR}/include/native_effects/VisorEffectInstance.hpp"
 	"${RGBStudio_SOURCE_DIR}/include/native_effects/VisorEffect.hpp"
+	"${RGBStudio_SOURCE_DIR}/include/native_effects/VisorEffectFactory.hpp"
 )
 
 add_library(native_effects STATIC 
 	"VisorEffectInstance.cpp"
 	"VisorEffect.cpp"
+	"VisorEffectFactory.cpp"
 	"FillEffectInstance.cpp"
 	"FillEffect.cpp"
 	"FillEffectFactory.cpp"
