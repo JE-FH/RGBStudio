@@ -1,7 +1,7 @@
 #include <event_trigger_runner/default_triggers/KeyTrigger.hpp>
 #include <event_trigger_runner/KeyEvent.hpp>
-
-KeyTrigger::KeyTrigger(std::string trigger_name, unsigned short trigger_key)
+#include <iostream>
+KeyTrigger::KeyTrigger(std::string trigger_name, int trigger_key)
 	: Trigger(trigger_name)
 {
 	_trigger_key = trigger_key;
@@ -10,7 +10,7 @@ KeyTrigger::KeyTrigger(std::string trigger_name, unsigned short trigger_key)
 bool KeyTrigger::should_trigger(Event& ev, std::string& trigger_sub_name)
 {
 	if (auto key_event = dynamic_cast<KeyEvent*>(&ev)) {
-		if (key_event->os_specific_code != _trigger_key) {
+		if (_trigger_key != -1 && key_event->os_specific_code != _trigger_key) {
 			return false;
 		}
 
@@ -23,8 +23,6 @@ bool KeyTrigger::should_trigger(Event& ev, std::string& trigger_sub_name)
 			trigger_sub_name = "pressed";
 			return true;
 		}
-
-		
 
 		if (!key_event->pressed) {
 			trigger_sub_name = "released";

@@ -4,11 +4,11 @@ class KeyTrigger
 	: public Trigger
 {
 public:
-	KeyTrigger(std::string trigger_name, unsigned short trigger_key);
+	KeyTrigger(std::string trigger_name, int trigger_key);
 
 	// Inherited via Trigger
 	virtual bool should_trigger(Event& ev, std::string& trigger_sub_name) override;
 private:
-	unsigned short _trigger_key;
+	int _trigger_key;
 };
 

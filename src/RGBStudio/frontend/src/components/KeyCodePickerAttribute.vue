@@ -6,8 +6,6 @@ const props = defineProps<{
 	intf: KeyCodePickerInterface
 }>()
 
-
-
 </script>
 
 <template>

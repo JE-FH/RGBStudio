@@ -25,7 +25,7 @@ const selectedKeyJsName = computed(() => JSNameLookupTable.get(props.modelValue)
 
 const displayedValue = computed(() => {
 	if (props.modelValue == -1) {
-		return "";
+		return "Any key";
 	} else {
 		return `${selectedKeyJsName.value} (${props.modelValue})`;
 	}
