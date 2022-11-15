@@ -204,7 +204,7 @@ void Editor::create_controller_completed(HRESULT result, ICoreWebView2Controller
 
 void Editor::notify_browser_added_trigger(const RGBLightRunnerTrigger& added_trigger) {
 	nlohmann::json params;
-	params["fields"] = nlohmann::json();
+	params["fields"] = nlohmann::json::object();
 	params["name"] = added_trigger.id;
 
 	auto subTriggers = nlohmann::json::array();
@@ -226,7 +226,7 @@ void Editor::notify_browser_added_trigger(const RGBLightRunnerTrigger& added_tri
 void Editor::notify_browser_added_effect(const RGBLightRunnerEffect& added_effect)
 {
 	nlohmann::json params;
-	params["fields"] = nlohmann::json();
+	params["fields"] = nlohmann::json::object();
 	params["name"] = added_effect.id;
 	for (const auto& field : added_effect.attributes) {
 		nlohmann::json field_desc;
